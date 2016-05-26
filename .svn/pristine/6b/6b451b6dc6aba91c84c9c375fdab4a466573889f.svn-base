@@ -1,0 +1,56 @@
+package com.ffcs.crmd.platform.pub.utils.sql;
+
+import com.ctg.itrdc.platform.common.exception.RtManagerException;
+import com.ctg.itrdc.platform.common.log.ILogger;
+import com.ctg.itrdc.platform.common.log.LoggerFactory;
+import com.ctg.itrdc.platform.common.utils.file.PropertiesUtil;
+import com.ffcs.crmd.platform.pub.ex.ExceptionUtils;
+
+/**
+ * Created by linzhiqiang on 16/2/23.
+ */
+public class DialectUtils {
+
+    private static final ILogger LOG                     = LoggerFactory
+        .getLogger(DialectUtils.class);
+    public static final  String  DIALECT_PROPERTIES_FILE = "dialect.properties";
+
+    public static final String DIALECT_KEY = "dialect";
+
+    private static Dialect dialect;
+
+    static {
+        Dialect defaultDialect = null;
+        try {
+            String dialectProperties = PropertiesUtil
+                .getConfigValueCache(DIALECT_PROPERTIES_FILE, DIALECT_KEY);
+            defaultDialect = Dialect.getDialect(dialectProperties);
+        } catch (Exception e) {
+            LOG.warn("getDialectError",e);
+        }
+        if (defaultDialect == null) {
+            defaultDialect = Dialect.MYSQL;
+        }
+        dialect = defaultDialect;
+    }
+
+    public static void setDialect(String dialect) {
+        Dialect eDa = Dialect.getDialect(dialect);
+        setDialect(eDa);
+    }
+
+    public static void setDialect(Dialect dialect) {
+        if (dialect == null) {
+            ExceptionUtils.throwEx(new RtManagerException("dialect could not null"));
+        }
+        DialectUtils.dialect = dialect;
+    }
+
+    public static Dialect getDialect() {
+        return dialect;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Integer.MAX_VALUE);
+    }
+}

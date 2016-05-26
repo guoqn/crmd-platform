@@ -1,0 +1,11 @@
+defualt.local.expire=2000
+default.local.maxSize=1000
+local.expire.test=1500
+local.maxSize.test=2000
+global.expire.test=1800
+global.maxSize.test=2100
+local.expire.test2=1500
+local.maxSize.test2=2000
+global.expire.test2=1800
+global.maxSize.test2=2100
+level.test2=2

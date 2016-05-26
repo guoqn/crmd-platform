@@ -1,0 +1,26 @@
+/**
+ * 
+ */
+package com.ffcs.crmd.platform.mq.ctg;
+
+/**
+ * 版本信息
+ * @author chenzhi
+ * @2015年11月3日 上午8:55:53
+ */
+public class Version {
+	private static String mainVersion = "1.0.17";
+	private static String ctgMqVersion="1.1.6";
+
+	public static String getMainVersion() {
+		return mainVersion;
+	}
+
+	/**
+	 * 集成的集团版本客户端版本号
+	 * @return the ctgMqVersion
+	 */
+	public static String getCtgMqVersion() {
+		return ctgMqVersion;
+	}
+}

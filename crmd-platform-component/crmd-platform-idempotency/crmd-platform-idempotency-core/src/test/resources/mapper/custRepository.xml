@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper>
+	<!-- 根据SysClass的java_code获取分片规则 -->
+	<select id="save">
+		<![CDATA[insert into cust(cust_id, CUST_NUMBER, sharding_id) values(?, ?, ?)]]>
+	</select>
+</mapper>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper>
+    <sql id="qrySysTablePage">
+        <![CDATA[
+            SELECT
+                TAB_ID,
+                TAB_NAME,
+                TAB_TYPE,
+                TAB_KEY_COL_NAME,
+                SLA_TAB_INST_COL_NAME,
+                SLA_TAB_ATTR_COL_NAME,
+                SLA_TAB_ATTR_VAL_COL_NAME,
+                MSTR_TAB_ID,
+                REMARK,
+                HIS_TABLE_NAME,
+                HIS_SEQ_NAME,
+                CREATE_STAFF,
+                UPDATE_STAFF,
+                STATUS_CD,
+                CREATE_DATE,
+                STATUS_DATE,
+                UPDATE_DATE,
+                REGION_CD,
+                AREA_ID,
+                REC_UPDATE_DATE,
+                SHARDING_ID,
+                REL_SHARDING_ID,
+                DVERSION,
+                DTIMESTAMP
+            FROM
+                SYS_TABLE
+            WHERE
+                1 = 1
+        ]]>
+    </sql>
+    <sql id="qrySysTableByTabId">
+        <![CDATA[
+            SELECT
+                TAB_ID,
+                TAB_NAME,
+                TAB_TYPE,
+                TAB_KEY_COL_NAME,
+                SLA_TAB_INST_COL_NAME,
+                SLA_TAB_ATTR_COL_NAME,
+                SLA_TAB_ATTR_VAL_COL_NAME,
+                MSTR_TAB_ID,
+                REMARK,
+                HIS_TABLE_NAME,
+                HIS_SEQ_NAME,
+                CREATE_STAFF,
+                UPDATE_STAFF,
+                STATUS_CD,
+                CREATE_DATE,
+                STATUS_DATE,
+                UPDATE_DATE,
+                REGION_CD,
+                AREA_ID,
+                REC_UPDATE_DATE,
+                SHARDING_ID,
+                REL_SHARDING_ID,
+                DVERSION,
+                DTIMESTAMP
+            FROM
+                SYS_TABLE
+            WHERE
+                TAB_ID = ?
+        ]]>
+    </sql>
+    <sql id="getSysTableByObjId">
+        <![CDATA[
+            SELECT
+                A.TAB_ID,
+                A.TAB_NAME,
+                A.TAB_TYPE,
+                A.TAB_KEY_COL_NAME,
+                A.SLA_TAB_INST_COL_NAME,
+                A.SLA_TAB_ATTR_COL_NAME,
+                A.SLA_TAB_ATTR_VAL_COL_NAME,
+                A.MSTR_TAB_ID,
+                A.REMARK,
+                A.HIS_TABLE_NAME,
+                A.HIS_SEQ_NAME,
+                A.CREATE_STAFF,
+                A.UPDATE_STAFF,
+                A.STATUS_CD,
+                A.CREATE_DATE,
+                A.STATUS_DATE,
+                A.UPDATE_DATE,
+                A.REGION_CD,
+                A.AREA_ID,
+                A.REC_UPDATE_DATE,
+                A.SHARDING_ID,
+                A.REL_SHARDING_ID,
+                A.DVERSION,
+                A.DTIMESTAMP
+            FROM
+                SYS_TABLE A,
+                OBJ_TAB_REL B
+            WHERE
+                A.TAB_ID = B.TAB_ID
+            AND
+                B.OBJ_ID = ?
+        ]]>
+    </sql>
+
+    <sql id="getSysTableByObjIdAndStatusCd">
+        <![CDATA[
+            SELECT
+                A.TAB_ID,
+                A.TAB_NAME,
+                A.TAB_TYPE,
+                A.TAB_KEY_COL_NAME,
+                A.SLA_TAB_INST_COL_NAME,
+                A.SLA_TAB_ATTR_COL_NAME,
+                A.SLA_TAB_ATTR_VAL_COL_NAME,
+                A.MSTR_TAB_ID,
+                A.REMARK,
+                A.HIS_TABLE_NAME,
+                A.HIS_SEQ_NAME,
+                A.CREATE_STAFF,
+                A.UPDATE_STAFF,
+                A.STATUS_CD,
+                A.CREATE_DATE,
+                A.STATUS_DATE,
+                A.UPDATE_DATE,
+                A.REGION_CD,
+                A.AREA_ID,
+                A.REC_UPDATE_DATE,
+                A.SHARDING_ID,
+                A.REL_SHARDING_ID,
+                A.DVERSION,
+                A.DTIMESTAMP
+            FROM
+                SYS_TABLE A,
+                OBJ_TAB_REL B
+            WHERE
+                A.TAB_ID = B.TAB_ID
+            AND
+                B.OBJ_ID = ?
+                AND A.STATUS_CD=?
+                AND B.STATUS_CD=?
+        ]]>
+    </sql>
+</mapper>

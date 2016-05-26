@@ -1,0 +1,23 @@
+package com.ffcs.crmd.platform.mq.rocketmq.impl;
+
+
+import com.ffcs.crmd.platform.mq.ConsumeStatus;
+import com.ffcs.crmd.platform.mq.MqMessage;
+import com.ffcs.crmd.platform.mq.producer.api.ITransactionCheckListener;
+
+public class MqCheckTransactionListenerImpl implements ITransactionCheckListener {
+
+    /**
+     * 发送事物消息:事物回查(暂不支持回查)
+     * 
+     * @author zhongfuhua
+     * @since 2015-08-24 
+     */
+    @Override
+    public ConsumeStatus checkLocalTransactionState(MqMessage msg) {
+        System.out.println("事物处理异常。。。。。。");
+        return ConsumeStatus.FAIL;
+    }
+
+
+}

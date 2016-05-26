@@ -1,0 +1,49 @@
+package com.ffcs.crmd.platform.pub.proxy.callfilter;
+
+import com.ctg.itrdc.platform.common.utils.type.StringUtils;
+import com.ctg.itrdc.platform.pub.util.ApplicationContextUtil;
+import com.ffcs.crmd.platform.pub.proxy.callfilter.impl.AbstractProxyCallFilter;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Created by linzhiqiang on 16/2/16.
+ */
+public class ProxyCallFilterFactory {
+
+    public static final String DEFAULT_PREFIX = "default";
+
+    public static final String CALL_FILTER_SUFFIX = "ProxyCallFilter";
+
+    private static final IProxyCallFilter EMPTY = new AbstractProxyCallFilter() {
+        @Override
+        public Map<String, String> getAppPropsMap() {
+            return new HashMap<String, String>();
+        }
+
+        @Override
+        public void putAppPropsMap(Map<String, String> props) {
+
+        }
+    };
+
+    public static IProxyCallFilter getProxyCallFilter(String mod, String serviceName,
+        String methodName) {
+        if (ApplicationContextUtil.containsBean(
+            StringUtils.first2Lower(mod) + StringUtils.first2Upper(serviceName)
+                + CALL_FILTER_SUFFIX)) {
+            return ApplicationContextUtil.getBean(
+                StringUtils.first2Lower(mod) + StringUtils.first2Upper(serviceName)
+                    + CALL_FILTER_SUFFIX);
+        } else if (ApplicationContextUtil
+            .containsBean(StringUtils.first2Lower(serviceName) + CALL_FILTER_SUFFIX)) {
+            return ApplicationContextUtil
+                .getBean(StringUtils.first2Lower(serviceName) + CALL_FILTER_SUFFIX);
+        } else if (ApplicationContextUtil.containsBean(DEFAULT_PREFIX + CALL_FILTER_SUFFIX)) {
+            return ApplicationContextUtil.getBean(DEFAULT_PREFIX + CALL_FILTER_SUFFIX);
+        } else {
+            return EMPTY;
+        }
+    }
+}

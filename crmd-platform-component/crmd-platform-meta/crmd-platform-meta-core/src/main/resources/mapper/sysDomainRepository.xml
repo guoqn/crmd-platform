@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper>
+
+    <sql id="qrySysTablePage">
+        <![CDATA[
+            SELECT
+                DOMAIN_ID,
+                DOMAIN_NAME,
+                DOMAIN_NBR,
+                DOMAIN_DESC,
+                STATUS_CD,
+                CREATE_STAFF,
+                UPDATE_STAFF,
+                CREATE_DATE,
+                STATUS_DATE,
+                UPDATE_DATE,
+                REMARK,
+                REGION_CD,
+                AREA_ID,
+                REC_UPDATE_DATE,
+                SHARDING_ID,
+                REL_SHARDING_ID,
+                DVERSION,
+                DTIMESTAMP
+            FROM
+                SYS_DOMAIN
+            WHERE
+                1 = 1
+        ]]>
+    </sql>
+
+</mapper>

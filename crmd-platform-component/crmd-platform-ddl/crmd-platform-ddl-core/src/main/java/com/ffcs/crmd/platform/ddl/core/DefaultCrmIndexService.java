@@ -1,0 +1,135 @@
+package com.ffcs.crmd.platform.ddl.core;
+
+import java.io.Serializable;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.springframework.stereotype.Service;
+
+import com.ctg.itrdc.platform.common.exception.RtManagerException;
+import com.ctg.itrdc.platform.pub.container.BeanLoader;
+import com.ctg.itrdc.platform.pub.util.ApplicationContextUtil;
+import com.ctg.udal.ddl.api.IDdlService;
+import com.ffcs.crmd.platform.ddl.api.ICrmIndexService;
+import com.google.common.base.Strings;
+
+//@Service("defaultCrmIndexService")
+public class DefaultCrmIndexService implements ICrmIndexService {
+    
+    private IDdlService         ddlService;
+    
+    private String              schema                   = "";
+    
+    private static final String INDEX_NAME_SPLIT         = ".";
+    
+    private static final String MULTI_INDEX_COLUMN_SPLIT = "|";
+    
+    public DefaultCrmIndexService() {
+        ddlService = BeanLoader.getBean(IDdlService.class);
+        if (ddlService == null) {
+            throw new RtManagerException("ddlService未配置，请确认");
+        }
+        DataSource ds = ApplicationContextUtil.getBean("dataSource");
+        try {
+            if (ds != null) {
+                try (Connection c = ds.getConnection()) {
+                    schema = c.getCatalog();
+                    schema = schema.toUpperCase();
+                    c.close();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RtManagerException("初始化异常");
+        }
+    }
+    
+    @Override
+    public String getIndex(String schema, String table, String indexColumn, String beIndexColumn,
+        Serializable key) {
+        List<String> indexColumns = new ArrayList<String>();
+        indexColumns.add(indexColumn);
+        return getIndex(schema, table, indexColumns, beIndexColumn, key);
+    }
+    
+    @Override
+    public String getIndex(String schema, String table, List<String> indexColumn,
+        String beIndexColumn, Serializable key) {
+        List<String> list = getIndexList(schema, table, indexColumn, beIndexColumn, key);
+        if (list.size() > 0) {
+            return list.get(0);
+        }
+        return "";
+    }
+    
+    @Override
+    public List<String> getIndexList(String schema, String table, String indexColumn,
+        String beIndexColumn, Serializable key) {
+        List<String> indexColumns = new ArrayList<String>();
+        indexColumns.add(indexColumn);
+        return getIndexList(schema, table, indexColumns, beIndexColumn, key);
+    }
+    
+    @Override
+    public List<String> getIndexList(String schema, String table, List<String> indexColumn,
+        String beIndexColumn, Serializable key) {
+        String indexName = createIndexName(schema, table, indexColumn, beIndexColumn);
+        List<String> list = ddlService.getListIndex(indexName, key);
+        return list;
+    }
+    
+    @Override
+    public String getIndex(String table, String indexColumn, String beIndexColumn, Serializable key) {
+        return getIndex(schema, table, indexColumn, beIndexColumn, key);
+    }
+    
+    @Override
+    public String getIndex(String table, List<String> indexColumn, String beIndexColumn,
+        Serializable key) {
+        return getIndex(schema, table, indexColumn, beIndexColumn, key);
+    }
+    
+    @Override
+    public List<String> getIndexList(String table, String indexColumn, String beIndexColumn,
+        Serializable key) {
+        return getIndexList(schema, table, indexColumn, beIndexColumn, key);
+    }
+    
+    @Override
+    public List<String> getIndexList(String table, List<String> indexColumn, String beIndexColumn,
+        Serializable key) {
+        return getIndexList(schema, table, indexColumn, beIndexColumn, key);
+    }
+    
+    public String createIndexName(String schema, String table, List<String> index, String beIndex) {
+        StringBuilder indexName = new StringBuilder();
+        
+        indexName.append(Strings.nullToEmpty(schema).toUpperCase());
+        indexName.append(INDEX_NAME_SPLIT);
+        indexName.append(Strings.nullToEmpty(table).toUpperCase());
+        indexName.append(INDEX_NAME_SPLIT);
+        int i = 0;
+        for (String str : index) {
+            if (i > 0) {
+                indexName.append(MULTI_INDEX_COLUMN_SPLIT);
+            } else {
+                i++;
+            }
+            indexName.append(Strings.nullToEmpty(str).toUpperCase());
+        }
+        indexName.append(INDEX_NAME_SPLIT);
+        indexName.append(Strings.nullToEmpty(beIndex).toUpperCase());
+        
+        return indexName.toString();
+    }
+    
+    public String createIndexName(String schema, String table, String index, String beIndex) {
+        List<String> indexs = new ArrayList<String>();
+        indexs.add(index);
+        return createIndexName(schema, table, indexs, beIndex);
+    }
+    
+}

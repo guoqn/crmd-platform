@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper>
+    <sql id="qrySysColumnPageByTabId">
+        <![CDATA[
+            SELECT
+                COL_ID,
+                TAB_ID,
+                COL_NAME,
+                COL_TYPE,
+                COL_DESC,
+                COL_LENGHT,
+                COL_NULLABLE,
+                COL_FOREIGN_KEY,
+                SHARDING_LEVEL,
+                REMARK,
+                CNS_TYPE,
+                CREATE_STAFF,
+                UPDATE_STAFF,
+                STATUS_CD,
+                CREATE_DATE,
+                STATUS_DATE,
+                UPDATE_DATE,
+                REGION_CD,
+                AREA_ID,
+                REC_UPDATE_DATE,
+                SHARDING_ID,
+                REL_SHARDING_ID,
+                DVERSION,
+                DTIMESTAMP
+            FROM
+                SYS_COLUMN
+            WHERE
+                TAB_ID = ?
+        ]]>
+    </sql>
+
+    <sql id="qrySysColumnsByTabIdAndStatusCd" type="sql">
+        <![CDATA[
+            SELECT
+                COL_ID,
+                TAB_ID,
+                COL_NAME,
+                COL_TYPE,
+                COL_DESC,
+                COL_LENGHT,
+                COL_NULLABLE,
+                COL_FOREIGN_KEY,
+                SHARDING_LEVEL,
+                REMARK,
+                CNS_TYPE,
+                CREATE_STAFF,
+                UPDATE_STAFF,
+                STATUS_CD,
+                CREATE_DATE,
+                STATUS_DATE,
+                UPDATE_DATE,
+                REGION_CD,
+                AREA_ID,
+                REC_UPDATE_DATE,
+                SHARDING_ID,
+                REL_SHARDING_ID,
+                DVERSION,
+                DTIMESTAMP
+            FROM
+                SYS_COLUMN
+            WHERE
+                TAB_ID = ?
+                AND STATUS_CD = ?
+        ]]>
+    </sql>
+</mapper>

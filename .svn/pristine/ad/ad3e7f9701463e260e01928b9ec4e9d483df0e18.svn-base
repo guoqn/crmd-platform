@@ -1,0 +1,2 @@
+APP=CRM
+DEPLOY_MODE=local

@@ -1,0 +1,24 @@
+##默认本地缓存有效时间,单位秒,默认为1800
+default.local.expire=2000
+##默认本地缓存最大缓存数量,超出使用LRU策略,默认为10000
+default.local.maxSize=1000
+##默认全局缓存有效时间,单位秒,默认为3600
+default.global.expire=2000
+##默认全局缓存最大缓存数量,默认为20000,目前该参数无意义.
+default.global.maxSize=1000
+
+##配置缓存级别level. 后面是缓存的对象类名,全字符匹配.
+## 1 代表线程级缓存
+## 3 代表本地缓存
+## 5 代表全局缓存
+## 8 代表本地缓存+全局缓存,二级缓存结合.
+level.com.ffcs.crmd.platform.meta.entity.BusiObj=8
+
+##本地缓存有效时间,单位秒,不配置则读取全局默认
+local.expire.com.ffcs.crmd.platform.meta.entity.BusiObj=500
+##本地缓存个数,不配置则读取全局默认
+local.maxSize.com.ffcs.crmd.platform.meta.entity.BusiObj=500
+##全局缓存有效时间,单位秒,不配置则读取全局默认
+global.expire.com.ffcs.crmd.platform.meta.entity.BusiObj=500
+##全局缓存个数,不配置则读取全局默认,目前参数没有用
+global.maxSize.com.ffcs.crmd.platform.meta.entity.BusiObj=500

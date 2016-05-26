@@ -1,0 +1,35 @@
+package com.ffcs.crmd.platform.mq.rocketmq;
+
+import javax.annotation.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.ffcs.crmd.platform.mq.ProdResult;
+import com.ffcs.crmd.platform.mq.producer.api.IProducer;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {
+        "classpath*:conf/mq/spring/applicationContext-crm-mq-producer-disorderly.xml" })
+public class TestProducerDisOrderly {
+    
+    @Resource(name = "crmMqDefaultProducer")
+    private IProducer defaultProducer;
+    
+    /**
+     * 默认发送方式:轮询队列发送
+     */
+    @Test
+    public void testDefaultProducer() {
+        for (int i = 0; i < 10000; i++) {
+            try {
+                ProdResult result = defaultProducer.send(("Body" + i).getBytes(), "Tag", "Key" + i);
+                System.out.println(result.getMqMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}

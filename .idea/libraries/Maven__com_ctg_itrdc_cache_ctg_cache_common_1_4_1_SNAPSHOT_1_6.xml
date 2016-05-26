@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.ctg.itrdc.cache:ctg-cache-common:1.4.1-SNAPSHOT-1.6">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ctg/itrdc/cache/ctg-cache-common/1.4.1-SNAPSHOT-1.6/ctg-cache-common-1.4.1-SNAPSHOT-1.6.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ctg/itrdc/cache/ctg-cache-common/1.4.1-SNAPSHOT-1.6/ctg-cache-common-1.4.1-SNAPSHOT-1.6-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ctg/itrdc/cache/ctg-cache-common/1.4.1-SNAPSHOT-1.6/ctg-cache-common-1.4.1-SNAPSHOT-1.6-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+     http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd
+     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd"
+	default-lazy-init="false"> <!-- false是关键 -->
+	<!-- 加载property文件配置 -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:crm-mq.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="ctgCurrentlyConsumer"
+		class="com.ffcs.crmd.platform.mq.ctg.consumer.impl.ListenerConsumerContainer"
+		init-method="start" destroy-method="close">
+		<!-- <可选>批量消费消息数-缺省:1 -->
+		<!-- <property name="batchSize" value="32"></property> -->
+		<!-- <可选>是否为有序消费-缺省:false -->
+		<!-- <property name="orderly" value="true"></property> -->
+		<!-- <可选>单个消费者实例内部消费处理线程-缺省:100个 -->
+		<!-- <property name="consumeThreadMin" value="200"></property> -->
+		<!-- 名服务地址  -->
+		<property name="nameSrv" value="${namesrvAddr}"></property>
+		<!-- 消费组名  -->
+		<property name="groupName" value="${consumer.group}"></property>
+		<!-- 主题  -->
+		<property name="topicName" value="${topic}"></property>
+		<!-- 验证用户ID -->
+		<property name="authID" value="${authID}"></property>
+		<!-- 验证用户密码  -->
+		<property name="authPWD" value="${authPWD}"></property>
+		<!-- 消息监听器接口 -->
+		<property name="messageListener" ref="ctgCurrentlyListener"></property>
+		<!-- 消费者连接数 -->
+		<property name="consumerConnectionNum" value="12"></property>
+	</bean>
+	<bean id="ctgCurrentlyListener"
+		class="com.ffcs.crmd.platform.mq.ctg.listener.impl.MqListenerCurrentlyImpl"></bean>
+</beans>

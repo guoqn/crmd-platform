@@ -1,0 +1,33 @@
+package com.ffcs.crmd.platform.mq.rocketmq.impl;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+import com.ffcs.crmd.platform.mq.ConsumeStatus;
+import com.ffcs.crmd.platform.mq.MqMessage;
+import com.ffcs.crmd.platform.mq.producer.api.ITransactionExecuter;
+
+public class MqTransacExecuterImpl implements ITransactionExecuter {
+    
+    private AtomicInteger transactionIndex = new AtomicInteger(1);
+    
+    /**
+     * 发送事物消息：执行本地事物逻辑
+     * 
+     * @author zhongfuhua
+     * @since 2015-08-24 
+     */
+    @Override
+    public ConsumeStatus executeTransaction(MqMessage msg, Object arg) {
+        int value = transactionIndex.getAndIncrement();
+        
+        if (value == 0) {
+            throw new RuntimeException("Could not find db");
+        } else if ((value % 5) == 0) {
+            return ConsumeStatus.FAIL;
+        } else if ((value % 4) == 0) {
+            return ConsumeStatus.SUCCESS;
+        }
+        
+        return ConsumeStatus.FAIL;
+    }
+}

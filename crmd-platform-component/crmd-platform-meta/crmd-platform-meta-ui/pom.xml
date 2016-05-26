@@ -1,0 +1,62 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>crmd-platform-meta</artifactId>
+        <groupId>com.ffcs.crmd.platform</groupId>
+        <version>0.0.3-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>crmd-platform-meta-ui</artifactId>
+    <packaging>jar</packaging>
+    <name>crmd-platform-meta-ui</name>
+    <description>主数据配置Web工程</description>
+    <url>http://maven.apache.org</url>
+    <dependencies>
+        <dependency>
+            <groupId>com.ffcs.crmd.platform</groupId>
+            <artifactId>crmd-platform-meta-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ffcs.crmd.platform</groupId>
+            <artifactId>crmd-platform-meta-control</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- 公共模块 -->
+        <dependency>
+            <groupId>com.ffcs.crmd.platform</groupId>
+            <artifactId>crmd-platform-pub</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ffcs.crmd.platform</groupId>
+            <artifactId>crmd-platform-pub-ui</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ffcs.crmd.platform</groupId>
+            <artifactId>crmd-platform-control</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- 公共模块 end -->
+        <dependency>
+            <groupId>com.ffcs.crmd.platform</groupId>
+            <artifactId>crmd-platform-meta-facade</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ffcs.crmd.platform</groupId>
+            <artifactId>crmd-platform-meta-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- dubbo -->
+        <dependency>
+            <groupId>com.ffcs.crmd.platform</groupId>
+            <artifactId>crmd-platform-dubbo-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>

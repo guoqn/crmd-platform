@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper>
+	<!-- 根据SysClass的java_code获取分片规则 -->
+	<sql id="getShardingRule" type="sql">
+		<![CDATA[
+		select
+			a.sharding_rule_id,
+			a.sharding_rule_name,
+			a.sharding_rule_cd,
+			a.sharding_type,
+			a.sharding_method,
+			a.sharding_id_type,
+			a.sharding_num,
+			a.data_node,
+			a.action_table_name,
+			a.remark,
+			a.area_id,
+			a.region_cd,
+			a.status_cd,
+			a.status_date,
+			a.create_staff,
+			a.create_date,
+			a.update_staff,
+			a.update_date,
+			a.rec_update_date,
+			a.dversion,
+			a.dtimestamp,
+			a.sharding_id
+		from
+			sharding_rule a,
+			table_sharding_rule_rel b
+		where
+			a.sharding_rule_id = b.sharding_rule_id and b.table_name = ?
+		]]>
+	</sql>
+</mapper>

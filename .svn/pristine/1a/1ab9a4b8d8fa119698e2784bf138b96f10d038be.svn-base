@@ -1,0 +1,40 @@
+package com.ffcs.crmd.platform.mq.rocketmq;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.ffcs.crmd.platform.mq.MqException;
+import com.ffcs.crmd.platform.mq.MqMessage;
+import com.ffcs.crmd.platform.mq.query.api.IQuery;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {
+        "classpath*:conf/mq/spring/applicationContext-crm-mq-common.xml" })
+public class TestQuery {
+    
+    @Resource(name="rocketMqQueryImpl")
+    private IQuery rocketMqQueryImpl;
+    
+    @Test
+    public void queryMessageById() throws MqException {
+        MqMessage msg = rocketMqQueryImpl.queryMessageById("868442CC00002A9F00000000007AD6D6");
+        System.out.println(msg);
+    }
+
+    
+    @Test
+    public void queryMessageByKey() throws MqException {
+        List<MqMessage> msgList = rocketMqQueryImpl.queryMessageByKey("Key1", "crm_ds_test", 32, 0,
+            System.currentTimeMillis());
+        for (MqMessage msg : msgList) {
+            System.out.println(msg);
+        }
+    }
+    
+}

@@ -1,0 +1,145 @@
+package com.ffcs.crmd.platform.mq.util;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import com.alibaba.rocketmq.client.producer.SendResult;
+import com.alibaba.rocketmq.common.message.Message;
+import com.alibaba.rocketmq.common.message.MessageExt;
+import com.ffcs.crmd.platform.mq.MqMessage;
+import com.ffcs.crmd.platform.mq.ProdResult;
+import com.ffcs.crmd.platform.mq.SendStatus;
+
+/**
+ * 
+ * 功能说明:消息处理工具类,应用到消息中间件的转化
+ *
+ * @author chenzhi
+ * 
+ * @Date 2015年12月3日 下午8:04:43
+ *
+ *
+ * 版本号  |   作者   |  修改时间   |   修改内容
+ *
+ */
+public final class MessageUtil {
+    
+    protected MessageUtil() {
+        
+    }
+    
+    /**
+     * 
+     * 功能说明:rocketmq的生产反馈结果转化
+     * 
+     * @author ZHONGFUHUA
+     *
+     * @Date 2015年12月3日
+     *
+     */
+    public static ProdResult rocketmq(SendResult sendResult) {
+        ProdResult prodResult = new ProdResult();
+        if (sendResult == null) {
+            return prodResult;
+        }
+        MqMessage mqMessage = new MqMessage();
+        // 转换发送状态
+        switch (sendResult.getSendStatus()) {
+            case SEND_OK:
+                prodResult.setSendStatus(SendStatus.SEND_OK);
+                break;
+            default:
+                prodResult.setSendStatus(SendStatus.UNCERTAIN);
+                break;
+        }
+        mqMessage.setMsgId(sendResult.getMsgId());
+        mqMessage.setTopicName(sendResult.getMessageQueue().getTopic());
+        prodResult.setMqMessage(mqMessage);
+        return prodResult;
+    }
+    
+    /**
+     * 
+     * 功能说明:rocketmq的生产反馈结果转化
+     * 
+     * @param e
+     *          异常对象
+     * @author ZHONGFUHUA
+     *
+     * @Date 2015年12月3日
+     *
+     */
+    public static ProdResult rocketmq(Exception e) {
+        ProdResult prodResult = new ProdResult();
+        MqMessage mqMessage = new MqMessage();
+        prodResult.setSendStatus(SendStatus.SEND_FAIL);
+        prodResult.setErrorMessage(e.getMessage());
+        prodResult.setMqMessage(mqMessage);
+        return prodResult;
+    }
+    
+    /**
+     * 
+     * 功能说明:rocketMq实体转成Mq实体
+     * 
+     * @author ZHONGFUHUA
+     *
+     * @Date 2015年12月3日
+     *
+     */
+    public static MqMessage rocketmq(Message msg) {
+        if (msg == null) {
+            return null;
+        }
+        MqMessage mqMessage = new MqMessage();
+        mqMessage.setTopicName(msg.getTopic());
+        mqMessage.setKeys(msg.getKeys());
+        mqMessage.setTags(msg.getTags());
+        mqMessage.setBody(msg.getBody());
+        
+        if (msg instanceof MessageExt) {
+            MessageExt t = (MessageExt) msg;
+            mqMessage.setMsgId(t.getMsgId());
+            mqMessage.setQueueId(t.getQueueId());
+            mqMessage.setQueueOffset(t.getQueueOffset());
+            mqMessage.setReconsumeTimes(t.getReconsumeTimes());
+            mqMessage.setProperties(msg.getProperties());
+        }
+        return mqMessage;
+    }
+    
+    /**
+     * 
+     * 功能说明:rocketMq实体转成Mq实体
+     * 
+     * @author ZHONGFUHUA
+     *
+     * @Date 2015年12月3日
+     *
+     */
+    public static List<MqMessage> rocketmq(List<MessageExt> msgList) {
+        List<MqMessage> mqList = new ArrayList<MqMessage>();
+        for (Message msg : msgList) {
+            MqMessage mqMessage = rocketmq(msg);
+            mqList.add(mqMessage);
+        }
+        return mqList;
+    }
+    
+    /**
+     * 
+     * 功能说明:创建实例名称 组名+主题+UUID
+     * 
+     * @author ZHONGFUHUA
+     *
+     * @Date 2015年12月3日
+     *
+     */
+    public static String createInstanceName(String groupName, String topicName) {
+        UUID uuid = UUID.randomUUID();
+        String str = uuid.toString().replaceAll("-", "");
+        String instanceName = groupName + "&" + topicName + "&" + str;
+        return instanceName;
+    }
+}

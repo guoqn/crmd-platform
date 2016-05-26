@@ -1,0 +1,3 @@
+时间  @buildtime@
+SVN   @buildnumber@
+MAVEN @pomversion@

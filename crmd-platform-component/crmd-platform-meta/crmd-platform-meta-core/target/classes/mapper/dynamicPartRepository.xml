@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper>
+	<!-- by qryPartType -->
+	<sql id="qryParts" type="sql">
+		<![CDATA[     
+			SELECT  
+				part_id,
+				part_code,
+				part_type,
+				part_name,
+				part_desc,
+				remark,
+				status_cd,
+				create_date,
+				status_date,
+				update_date,
+				sharding_id,
+				create_staff,
+				update_staff,
+				tenant_id
+			 FROM 
+			 	DYNAMIC_PART			 
+			 WHERE  status_cd= ?
+		]]>
+	</sql>
+
+	<!-- by qryPartType -->
+	<sql id="qryPageInfoPart" type="xml">
+		<![CDATA[     
+		   <dataSqlNode>
+		        <type>sqltext</type>
+		        <sqltext>
+		        	SELECT
+						part_id,
+						part_code,
+						part_type,
+						part_name,
+						part_desc,
+						remark,
+						status_cd,
+						create_date,
+						status_date,
+						update_date,
+						sharding_id,
+						create_staff,
+						update_staff,
+						tenant_id
+					FROM
+						dynamic_part
+					WHERE 
+				</sqltext>     
+		        <dataSqlNode>
+		            <type>likeright</type>
+		            <sqltext> and part_name like ? </sqltext> 
+		            <paramTag>partName</paramTag>
+		        </dataSqlNode>
+		        <dataSqlNode>
+		             <type>param</type>
+		             <sqltext> and part_type= ?</sqltext>
+		             <paramTag>partType</paramTag>
+		         </dataSqlNode>
+		         <dataSqlNode>
+		              <type>param</type>
+		              <sqltext> and status_cd= ?</sqltext>
+		              <paramTag>statusCd</paramTag>
+		          </dataSqlNode>
+		  </dataSqlNode>
+		]]>
+	</sql>
+
+	<!-- by getDynamicPartByCode -->
+	<sql id="getDynamicPartByCode" type="sql">
+		<![CDATA[     
+			SELECT  
+				part_id,
+				part_code,
+				part_type,
+				part_name,
+				part_desc,
+				remark,
+				status_cd,
+				create_date,
+				status_date,
+				update_date,
+				sharding_id,
+				create_staff,
+				update_staff,
+				tenant_id
+			 FROM 
+			 	DYNAMIC_PART			 
+			 WHERE  
+			 	part_code =?
+			 AND
+				status_cd= ?
+		]]>
+	</sql>
+
+</mapper>

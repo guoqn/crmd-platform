@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper>
+	<!-- by winCode -->
+	<sql id="qryDynamicEventByBusParam" type="xml">
+		<![CDATA[     
+		   <dataSqlNode>
+		        <type>sqltext</type>
+		        <sqltext>
+		        	SELECT
+						event_id,
+						bus_type,
+						bus_spec,
+						bus_obj_id,
+						bus_region,
+						bus_service,
+						bus_channel,
+						remark,
+						status_cd,
+						create_date,
+						status_date,
+						update_date,
+						sharding_id,
+						create_staff,
+						update_staff,
+						tenant_id
+					FROM
+						dynamic_event
+					WHERE
+				</sqltext>     
+		        <dataSqlNode>
+		            <type>param</type>
+		            <sqltext> and bus_type= ? </sqltext> 
+		            <paramTag>busType</paramTag>
+		        </dataSqlNode>
+		        <dataSqlNode>
+		             <type>param</type>
+		             <sqltext> and bus_spec= ?</sqltext>
+		             <paramTag>busSpec</paramTag>
+		         </dataSqlNode>
+		         <dataSqlNode>
+		              <type>param</type>
+		              <sqltext> and bus_obj_id= ?</sqltext>
+		              <paramTag>busObjId</paramTag>
+		          </dataSqlNode>
+		          <dataSqlNode>
+		              <type>param</type>
+		              <sqltext> and bus_region= ?</sqltext>
+		              <paramTag>busRegion</paramTag>
+		          </dataSqlNode>
+		          <dataSqlNode>
+		              <type>param</type>
+		              <sqltext> and bus_service= ?</sqltext>
+		              <paramTag>busService</paramTag>
+		          </dataSqlNode>
+		          <dataSqlNode>
+		              <type>param</type>
+		              <sqltext> and bus_channel= ?</sqltext>
+		              <paramTag>busChannel</paramTag>
+		          </dataSqlNode>
+		          <dataSqlNode>
+		              <type>param</type>
+		              <sqltext> and status_cd= ?</sqltext>
+		              <paramTag>statusCd</paramTag>
+		          </dataSqlNode>
+		  </dataSqlNode>
+		]]>
+	</sql>
+
+</mapper>

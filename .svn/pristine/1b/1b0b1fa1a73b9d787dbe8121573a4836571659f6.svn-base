@@ -1,0 +1,74 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"
+	import="com.ffcs.crmd.platform.control.utils.JspUtil"%>
+<!DOCTYPE html>
+<html>
+<head>
+<jsp:include page="/app/public/include/header-inc.jsp"></jsp:include>
+<title>动态界面</title>
+</head>
+<body>
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div id="div"></div>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div id="div2"></div>
+		</div>
+	</div>
+
+	<jsp:include page="/app/public/include/footer-inc.jsp"></jsp:include>
+	<script type="text/javascript"
+		src="<%=JspUtil.path(request)%>/app/public/dypage/easy-html/eh-data.js?<%=JspUtil.version()%>"></script>
+	<script type="text/javascript"
+		src="<%=JspUtil.path(request)%>/app/public/dypage/easy-html/eh-parse.js?<%=JspUtil.version()%>"></script>
+	<script type="text/javascript"
+		src="<%=JspUtil.path(request)%>/app/public/dypage/easy-html/eh-style.js?<%=JspUtil.version()%>"></script>
+	<script type="text/javascript"
+		src="<%=JspUtil.path(request)%>/app/public/dypage/easy-html/eh-script.js?<%=JspUtil.version()%>"></script>
+	<script type="text/javascript"
+		src="<%=JspUtil.path(request)%>/app/public/dypage/easy-html/eh-util.js?<%=JspUtil.version()%>"></script>
+	<script type="text/javascript">
+		$(function() {
+			//直接通过winCode;
+			$("#div").win({
+				param : 'WIN-3001',
+				success : function(data) {
+					//设值
+					//事件绑定
+					$("#44").click(function() {
+						console.log(eh.parse.getHtmlValue(data));
+					});
+				}
+			});
+			//通过配置的事件
+			$("#div2").winByEvent({
+				param : {
+					busSpec : 116,
+					busService : 0,
+					busRegion : 0
+				},
+				success : function(data) {
+					eh.parse.setHtmlValue(data, {
+						RecCode : "123",
+						259100000020190 : "1"
+					});
+					//eh.parse.clearHtmlValue(data);
+					//设值
+					/* $("#259100000020190").initSelect({
+						url : "meta/dynamicPageCtrl/getTestList",
+						param : {},
+						success : function() {
+
+						}
+					}); */
+				}
+			});
+
+		});
+	</script>
+</body>
+</html>

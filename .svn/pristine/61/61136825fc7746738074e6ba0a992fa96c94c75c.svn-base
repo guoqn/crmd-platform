@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper>
+
+	<sql id="getAttrValuesByCode" type="sql"><![CDATA[
+			select * from attr_value a where a.attr_id=? and a.status_cd = ?]]>
+	</sql>
+
+</mapper>

@@ -1,0 +1,9 @@
+#NameServer的地址与端口
+namesrvAddr=134.132.66.203:9876;134.132.66.204:9876;134.132.66.205:9876;
+
+#主题
+topic=CTG_MQ_TEST
+
+#消费和生产组
+producer.group=CTG_MQ_TEST_PRODUCER
+consumer.group=CTG_MQ_TEST_CONSUMER

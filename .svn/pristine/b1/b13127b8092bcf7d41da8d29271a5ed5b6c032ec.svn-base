@@ -1,0 +1,44 @@
+.row {
+    margin-top: 20px;
+}
+
+.panel-body {
+    /*min-height: 280px;*/
+}
+
+.tab-content {
+    padding: 8px 0;
+}
+
+
+/*自定义表格*/
+table.tbCustom {border-top:1px solid #dddddd;border-left:1px solid #dddddd;font-size:14px;}
+table.tbCustom th{background:#f3f3f3;font-weight:bold;color:#333;text-align:center;white-space:nowrap;}/*行头文字换行*/
+table.tbCustom  td{ text-align:center;color:#333;white-space:normal;word-wrap:break-word;word-break:break-all;}/*英文数据换行*/
+table.tbCustom th,table.tbCustom td{line-height:33px;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd}
+table.tree td{text-align:left;padding-left:10px}
+table.tbCustom th i{font-style:normal; font-size:12px; font-weight:lighter;color:#999;}
+table.tbCustom th.leftdotted,table.tbCustom td.leftdotted{border-right:1px dashed #dddddd;}
+
+table.tbCustom td a{ width:70px; padding:5px 10px; line-height:36px;color:white;	-moz-border-radius: 5px;      /* Gecko browsers */
+    -webkit-border-radius: 5px;   /* Webkit browsers */
+    border-radius: 5px;            /* W3C syntax */}
+table.tbCustom td a.detail{color:#3888CA}
+table.tbCustom td a.detail:hover{text-decoration:underline}
+table.tbCustom td a.blue{background:#3f9eeb;}
+table.tbCustom td a.red{background:red;}
+table.tbCustom td a.green{background:green;}
+table.tbCustom td a.orange{background:#ed0004;}
+.green{width:20%;background:green;height:22px; padding-left:10px;color:white}
+.orange{width:30%;background:orange;height:22px; padding-left:10px;color:white}
+.red{width:40%;background:red;height:22px; padding-left:10px;color:white}
+table.tbCustom td a.cred{color:red;}
+table.tbCustom td a.cgreen{color:green;}
+table.tbCustom td a.cblue{color:blue;}
+table.tbCustom td.totle{text-align:right;padding-right:30px;font-size:1.4em}
+table.tbCustom td a.paddin{padding:0}
+table.tbCustom td a.searchselect{color:#FF8800;}
+table.tbCustom td a:hover.searchselect{color:#FF8800;}
+table.tbCustom td a.tblue,table.tbCustom td a.moreblue{  color: #05a; padding:0;}
+table.tbCustom td a.tblue:hover,table.tbCustom td a.moreblue:hover{color:#f00;}
+table.tbCustom td a.moreblue{float:left; display:block; width:auto; padding-left:15px;}

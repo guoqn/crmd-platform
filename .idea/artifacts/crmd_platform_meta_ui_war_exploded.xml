@@ -1,0 +1,172 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="crmd-platform-meta-ui:war exploded">
+    <output-path>$PROJECT_DIR$/crmd-platform-component/crmd-platform-meta/crmd-platform-meta-ui/target/crmd-platform-meta-ui</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="crmd-platform-meta-ui" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="archive" name="crmd-platform-meta-api-0.0.3-SNAPSHOT.jar">
+            <element id="module-output" name="crmd-platform-meta-api" />
+          </element>
+          <element id="archive" name="crmd-platform-core-ddd-api-0.0.3-SNAPSHOT.jar">
+            <element id="module-output" name="crmd-platform-core-ddd-api" />
+          </element>
+          <element id="archive" name="crmd-platform-core-dao-api-0.0.3-SNAPSHOT.jar">
+            <element id="module-output" name="crmd-platform-core-dao-api" />
+          </element>
+          <element id="library" level="project" name="Maven: axis:axis:1.4" />
+          <element id="library" level="project" name="Maven: org.apache.axis:axis-jaxrpc:1.4" />
+          <element id="library" level="project" name="Maven: org.apache.axis:axis-saaj:1.4" />
+          <element id="library" level="project" name="Maven: axis:axis-wsdl4j:1.5.1" />
+          <element id="library" level="project" name="Maven: commons-logging:commons-logging:1.2" />
+          <element id="library" level="project" name="Maven: commons-discovery:commons-discovery:0.2" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.2.3" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.2.3" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.2.3" />
+          <element id="archive" name="crmd-platform-meta-control-0.0.3-SNAPSHOT.jar">
+            <element id="module-output" name="crmd-platform-meta-control" />
+          </element>
+          <element id="archive" name="crmd-platform-pub-0.0.3-SNAPSHOT.jar">
+            <element id="module-output" name="crmd-platform-pub" />
+          </element>
+          <element id="archive" name="crmd-platform-base-0.0.3-SNAPSHOT.jar">
+            <element id="module-output" name="crmd-platform-base" />
+          </element>
+          <element id="library" level="project" name="Maven: com.ctg.itrdc.platform:ctg-itrdc-platform-common:1.0-SNAPSHOT" />
+          <element id="library" level="project" name="Maven: org.slf4j:jcl-over-slf4j:1.7.7" />
+          <element id="library" level="project" name="Maven: org.slf4j:jul-to-slf4j:1.7.7" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-log4j12:1.7.12" />
+          <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.3.2" />
+          <element id="library" level="project" name="Maven: commons-io:commons-io:2.4" />
+          <element id="library" level="project" name="Maven: org.apache.commons:commons-compress:1.9" />
+          <element id="library" level="project" name="Maven: uk.com.robust-it:cloning:1.9.1" />
+          <element id="library" level="project" name="Maven: org.objenesis:objenesis:2.1" />
+          <element id="library" level="project" name="Maven: commons-httpclient:commons-httpclient:3.1" />
+          <element id="library" level="project" name="Maven: com.esotericsoftware:kryo:3.0.3" />
+          <element id="library" level="project" name="Maven: com.esotericsoftware:reflectasm:1.10.1" />
+          <element id="library" level="project" name="Maven: com.esotericsoftware:minlog:1.3.0" />
+          <element id="library" level="project" name="Maven: de.ruedigermoeller:fst:2.24" />
+          <element id="library" level="project" name="Maven: org.javassist:javassist:3.18.1-GA" />
+          <element id="library" level="project" name="Maven: com.thoughtworks.xstream:xstream:1.4.8" />
+          <element id="library" level="project" name="Maven: xmlpull:xmlpull:1.1.3.1" />
+          <element id="library" level="project" name="Maven: xpp3:xpp3_min:1.1.4c" />
+          <element id="library" level="project" name="Maven: com.alibaba:fastjson:1.2.5" />
+          <element id="library" level="project" name="Maven: org.apache.poi:poi:3.10-FINAL" />
+          <element id="library" level="project" name="Maven: net.sf.jxls:jxls-core:1.0.5" />
+          <element id="library" level="project" name="Maven: commons-digester:commons-digester:2.0" />
+          <element id="library" level="project" name="Maven: org.apache.commons:commons-jexl:2.0.1" />
+          <element id="library" level="project" name="Maven: org.apache.poi:poi-ooxml:3.9" />
+          <element id="library" level="project" name="Maven: org.apache.poi:poi-ooxml-schemas:3.9" />
+          <element id="library" level="project" name="Maven: org.apache.xmlbeans:xmlbeans:2.3.0" />
+          <element id="library" level="project" name="Maven: dom4j:dom4j:1.6.1" />
+          <element id="library" level="project" name="Maven: xml-apis:xml-apis:1.0.b2" />
+          <element id="library" level="project" name="Maven: org.codehaus.castor:castor-codegen:1.3.3" />
+          <element id="library" level="project" name="Maven: org.codehaus.castor:castor-core:1.3.3" />
+          <element id="library" level="project" name="Maven: org.codehaus.castor:castor-xml:1.3.3" />
+          <element id="library" level="project" name="Maven: org.codehaus.castor:castor-xml-schema:1.3.3" />
+          <element id="library" level="project" name="Maven: commons-lang:commons-lang:2.6" />
+          <element id="library" level="project" name="Maven: com.ctg.itrdc.platform:ctg-itrdc-platform-pub:1.0-SNAPSHOT" />
+          <element id="library" level="project" name="Maven: com.ctg.itrdc.platform:ctg-itrdc-platform-clientapi:1.0-SNAPSHOT" />
+          <element id="library" level="project" name="Maven: com.ctg.itrdc.mq:ctg-mq-api:1.1.1" />
+          <element id="library" level="project" name="Maven: com.ctg.itrdc.cache:ctg-cache-serviceapi:0.0.3-SNAPSHOT" />
+          <element id="library" level="project" name="Maven: com.ctg.itrdc.platform:ctg-itrdc-platform-efclientapi:0.0.1-SNAPSHOT" />
+          <element id="library" level="project" name="Maven: com.ctg.itrdc.event:ctg-event-client-api:0.1.0-SNAPSHOT" />
+          <element id="library" level="project" name="Maven: com.google.code.gson:gson:2.3.1" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-tx:4.1.6.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-context-support:4.1.6.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-jdbc:4.1.6.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-web:4.1.6.RELEASE" />
+          <element id="library" level="project" name="Maven: javax.persistence:persistence-api:1.0.2" />
+          <element id="library" level="project" name="Maven: com.alibaba:druid:1.0.17" />
+          <element id="library" level="project" name="Maven: javax.servlet:javax.servlet-api:3.1.0" />
+          <element id="library" level="project" name="Maven: javax.servlet:jstl:1.2" />
+          <element id="library" level="project" name="Maven: javax.servlet.jsp:jsp-api:2.1" />
+          <element id="archive" name="crmd-platform-ddl-api-0.0.3-SNAPSHOT.jar">
+            <element id="module-output" name="crmd-platform-ddl-api" />
+          </element>
+          <element id="library" level="project" name="Maven: com.ctg.udal:ctg-udal-ddl-api:1.0-SNAPSHOT" />
+          <element id="library" level="project" name="Maven: org.apache.commons:commons-pool2:2.3" />
+          <element id="library" level="project" name="Maven: com.ffcs.crmd:crmd-lmax:0.0.3-SNAPSHOT" />
+          <element id="library" level="project" name="Maven: joda-time:joda-time:2.9" />
+          <element id="library" level="project" name="Maven: com.google.guava:guava:19.0" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.12" />
+          <element id="library" level="project" name="Maven: com.lmax:disruptor:3.3.2" />
+          <element id="library" level="project" name="Maven: io.dropwizard.metrics:metrics-core:3.1.2" />
+          <element id="library" level="project" name="Maven: io.dropwizard.metrics:metrics-healthchecks:3.1.2" />
+          <element id="library" level="project" name="Maven: io.dropwizard.metrics:metrics-jvm:3.1.2" />
+          <element id="library" level="project" name="Maven: io.dropwizard.metrics:metrics-servlet:3.1.2" />
+          <element id="library" level="project" name="Maven: io.dropwizard.metrics:metrics-servlets:3.1.2" />
+          <element id="library" level="project" name="Maven: io.dropwizard.metrics:metrics-json:3.1.2" />
+          <element id="library" level="project" name="Maven: commons-beanutils:commons-beanutils:1.9.2" />
+          <element id="library" level="project" name="Maven: commons-collections:commons-collections:3.2.1" />
+          <element id="archive" name="crmd-platform-control-0.0.3-SNAPSHOT.jar">
+            <element id="module-output" name="crmd-platform-control" />
+          </element>
+          <element id="library" level="project" name="Maven: org.springframework:spring-webmvc:4.1.6.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-beans:4.1.6.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-context:4.1.6.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-core:4.1.6.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-expression:4.1.6.RELEASE" />
+          <element id="library" level="project" name="Maven: org.aspectj:aspectjrt:1.8.5" />
+          <element id="library" level="project" name="Maven: org.aspectj:aspectjweaver:1.8.5" />
+          <element id="library" level="project" name="Maven: cglib:cglib:3.1" />
+          <element id="library" level="project" name="Maven: org.ow2.asm:asm:4.2" />
+          <element id="archive" name="crmd-platform-meta-facade-0.0.3-SNAPSHOT.jar">
+            <element id="module-output" name="crmd-platform-meta-facade" />
+          </element>
+          <element id="library" level="project" name="Maven: org.springframework:spring-test:4.1.6.RELEASE" />
+          <element id="archive" name="crmd-platform-core-ddd-facade-0.0.3-SNAPSHOT.jar">
+            <element id="module-output" name="crmd-platform-core-ddd-facade" />
+          </element>
+          <element id="archive" name="crmd-platform-core-dao-facade-0.0.3-SNAPSHOT.jar">
+            <element id="module-output" name="crmd-platform-core-dao-facade" />
+          </element>
+          <element id="archive" name="crmd-platform-data-0.0.3-SNAPSHOT.jar">
+            <element id="module-output" name="crmd-platform-data" />
+          </element>
+          <element id="library" level="project" name="Maven: com.ctg.itrdc.platform:ctg-itrdc-platform-data:1.0-SNAPSHOT" />
+          <element id="archive" name="crmd-platform-idempotency-api-0.0.3-SNAPSHOT.jar">
+            <element id="module-output" name="crmd-platform-idempotency-api" />
+          </element>
+          <element id="archive" name="crmd-platform-meta-core-0.0.3-SNAPSHOT.jar">
+            <element id="module-output" name="crmd-platform-meta-core" />
+          </element>
+          <element id="archive" name="crmd-platform-core-ddd-service-0.0.3-SNAPSHOT.jar">
+            <element id="module-output" name="crmd-platform-core-ddd-service" />
+          </element>
+          <element id="archive" name="crmd-platform-core-dao-service-0.0.3-SNAPSHOT.jar">
+            <element id="module-output" name="crmd-platform-core-dao-service" />
+          </element>
+          <element id="archive" name="crmd-platform-ddl-core-0.0.3-SNAPSHOT.jar">
+            <element id="module-output" name="crmd-platform-ddl-core" />
+          </element>
+          <element id="library" level="project" name="Maven: com.ctg.itrdc.platform:ctg-itrdc-platform-daoclient:1.0-SNAPSHOT" />
+          <element id="library" level="project" name="Maven: com.ctg.udal:ctg-udal-ddl-client:1.0-SNAPSHOT" />
+          <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.32" />
+          <element id="archive" name="crmd-platform-dubbo-api-0.0.3-SNAPSHOT.jar">
+            <element id="module-output" name="crmd-platform-dubbo-api" />
+          </element>
+          <element id="library" level="project" name="Maven: com.alibaba:dubbo:2.8.4" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-aop:4.1.6.RELEASE" />
+          <element id="library" level="project" name="Maven: aopalliance:aopalliance:1.0" />
+          <element id="library" level="project" name="Maven: io.netty:netty:3.6.6.Final" />
+          <element id="library" level="project" name="Maven: log4j:log4j:1.2.17" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpclient:4.2.1" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpcore:4.2.1" />
+          <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.10" />
+          <element id="library" level="project" name="Maven: commons-pool:commons-pool:1.6" />
+          <element id="library" level="project" name="Maven: com.101tec:zkclient:0.7" />
+          <element id="library" level="project" name="Maven: org.apache.curator:curator-framework:2.9.1" />
+          <element id="library" level="project" name="Maven: org.apache.curator:curator-client:2.9.1" />
+          <element id="library" level="project" name="Maven: org.apache.zookeeper:zookeeper:3.4.6" />
+        </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/crmd-platform-component/crmd-platform-meta/crmd-platform-meta-ui/target/crmd-platform-meta-ui/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="crmd-platform-meta-ui/web/Web" />
+    </root>
+  </artifact>
+</component>

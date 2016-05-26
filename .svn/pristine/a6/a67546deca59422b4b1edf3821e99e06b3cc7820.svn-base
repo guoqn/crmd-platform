@@ -1,0 +1,502 @@
+package com.ffcs.crmd.platform.data.dao.impl;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import com.ffcs.crmd.platform.pub.utils.sql.translater.PageSqlEntity;
+import com.ffcs.crmd.platform.pub.utils.sql.translater.SqlTranslaterUtil;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.stereotype.Service;
+
+import com.ctg.itrdc.platform.common.entity.PageInfo;
+import com.ctg.itrdc.platform.common.exception.RtManagerException;
+import com.ctg.itrdc.platform.common.log.ILogger;
+import com.ctg.itrdc.platform.common.log.LoggerFactory;
+import com.ctg.itrdc.platform.common.utils.type.NumberUtils;
+import com.ctg.itrdc.platform.data.dao.impl.BaseDaoImpl;
+import com.ctg.itrdc.platform.pub.entity.BaseEntity;
+import com.ctg.itrdc.platform.pub.sqlext.SqlRegister;
+import com.ctg.itrdc.platform.pub.sqlext.SqlRegisterFactory;
+import com.ffcs.crmd.platform.data.dao.ICrmBaseCacheDao;
+import com.ffcs.crmd.platform.data.dao.ICrmBaseDao;
+import com.ffcs.crmd.platform.data.sqlext.impl.CrmSqlRegister;
+import com.ffcs.crmd.platform.idempotency.api.factory.IdempotencyDataServiceFactory;
+import com.ffcs.crmd.platform.idempotency.api.service.IIdempotencyDataService;
+import com.ffcs.crmd.platform.meta.daaction.DaActionSupport;
+import com.ffcs.crmd.platform.meta.exception.MetaException;
+import com.ffcs.crmd.platform.meta.intf.IMetaEntity;
+import com.ffcs.crmd.platform.meta.provider.IExampleQuery;
+import com.ffcs.crmd.platform.meta.provider.ITableMetaData;
+import com.ffcs.crmd.platform.pub.ex.ExceptionUtils;
+import com.ffcs.crmd.platform.pub.vo.RetVo;
+
+@Service("crmBaseDao")
+public class CrmBaseDaoImpl extends BaseDaoImpl implements ICrmBaseCacheDao, ICrmBaseDao {
+
+    protected ILogger log = LoggerFactory.getLogger(CrmBaseDaoImpl.class);
+
+    protected SqlRegister sqlRegister = SqlRegisterFactory.getSqlRegister();
+
+    private IIdempotencyDataService dataService = IdempotencyDataServiceFactory
+        .getIdempotencyDataService();
+
+    /**
+     * 向仓库注册SQL语句。
+     *
+     * @param sqlName
+     *            SQL语句名称
+     * @param sql
+     *            SQL语句
+     */
+    protected void registerSql(String sqlName, String sql) {
+        sqlRegister.registerSql(sqlName, sql);
+    }
+
+    @Override
+    public int jdbcQueryForInt(String sql) {
+        return super.jdbcQueryForInt(sql);
+    }
+
+    protected String getSqlByName(String sqlName) {
+        String hql = sqlRegister.getSql(sqlName);
+        if (hql == null) {
+            throw new RtManagerException("无法根据名称：@sqlName，查找sql定义", this.getClass(), "getSqlByName",
+                "sqlNull", "@sqlName", sqlName);
+        }
+        return hql;
+    }
+
+    @Override
+    public int jdbcQueryForIntByName(String name, Object... args) {
+        String sql = this.getSqlByName(name);
+        return jdbcQueryForInt(sql, args);
+    }
+
+    @Override
+    public int jdbcQueryForIntByName(String name, Object[] args, int[] argTypes) {
+        String sql = this.getSqlByName(name);
+        return jdbcQueryForInt(sql, args, argTypes);
+    }
+
+    @Override
+    public int jdbcQueryForIntByName(String name) {
+        String sql = this.getSqlByName(name);
+        return jdbcQueryForInt(sql);
+    }
+
+    @Override
+    public <E> List<E> jdbcFindListByName(String name, Class<E> elementType) {
+        String sql = this.getSqlByName(name);
+        return jdbcFindList(sql, elementType, new ArrayList<Object>());
+    }
+
+    @Override
+    public <E> List<E> jdbcFindListByName(String name, Class<E> elementType, List<Object> params) {
+        String sql = this.getSqlByName(name);
+        return jdbcFindList(sql, elementType, params);
+    }
+
+    @Override
+    public int jdbcGetSizeByName(String name, List<Object> params) {
+        String sql = this.getSqlByName(name);
+        return jdbcGetSize(sql, params);
+    }
+
+    @Override
+    public <E> PageInfo jdbcFindPageInfoByName(String name, Class<E> elementType, int currentPage,
+        int perPageNum) {
+        String sql = this.getSqlByName(name);
+        return jdbcFindPageInfo(sql, elementType, new ArrayList<Object>(), currentPage, perPageNum);
+    }
+
+    @Override
+    public <E> PageInfo jdbcFindPageInfoByName(String name, Class<E> elementType,
+        List<Object> params, int currentPage, int perPageNum) {
+        String sql = this.getSqlByName(name);
+        return jdbcFindPageInfo(sql, elementType, params, currentPage, perPageNum);
+    }
+
+    @Override
+    public long jdbcQueryForLongByName(String name, Object... args) {
+        String sql = this.getSqlByName(name);
+        return jdbcQueryForLong(sql, args);
+    }
+
+    @Override
+    public long jdbcQueryForLongByName(String name, Object[] args, int[] argTypes) {
+        String sql = this.getSqlByName(name);
+        return jdbcQueryForLong(sql, args, argTypes);
+    }
+
+    @Override
+    public long jdbcQueryForLongByName(String name) {
+        String sql = this.getSqlByName(name);
+        return jdbcQueryForLong(sql);
+    }
+
+    @Override
+    public <E> List<E> jdbcFindListByName(String name, Class<E> elementType, boolean isCache) {
+        String sql = this.getSqlByName(name);
+        return jdbcFindList(sql, elementType, new ArrayList<Object>(), isCache);
+    }
+
+    @Override
+    public <E> List<E> jdbcFindListByName(String name, Class<E> elementType, List<Object> params,
+        boolean isCache) {
+        String sql = this.getSqlByName(name);
+        return jdbcFindList(sql, elementType, params, isCache);
+    }
+
+    @Override
+    public <E> PageInfo jdbcFindPageInfoByName(String name, Class<E> elementType, int currentPage,
+        int perPageNum, boolean isCache) {
+        String sql = this.getSqlByName(name);
+        return jdbcFindPageInfo(sql, elementType, new ArrayList<Object>(), currentPage, perPageNum,
+            isCache);
+    }
+
+    @Override
+    public <E> PageInfo jdbcFindPageInfoByName(String name, Class<E> elementType,
+        List<Object> params, int currentPage, int perPageNum, boolean isCache) {
+        String sql = this.getSqlByName(name);
+        return jdbcFindPageInfo(sql, elementType, params, currentPage, perPageNum, isCache);
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public <T extends BaseEntity> int insert(T entity) {
+        // 正在执行分布式事务
+        if (dataService.isSysWorkRunning()) {
+            return dataService.insert(entity);
+        } else {
+            RetVo vo = DaActionSupport.doSaveAction(entity);
+            return NumberUtils.nullToIntegerZero(vo.getObject());
+        }
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public <T extends BaseEntity> int updateByPrimaryKey(T entity) {
+        // 正在执行分布式事务
+        if (dataService.isSysWorkRunning()) {
+            return dataService.updateByPrimaryKey(entity);
+        } else {
+            RetVo vo = DaActionSupport.doUpdateAction(entity);
+            return NumberUtils.nullToIntegerZero(vo.getObject());
+        }
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public <T extends BaseEntity> int deleteByPrimaryKey(T entity) {
+        // 正在执行分布式事务
+        if (dataService.isSysWorkRunning()) {
+            return dataService.deleteByPrimaryKey(entity);
+        } else {
+            RetVo vo = DaActionSupport.doDeleteAction(entity);
+            return NumberUtils.nullToIntegerZero(vo.getObject());
+        }
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public <T extends BaseEntity> int updateSelectiveByPrimaryKey(T entity) {
+        // 正在执行分布式事务
+        if (dataService.isSysWorkRunning()) {
+            return dataService.updateSelectiveByPrimaryKey(entity);
+        } else {
+            return super.updateSelectiveByPrimaryKey(entity);
+        }
+    }
+
+    @Override
+    public <E> List<E> queryListByName(String name, Class<E> elementType,
+        Map<String, Object> params) {
+        if (sqlRegister instanceof CrmSqlRegister) {
+            // CrmSqlRegister 才支持
+            Object[] obj = ((CrmSqlRegister) sqlRegister).getSql(name, params);
+            if (obj != null && obj.length == 2) {
+                return this.jdbcFindList(obj[0].toString(), elementType, (List<Object>) obj[1]);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public <E> PageInfo<E> queryPageInfoByName(String name, Class<E> elementType,
+        Map<String, Object> params, int page, int pageSize) {
+        if (sqlRegister instanceof CrmSqlRegister) {
+            // CrmSqlRegister 才支持
+            Object[] obj = ((CrmSqlRegister) sqlRegister).getSql(name, params);
+            if (obj != null && obj.length == 2) {
+                return this
+                    .jdbcFindPageInfo(obj[0].toString(), elementType, (List<Object>) obj[1], page,
+                        pageSize);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public <E> List<E> queryListByName(String name, Class<E> elementType,
+        Map<String, Object> params, boolean isCache) {
+        if (sqlRegister instanceof CrmSqlRegister) {
+            // CrmSqlRegister 才支持
+            Object[] obj = ((CrmSqlRegister) sqlRegister).getSql(name, params);
+            if (obj != null && obj.length == 2) {
+                return this
+                    .jdbcFindList(obj[0].toString(), elementType, (List<Object>) obj[1], isCache);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public <E> PageInfo<E> queryPageInfoByName(String name, Class<E> elementType,
+        Map<String, Object> params, int page, int pageSize, boolean isCache) {
+        if (sqlRegister instanceof CrmSqlRegister) {
+            // CrmSqlRegister 才支持
+            Object[] obj = ((CrmSqlRegister) sqlRegister).getSql(name, params);
+            if (obj != null && obj.length == 2) {
+                return this
+                    .jdbcFindPageInfo(obj[0].toString(), elementType, (List<Object>) obj[1], page,
+                        pageSize, isCache);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public int queryForIntByName(String name, Map<String, Object> params) {
+        if (sqlRegister instanceof CrmSqlRegister) {
+            // CrmSqlRegister 才支持
+            Object[] obj = ((CrmSqlRegister) sqlRegister).getSql(name, params);
+            if (obj != null && obj.length == 2) {
+                List<Object> pList = (List<Object>) obj[1];
+                Object[] array = null;
+                if (pList != null && pList.size() > 0) {
+                    array = new Object[pList.size()];
+                    pList.toArray(array);
+                }
+                return this.jdbcQueryForInt(obj[0].toString(), array);
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public long queryForLongByName(String name, Map<String, Object> params) {
+        if (sqlRegister instanceof CrmSqlRegister) {
+            // CrmSqlRegister 才支持
+            Object[] obj = ((CrmSqlRegister) sqlRegister).getSql(name, params);
+            if (obj != null && obj.length == 2) {
+                List<Object> pList = (List<Object>) obj[1];
+                Object[] array = null;
+                if (pList != null && pList.size() > 0) {
+                    array = new Object[pList.size()];
+                    pList.toArray(array);
+                }
+                return this.jdbcQueryForLong(obj[0].toString(), array);
+            }
+        }
+        return 0L;
+    }
+
+    @Override
+    public <T extends BaseEntity> void jdbcBatchInsert(List<T> entitys) {
+        ExceptionUtils.throwEx("not support this method");
+        // super.jdbcBatchInsert(entitys);
+    }
+
+    @Override
+    public <T extends BaseEntity> int[] jdbcBatchUpdateByPrimaryKey(List<T> entitys) {
+        ExceptionUtils.throwEx("not support this method");
+        return null;
+        // return super.jdbcBatchUpdateByPrimaryKey(entitys);
+    }
+
+    @Override
+    public <T extends BaseEntity> void jdbcBatchDeleteByPrimary(List<T> entitys) {
+        ExceptionUtils.throwEx("not support this method");
+        // super.jdbcBatchDeleteByPrimary(entitys);
+    }
+
+    @Override
+    public <T extends BaseEntity> T selectByPrimaryKey(T entity, boolean isCache) {
+        if (entity instanceof IMetaEntity && ((IMetaEntity)entity).isUseMeta()) {
+            T t = null;
+            if (isCache) {
+                t = (T) cacheEntityService.getObject(entity.getId(), entity.getClass());
+                if (t != null) {
+                    return t;
+                }
+            }
+            ITableMetaData tableMetaData = ((IMetaEntity) entity).readTableMeta();
+            if (tableMetaData == null) {
+                ExceptionUtils.throwEx(new MetaException("table Meta is not exists"));
+            }
+            IExampleQuery query = tableMetaData.getExampleQuery((IMetaEntity) entity);
+            String sql = query.getSql();
+            Object[] idAndShardingIdColumnsValueArray = query.getParams().toArray();
+            log.debug(sql);
+            // t = (T) jdbcTemplate.queryForObject(sql,
+            // idAndShardingIdColumnsValueArray,
+            // BeanPropertyRowMapper.newInstance(entity.getClass()));
+            List<T> list = (List<T>) this.jdbcFindList(sql, entity.getClass(),
+                Arrays.asList(idAndShardingIdColumnsValueArray));
+            if (list == null || list.size() <= 0) {
+                log.warn("query:{},args:{},expected {}, actual {}", sql,
+                    idAndShardingIdColumnsValueArray, 1, 0);
+            } else if (list.size() >= 1) {
+                if (list.size() > 1) {
+                    log.warn("query:{},args:{},expected {}, actual {}", sql,
+                        idAndShardingIdColumnsValueArray, 1, list.size());
+                }
+                t = list.get(0);
+            }
+
+            if (isCache && t != null) {
+                cacheEntityService.putObject(t.getId(), t);
+            }
+            return t;
+        } else {
+            return super.selectByPrimaryKey(entity, isCache);
+        }
+
+    }
+
+    @Override
+    public <T extends BaseEntity> List<T> selectByExample(T entity, boolean isCache) {
+        if (entity instanceof IMetaEntity && ((IMetaEntity)entity).isUseMeta()) {
+            ITableMetaData tableMetaData = ((IMetaEntity) entity).readTableMeta();
+            if (tableMetaData == null) {
+                ExceptionUtils.throwEx(new MetaException("table Meta is not exists"));
+            }
+            IExampleQuery query = tableMetaData.getExampleQuery((IMetaEntity) entity);
+            String sql = query.getSql();
+            Object[] params = query.getParams().toArray();
+            log.debug(sql);
+            List<T> list = (List<T>) getJdbcTemplate()
+                .query(sql, params, BeanPropertyRowMapper.newInstance(entity.getClass()));
+            if (isCache && cacheHandler != null) {
+                list = cacheHandler.doHandle(list);
+            }
+            return list;
+        } else {
+            return super.selectByExample(entity, isCache);
+        }
+    }
+
+    @Override
+    public <T extends BaseEntity> T jdbcSelectFirstRow(T entity, boolean isCache) {
+        if (entity instanceof IMetaEntity && ((IMetaEntity)entity).isUseMeta()) {
+            ITableMetaData tableMetaData = ((IMetaEntity) entity).readTableMeta();
+            if (tableMetaData == null) {
+                ExceptionUtils.throwEx(new MetaException("table Meta is not exists"));
+            }
+            IExampleQuery query = tableMetaData.getExampleQuery((IMetaEntity) entity);
+            String sql = query.getSql();
+            List<Object> params = query.getParams();
+            log.debug(sql);
+
+            List<T> rs = (List<T>) jdbcFindList(sql, entity.getClass(), params);
+            if (rs != null && rs.size() > 0) {
+                T t = rs.get(0);
+                if (isCache && cacheHandler != null) {
+                    t = cacheHandler.doHandle(t);
+                }
+                return t;
+            }
+            return null;
+        } else {
+            return super.jdbcSelectFirstRow(entity, isCache);
+        }
+    }
+
+    @Override
+    public <T> PageInfo<T> jdbcFindPageInfo(String sql, Class<T> elementType, List<Object> params,
+        int currentPage, int perPageNum, boolean isCache) {
+        int pageSize = perPageNum;
+        int page = currentPage;
+        if (pageSize == 0) {
+            pageSize = PageInfo.DEFAULT_PAGE_SIZE;
+        }
+        if (currentPage == 0) {
+            page = 1;
+        }
+        int first = (page - 1) * pageSize;
+
+//        Object[] array = null;
+//        // 构建分页
+//        String pageSql = PARSE.getPageSql(sql);
+//        List<Object> pageParams = null;
+//        if (params != null) {
+//            pageParams = new ArrayList<Object>(params);
+//        } else {
+//            pageParams = new ArrayList<Object>();
+//        }
+//        pageParams.addAll(PARSE.getPageParam(page, pageSize));
+//        if (pageParams != null) {
+//            array = new Object[pageParams.size()];
+//            pageParams.toArray(array);
+//        }
+//
+//        List<Object> paramArray = new ArrayList<Object>();
+//        for (Object pa : array) {
+//            paramArray.add(pa);
+//        }
+//        String pageSql = PagerUtils.limit(sql, DialectUtils.getDialect().dialect(),first,pageSize);
+
+        PageSqlEntity pageSqlEntity = SqlTranslaterUtil.getPageSql(sql,first,pageSize);
+
+        if (pageSqlEntity.getPageParams().length > 0) {
+            for (Object obj : pageSqlEntity.getPageParams()) {
+                params.add(obj);
+            }
+        }
+
+        List<T> list = this.jdbcFindList(pageSqlEntity.getPageSql(), elementType, params);
+        if (isCache && cacheHandler != null) {
+            list = cacheHandler.doHandle(list);
+        }
+        // 查询总量
+        final int totalCounts = this.jdbcGetSize(sql, params);
+        int totalPages = totalCounts / pageSize;
+        if ((totalCounts % pageSize) > 0) {
+            totalPages += 1;
+        }
+
+        final PageInfo<T> pageInfo = new PageInfo<T>(list);
+        pageInfo.setTotal(totalCounts);
+        pageInfo.setPages(totalPages);
+        pageInfo.setNavigatePages(totalPages);
+        pageInfo.setPageNum(page);
+        pageInfo.setPageSize(pageSize);
+        // 由于结果是>startRow的，所以实际的需要+1
+        if (list.size() == 0) {
+            pageInfo.setStartRow(0);
+            pageInfo.setEndRow(0);
+        } else {
+            pageInfo.setStartRow(first + 1);
+            pageInfo.setEndRow(first + list.size());
+        }
+        pageInfo.setList(list);
+        pageInfo.calcAndJudge();
+
+        return pageInfo;
+    }
+
+
+    @Override
+    public int jdbcGetSize(String sql, List<Object> params) {
+        final String totalCountSql = SqlTranslaterUtil.getCountSql(sql);
+
+        Object[] array = null;
+        if (params != null) {
+            array = new Object[params.size()];
+            params.toArray(array);
+        }
+        return this.jdbcQueryForInt(totalCountSql, array);    }
+}

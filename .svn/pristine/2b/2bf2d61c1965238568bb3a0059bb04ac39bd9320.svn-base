@@ -1,0 +1,330 @@
+package com.ffcs.crmd.platform.mq.rocketmq.consumer.impl;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+
+import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
+import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
+import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
+import com.alibaba.rocketmq.client.consumer.listener.ConsumeOrderlyContext;
+import com.alibaba.rocketmq.client.consumer.listener.ConsumeOrderlyStatus;
+import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
+import com.alibaba.rocketmq.client.consumer.listener.MessageListenerOrderly;
+import com.alibaba.rocketmq.client.exception.MQClientException;
+import com.alibaba.rocketmq.client.log.ClientLogger;
+import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
+import com.alibaba.rocketmq.common.message.MessageExt;
+import com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel;
+import com.ffcs.crmd.platform.mq.ConsumeStatus;
+import com.ffcs.crmd.platform.mq.MqException;
+import com.ffcs.crmd.platform.mq.MqMessage;
+import com.ffcs.crmd.platform.mq.consumer.api.IMessageListener;
+import com.ffcs.crmd.platform.mq.rocketmq.util.MessageUtil;
+
+/**
+ * 
+ * 功能说明:RocketMq基本消费者监听
+ *
+ * @author ZHONGFUHUA
+ * 
+ * @Date 2015年10月30日 上午11:54:08
+ *
+ *
+ * 版本号  |   作者   |  修改时间   |   修改内容
+ *
+ */
+public class ListenerConsumer extends AbstractConsumer {
+    /**
+     * 日志
+     */
+    private final Logger          log              = ClientLogger.getLog();
+    
+    /**
+     * 是否为有序监听器
+     */
+    private boolean               orderly          = false;
+    
+    /**
+     * 监听器
+     */
+    private IMessageListener      messageListener  = null;
+    
+    /**
+     * 消费者实例
+     */
+    private DefaultMQPushConsumer consumer         = null;
+    
+    /**
+     * 单次批量消费最大数
+     */
+    private int                   batchSize        = 1;
+    
+    /**
+     * 消费最小线程数
+     */
+    private int                   consumeThreadMin = 100;
+    
+    public ListenerConsumer() {
+        
+    }
+    
+    /**
+     * 
+     * 功能说明:初始化消费者实例配置
+     * 
+     * @author ZHONGFUHUA
+     *
+     * @Date 2015年10月30日
+     *
+     */
+    private void initConsumer() throws MQClientException {
+        consumer = new DefaultMQPushConsumer();
+        consumer.setNamesrvAddr(this.getNameSrv());
+        consumer.setConsumerGroup(this.getGroupName());
+        consumer.subscribe(this.getTopicName(), "*");
+        consumer.setInstanceName(this.getInstanceName());
+        consumer.setMessageModel(MessageModel.CLUSTERING);
+        consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
+        consumer.setConsumeMessageBatchMaxSize(this.getBatchSize());
+        consumer.setConsumeThreadMin(this.getConsumeThreadMin());
+        consumer.setConsumeThreadMax(this.getConsumeThreadMin());
+        
+        // 监听器类型
+        if (this.orderly) {
+            consumer.registerMessageListener(new OrderMessageListener(this.messageListener));
+        } else {
+            consumer.registerMessageListener(new DefualtMessageListener(this.messageListener));
+        }
+        consumer.start();
+    }
+    
+    /**
+     * 
+     * 功能说明:检查配置
+     * 
+     * @author ZHONGFUHUA
+     *
+     * @Date 2015年10月30日
+     *
+     */
+    @Override
+    protected void checkConfig() throws MqException {
+        super.checkConfig();
+        if (this.messageListener == null) {
+            throw new MqException("监听不能为空!");
+        }
+    }
+    
+    
+    /**
+     * 
+     * 功能说明:启动消费者
+     * 
+     * @author ZHONGFUHUA
+     *
+     * @Date 2015年10月30日
+     *
+     */
+    public void start() throws MqException {
+        if (consumer == null) {
+            this.checkConfig();
+            try {
+                this.initConsumer();
+                log.info("CrmLogger: Listen consumer start success [{}]", consumer.getClientIP()
+                    + "@" + consumer.getInstanceName());
+            } catch (MQClientException e) {
+                log.warn("CrmLogger: Listen consumer start fail {}  [{}]",
+                    consumer.getInstanceName(), e.getMessage());
+                throw new MqException(e.getMessage(), e.getCause());
+            }
+        } else {
+            log.warn("CrmLogger: Listen consumer already started,maybe bean init error");
+        }
+    }
+    
+    /**
+     * 
+     * 功能说明:关闭生产者
+     * 
+     * @author ZHONGFUHUA
+     *
+     * @Date 2015年10月30日
+     *
+     */
+    @Override
+    public void close() {
+        if (consumer != null) {
+            consumer.shutdown();
+            log.info("CrmLogger: Listen consumer close success {}", consumer.getClientIP() + "@"
+                + consumer.getInstanceName());
+            consumer = null;
+        } else {
+            log.warn("CrmLogger: Listen consumer close fail ,because it's null consumer object ");
+        }
+    }
+    
+    /**
+     * 
+     * 功能说明:监听方式不实现
+     * 
+     * @author ZHONGFUHUA
+     *
+     * @Date 2015年10月30日
+     *
+     */
+    @Override
+    @Deprecated
+    public List<MqMessage> pull() {
+        return null;
+    }
+    
+    /**
+     * 
+     * 功能说明:监听方式不实现
+     * 
+     * @author ZHONGFUHUA
+     *
+     * @Date 2015年10月30日
+     *
+     */
+    @Override
+    @Deprecated
+    public void ackMessage(MqMessage message, boolean ack) throws MqException {
+        
+    }
+    
+    /**
+     * 
+     * 功能说明:监听方式不实现
+     * 
+     * @author ZHONGFUHUA
+     *
+     * @Date 2015年10月30日
+     *
+     */
+    @Override
+    @Deprecated
+    public List<MqMessage> pull(int num) {
+        return null;
+    }
+    
+    /**
+     * 
+     * 功能说明:有序的监听器
+     *
+     * @author ZHONGFUHUA
+     * 
+     * @Date 2015年10月30日 上午11:54:31
+     *
+     *
+     * 版本号  |   作者   |  修改时间   |   修改内容
+     *
+     */
+    protected class OrderMessageListener implements MessageListenerOrderly {
+        private IMessageListener messageListener;
+        
+        public OrderMessageListener(IMessageListener messageListener) {
+            this.messageListener = messageListener;
+        }
+        
+        @Override
+        public ConsumeOrderlyStatus consumeMessage(List<MessageExt> paramList,
+            ConsumeOrderlyContext OrderlyContext) {
+            List<MqMessage> messageList = MessageUtil.rocketmq(paramList);
+            try {
+                ConsumeStatus status = messageListener.onMessage(messageList);
+                switch (status) {
+                    case SUCCESS:
+                        return ConsumeOrderlyStatus.SUCCESS;
+                    case FAIL:
+                        return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
+                    default:
+                        return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                log.warn("CrmLogger: Message listen consumer exception [{}], quque[{}], msgId{}",
+                    ex.getMessage(), OrderlyContext.getMessageQueue(), messageList);
+                return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
+            }
+        }
+        
+    }
+    
+    /**
+     * 
+     * 功能说明:默认监听器,并发监听
+     *
+     * @author ZHONGFUHUA
+     * 
+     * @Date 2015年10月30日 上午11:54:42
+     *
+     *
+     * 版本号  |   作者   |  修改时间   |   修改内容
+     *
+     */
+    protected class DefualtMessageListener implements MessageListenerConcurrently {
+        private IMessageListener messageListener;
+        
+        public DefualtMessageListener(IMessageListener messageListener) {
+            this.messageListener = messageListener;
+        }
+        
+        @Override
+        public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> paramList,
+            ConsumeConcurrentlyContext concurrentlyContext) {
+            List<MqMessage> messageList = MessageUtil.rocketmq(paramList);
+            try {
+                ConsumeStatus status = messageListener.onMessage(messageList);
+                switch (status) {
+                    case SUCCESS:
+                        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                    case FAIL:
+                        return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                    default:
+                        return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                log.warn("CrmLogger: Message listen consumer exception [{}], quque[{}], msgId{}",
+                    ex.getMessage(), concurrentlyContext.getMessageQueue(), messageList);
+                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+            }
+        }
+    }
+ 
+    
+    public boolean isOrderly() {
+        return orderly;
+    }
+    
+    public void setOrderly(boolean orderly) {
+        this.orderly = orderly;
+    }
+    
+    public IMessageListener getMessageListener() {
+        return messageListener;
+    }
+    
+    public void setMessageListener(IMessageListener messageListener) {
+        this.messageListener = messageListener;
+    }
+    
+    public int getBatchSize() {
+        return batchSize;
+    }
+    
+    public void setBatchSize(int batchSize) {
+        this.batchSize = batchSize;
+    }
+    
+    public int getConsumeThreadMin() {
+        return consumeThreadMin;
+    }
+    
+    public void setConsumeThreadMin(int consumeThreadMin) {
+        this.consumeThreadMin = consumeThreadMin;
+    }
+    
+}

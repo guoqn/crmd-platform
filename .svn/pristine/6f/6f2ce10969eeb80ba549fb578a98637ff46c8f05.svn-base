@@ -1,0 +1,100 @@
+﻿<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.ffcs.crmd.platform</groupId>
+		<artifactId>crmd-platform-mq</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>crmd-platform-mq-ctg</artifactId>
+	<name>crmd-platform-mq-ctg</name>
+	<url>http://maven.apache.org</url>
+	<description>集团版本消息中间件</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<!-- crmd-platform-mq-api -->
+		<dependency>
+			<groupId>com.ffcs.crmd.platform</groupId>
+			<artifactId>crmd-platform-mq-api</artifactId>
+		</dependency>
+
+		<!-- ctg-mq -->
+		<dependency>
+			<groupId>com.ctg.itrdc.mq</groupId>
+			<artifactId>ctg-mq-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.ctg.itrdc.mq</groupId>
+			<artifactId>ctg-mq-rocketmq</artifactId>
+		</dependency>
+
+		<!-- commons -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
+		<!-- srping test -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- junit test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- compiler编译插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+
+			<!-- resource插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
+
+			<!-- jar打包相关插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+			</plugin>
+
+			<!-- source源代码插件 -->
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+			</plugin>
+			
+			<!-- 版本信息输出插件 -->
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>replacer</artifactId>
+			</plugin>
+			
+			<!-- 版本号构建插件 -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>

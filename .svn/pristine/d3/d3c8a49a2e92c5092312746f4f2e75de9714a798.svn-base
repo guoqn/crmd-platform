@@ -1,0 +1,5 @@
+default.local.expire=2000
+default.local.maxSize=1000
+#level.com.ffcs.crmd.platform.meta.entity.AttrSpec2=8
+#level.com.ffcs.crmd.platform.meta.entity.BusiObjAttr=5
+level.com.ffcs.crmd.platform.meta.entity.BusiObj=8

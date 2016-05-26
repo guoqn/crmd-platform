@@ -1,0 +1,37 @@
+[ {
+		id : 10,
+		componentId:-1,
+		pId : 0,
+		componentType:-1,
+		name : "布局组件",
+		componentName:"布局组件",
+		open : true
+	}, {
+		id : 100,
+		componentId:-1,
+		pId : 10,
+		componentType:3,
+		componentName:"层（DIV）",
+		name : "层（DIV）"
+	}, {
+		id : 101,
+		componentId:-1,
+		pId : 10,
+		componentType:0,
+		componentName:"表单(FORM)",
+		name : "表单(FORM)"
+	}, {
+		id : 104,
+		componentId:-1,
+		pId : 10,
+		componentType:4,
+		componentName:"标签（label）",
+		name : "标签（label）"
+	}, {
+		id : 105,
+		componentId:-1,
+		pId : 10,
+		componentType:200,
+		componentName:"虚拟组件(模版使用)",
+		name : "虚拟组件(模版使用)"
+	}]

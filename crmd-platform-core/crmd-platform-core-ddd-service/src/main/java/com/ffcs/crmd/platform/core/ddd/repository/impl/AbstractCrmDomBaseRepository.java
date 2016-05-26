@@ -1,0 +1,339 @@
+package com.ffcs.crmd.platform.core.ddd.repository.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import com.ctg.itrdc.platform.common.entity.PageInfo;
+import com.ctg.itrdc.platform.common.exception.RtManagerException;
+import com.ctg.itrdc.platform.common.log.ILogger;
+import com.ctg.itrdc.platform.common.log.LoggerFactory;
+import com.ctg.itrdc.platform.common.utils.type.StringUtils;
+import com.ctg.itrdc.platform.data.entity.ClassInfoUtils;
+import com.ctg.itrdc.platform.data.entity.ColumnInfo;
+import com.ctg.itrdc.platform.data.entity.EntityInfo;
+import com.ctg.itrdc.platform.pub.entity.BaseEntity;
+import com.ctg.itrdc.platform.pub.sqlext.SqlRegister;
+import com.ctg.itrdc.platform.pub.sqlext.SqlRegisterFactory;
+import com.ffcs.crmd.platform.core.ddd.entity.impl.AbstractCrmDomBaseEntityImpl;
+import com.ffcs.crmd.platform.core.ddd.repository.ICrmDomBaseRepository;
+import com.ffcs.crmd.platform.core.ddd.util.EntityInsFactory;
+import com.ffcs.crmd.platform.data.dao.impl.CrmBaseDaoImpl;
+import com.ffcs.crmd.platform.idempotency.api.factory.IdempotencyDataServiceFactory;
+import com.ffcs.crmd.platform.idempotency.api.service.IIdempotencyDataService;
+
+public abstract class AbstractCrmDomBaseRepository<T extends AbstractCrmDomBaseEntityImpl, ID extends Serializable>
+		extends CrmBaseDaoImpl implements ICrmDomBaseRepository<T, ID> {
+
+	private IIdempotencyDataService dataService = IdempotencyDataServiceFactory.getIdempotencyDataService();
+
+	protected ILogger logger = LoggerFactory.getLogger(this.getClass());
+	private Class<T> repositoryClass;
+
+	protected SqlRegister sqlRegister = SqlRegisterFactory.getSqlRegister();
+
+	public AbstractCrmDomBaseRepository(Class<T> repositoryClass) {
+		super();
+		this.repositoryClass = repositoryClass;
+	}
+
+	public void setRepositoryClass(Class<T> clazz) {
+		this.repositoryClass = clazz;
+	}
+
+	@Override
+	public Class<T> getRepositoryClass() {
+		return this.repositoryClass;
+	}
+
+	/**
+	 * 向仓库注册SQL语句。
+	 *
+	 * @param sqlName
+	 *            SQL语句名称
+	 * @param sql
+	 *            SQL语句
+	 */
+	protected void registerSql(String sqlName, String sql) {
+		sqlRegister.registerSql(sqlName, sql);
+	}
+
+	protected String getSqlByName(String sqlName) {
+		String hql = sqlRegister.getSql(sqlName);
+		if (hql == null) {
+			throw new RtManagerException("无法根据名称：@sqlName，查找sql定义", this.getClass(), "getSqlByName", "sqlNull",
+					"@sqlName", sqlName);
+		}
+		return hql;
+	}
+
+	@Override
+	public T getByIdAndShardingId(ID id, Object shardingId) {
+		EntityInfo entityInfo = ClassInfoUtils.getEntityMap().get(this.getRepositoryClass());
+		if (entityInfo == null) {
+			throw new RtManagerException(this.getRepositoryClass() + " EntityInfo not Define");
+		}
+		if (!entityInfo.isSharding()) {
+			throw new RtManagerException(this.getRepositoryClass() + " EntityInfo not Sharding");
+		}
+		StringBuilder builder = new StringBuilder();
+		List<Object> params = new ArrayList<Object>();
+		builder.append("SELECT ");
+		String selectColumn = ClassInfoUtils.getSelectColumn(entityInfo.getTableName(), null);
+		builder.append(selectColumn);
+		builder.append(" FROM ");
+		builder.append(entityInfo.getTableName());
+		builder.append(" WHERE ");
+		int i = 0;
+		List<ColumnInfo> columnInfos = entityInfo.getColumnList();
+		for (ColumnInfo columnInfo : columnInfos) {
+			if (columnInfo.isPrimaryKey()) {
+				if (i > 0) {
+					builder.append(" AND ");
+				}
+				builder.append(columnInfo.getColumnName() + "=?");
+				params.add(id);
+				i++;
+			} else if (columnInfo.isSharding()) {
+				if (i > 0) {
+					builder.append(" AND ");
+				}
+				builder.append(columnInfo.getColumnName() + "=?");
+				params.add(shardingId);
+				i++;
+			}
+		}
+
+		List<T> list = this.jdbcFindList(builder.toString(), this.getRepositoryClass(), params);
+		if (list != null && list.size() >= 1) {
+			return list.get(0);
+		}
+		return null;
+	}
+
+	@SuppressWarnings({ "rawtypes", "hiding" })
+	@Override
+	public <T extends BaseEntity> int insert(T entity) {
+		// 正在执行分布式事务
+		if (dataService.isSysWorkRunning()) {
+			return dataService.insert(entity);
+		} else {
+			return super.insert(entity);
+		}
+	}
+
+	@SuppressWarnings({ "rawtypes", "hiding" })
+	@Override
+	public <T extends BaseEntity> int updateByPrimaryKey(T entity) {
+		// 正在执行分布式事务
+		if (dataService.isSysWorkRunning()) {
+			return dataService.updateByPrimaryKey(entity);
+		} else {
+			return super.updateByPrimaryKey(entity);
+		}
+	}
+
+	@SuppressWarnings({ "rawtypes", "hiding" })
+	@Override
+	public <T extends BaseEntity> int deleteByPrimaryKey(T entity) {
+		// 正在执行分布式事务
+		if (dataService.isSysWorkRunning()) {
+			return dataService.deleteByPrimaryKey(entity);
+		} else {
+			return super.deleteByPrimaryKey(entity);
+		}
+	}
+
+	@SuppressWarnings({ "rawtypes", "hiding" })
+	@Override
+	public <T extends BaseEntity> int updateSelectiveByPrimaryKey(T entity) {
+		// 正在执行分布式事务
+		if (dataService.isSysWorkRunning()) {
+			return dataService.updateSelectiveByPrimaryKey(entity);
+		} else {
+			return super.updateSelectiveByPrimaryKey(entity);
+		}
+	}
+
+	@Override
+	public T getById(ID id) {
+		return getById(id, true);
+	}
+
+	@Override
+	public T getById(ID id, boolean isCache) {
+		T t = EntityInsFactory.getInstance(repositoryClass);
+		t.setId(id);
+		return selectByPrimaryKey(t, isCache);
+
+	}
+
+	@Override
+	public T getSingleByExample(T t) {
+		return getSingleByExample(t, true);
+	}
+
+	@Override
+	public T getSingleByExample(T t, boolean isCache) {
+		List<T> list = selectByExample(t, isCache);
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		}
+		return null;
+	}
+
+	/**
+	 * 根据框架生成查询语句，尽量少用
+	 */
+	@Override
+	public List<T> queryAll() {
+		return queryAll(true);
+	}
+
+	@Override
+	public List<T> queryAll(boolean isCache) {
+		List<T> list = new ArrayList<T>();
+		T t = EntityInsFactory.getInstance(repositoryClass);
+		list = this.selectByExample(t, isCache);
+		return list;
+
+	}
+
+	private T mapToEntt(Map<String, Object> map) {
+		T t = EntityInsFactory.getInstance(repositoryClass);
+		Map<String, String> colToPropMap = ClassInfoUtils.getColumnToPropMap(repositoryClass);
+		if (colToPropMap == null) {
+			throw new RtManagerException("初始化错误，没有映射信息");
+		}
+		for (Map.Entry<String, Object> en : map.entrySet()) {
+			String prop = colToPropMap.get(en.getKey());
+			if (StringUtils.isNullOrEmpty(prop)) {
+				throw new RtManagerException("入参错误，字段没有对应属性");
+			}
+			t.setProperty(prop, en.getValue());
+		}
+		return t;
+	}
+
+	@Override
+	public List<T> queryByMap(Map<String, Object> map) {
+		return queryByMap(map, true);
+	}
+
+	@Override
+	public PageInfo queryPageInfoByMap(Map<String, Object> map, int page, int pageSize) {
+		return queryPageInfoByMap(map, page, pageSize, true);
+	}
+
+	@Override
+	public List<T> queryByMap(Map<String, Object> map, boolean isCache) {
+		T t = mapToEntt(map);
+		return selectByExample(t, isCache);
+
+	}
+
+	@Override
+	public PageInfo queryPageInfoByMap(Map<String, Object> map, int page, int pageSize, boolean isCache) {
+		T t = mapToEntt(map);
+		String sql = ClassInfoUtils.getSelectByExampleSql(t);
+		Object[] columnsValue = ClassInfoUtils.getSelectiveColumnsValueArray(t);
+		List<Object> params = Arrays.asList(columnsValue);
+		return jdbcFindPageInfo(sql, repositoryClass, params, page, pageSize, isCache);
+	}
+
+	/*************** 根据sql名称执行sql ********************/
+	// private Map<String, String> sqlMap = new HashMap<String, String>();
+
+	@Override
+	public int jdbcQueryForIntByName(String name, Object... args) {
+		String sql = this.getSqlByName(name);
+		return jdbcQueryForInt(sql, args);
+	}
+
+	@Override
+	public int jdbcQueryForIntByName(String name, Object[] args, int[] argTypes) {
+		String sql = this.getSqlByName(name);
+		return jdbcQueryForInt(sql, args, argTypes);
+	}
+
+	@Override
+	public int jdbcQueryForIntByName(String name) {
+		String sql = this.getSqlByName(name);
+		return jdbcQueryForInt(sql);
+	}
+
+	@Override
+	public <E> List<E> jdbcFindListByName(String name, Class<E> elementType) {
+		String sql = this.getSqlByName(name);
+		return jdbcFindList(sql, elementType, new ArrayList<Object>());
+	}
+
+	@Override
+	public <E> List<E> jdbcFindListByName(String name, Class<E> elementType, List<Object> params) {
+		String sql = this.getSqlByName(name);
+		return jdbcFindList(sql, elementType, params);
+	}
+
+	@Override
+	public int jdbcGetSizeByName(String name, List<Object> params) {
+		String sql = this.getSqlByName(name);
+		return jdbcGetSize(sql, params);
+	}
+
+	@Override
+	public <E> PageInfo jdbcFindPageInfoByName(String name, Class<E> elementType, int currentPage, int perPageNum) {
+		return jdbcFindPageInfoByName(name, elementType, currentPage, perPageNum, true);
+	}
+
+	@Override
+	public <E> PageInfo jdbcFindPageInfoByName(String name, Class<E> elementType, List<Object> params, int currentPage,
+			int perPageNum) {
+		return jdbcFindPageInfoByName(name, elementType, params, currentPage, perPageNum, true);
+	}
+
+	@Override
+	public long jdbcQueryForLongByName(String name, Object... args) {
+		String sql = this.getSqlByName(name);
+		return jdbcQueryForLong(sql, args);
+	}
+
+	@Override
+	public long jdbcQueryForLongByName(String name, Object[] args, int[] argTypes) {
+		String sql = this.getSqlByName(name);
+		return jdbcQueryForLong(sql, args, argTypes);
+	}
+
+	@Override
+	public long jdbcQueryForLongByName(String name) {
+		String sql = this.getSqlByName(name);
+		return jdbcQueryForLong(sql);
+	}
+
+	@Override
+	public <E> List<E> jdbcFindListByName(String name, Class<E> elementType, boolean isCache) {
+		String sql = this.getSqlByName(name);
+		return jdbcFindList(sql, elementType, new ArrayList<Object>(), isCache);
+	}
+
+	@Override
+	public <E> List<E> jdbcFindListByName(String name, Class<E> elementType, List<Object> params, boolean isCache) {
+		String sql = this.getSqlByName(name);
+		return jdbcFindList(sql, elementType, params, isCache);
+	}
+
+	@Override
+	public <E> PageInfo jdbcFindPageInfoByName(String name, Class<E> elementType, int currentPage, int perPageNum,
+			boolean isCache) {
+		String sql = this.getSqlByName(name);
+		return jdbcFindPageInfo(sql, elementType, new ArrayList<Object>(), currentPage, perPageNum, isCache);
+	}
+
+	@Override
+	public <E> PageInfo jdbcFindPageInfoByName(String name, Class<E> elementType, List<Object> params, int currentPage,
+			int perPageNum, boolean isCache) {
+		String sql = this.getSqlByName(name);
+		return jdbcFindPageInfo(sql, elementType, params, currentPage, perPageNum, isCache);
+	}
+}

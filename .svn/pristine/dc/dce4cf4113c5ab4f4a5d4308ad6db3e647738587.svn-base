@@ -1,0 +1,19 @@
+package com.ffcs.crmd.platform.mq.rocketmq;
+/**
+ * 版本信息
+ * @author chenzhi
+ * @2015年11月3日 上午8:55:53
+ */
+public class Version {
+	private static String mainVersion = "1.0.15";
+	private static String crmMqVersion="3.2.6";
+
+	public static String getMainVersion() {
+		return mainVersion;
+	}
+
+    public static String getCrmMqVersion() {
+        return crmMqVersion;
+    }
+
+}

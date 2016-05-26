@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} %L - %msg%n" />
+		</Console>
+		<!-- immediateFlush="false" -->
+		<!-- <RollingRandomAccessFile name="File" fileName="G:/dbproxy.log" -->
+		<!-- filePattern="dbproxy.%d{yyyy-MM-dd}.log" ignoreExceptions="false"> -->
+		<!-- <PatternLayout> -->
+		<!-- <Pattern>%d{MM/dd HH:mm:ss.SSS} %5p [%t] (%F:%L) -%m%n</Pattern> -->
+		<!-- </PatternLayout> -->
+		<!-- <Policies> -->
+		<!-- <TimeBasedTriggeringPolicy /> -->
+		<!-- </Policies> -->
+		<!-- </RollingRandomAccessFile> -->
+		<!-- <Async name="Async" includeLocation="true" ignoreExceptions="false"> -->
+		<!-- <AppenderRef ref="Console" /> -->
+		<!-- </Async> -->
+
+	</Appenders>
+
+
+	<Loggers>
+		<!-- <asyncRoot level="INFO" includeLocation="true"> -->
+		<!-- <AppenderRef ref="File" /> -->
+		<!-- </asyncRoot> -->
+		<Root level="INFO" includeLocation="true">
+			<AppenderRef ref="Console" />
+		</Root>
+		<!-- <AsyncLogger name="log4j。test" level="INFO" includeLocation="true" 
+			exceptionHandler="log4j.MyExHandler"> -->
+		<!-- <AppenderRef ref="Async" /> -->
+		<!-- </AsyncLogger> -->
+		<asyncLogger level="OFF" name="com.ffcs.crmd.lmax.pool.CommandPoolUtils">
+		<AppenderRef ref="Console"></AppenderRef>
+		</asyncLogger>
+		<asyncLogger level="OFF" name="com.ffcs.crmd.lmax.base.TransEventProducer">
+			<AppenderRef ref="Console"></AppenderRef>
+		</asyncLogger>
+		<asyncLogger level="OFF" name="org.springframework">
+			<AppenderRef ref="Console"></AppenderRef>
+		</asyncLogger>
+		<asyncLogger level="OFF" name="org.apache.zookeeper">
+			<AppenderRef ref="Console"></AppenderRef>
+		</asyncLogger>
+		<Logger level="OFF" name="com.ffcs.crmd,lmax">
+			<AppenderRef ref="Console"></AppenderRef>
+		</Logger>
+		<Logger level="INFO" name="com.ffcs.crmd.platform">
+			<AppenderRef ref="Console"></AppenderRef>
+		</Logger>
+		<!-- <root level="INFO"> -->
+		<!-- <AppenderRef ref="File" /> -->
+		<!-- </root> -->
+		<!-- <root level="INFO"> -->
+		<!-- <AppenderRef ref="Async" /> -->
+		<!-- </root> -->
+	</Loggers>
+</Configuration>

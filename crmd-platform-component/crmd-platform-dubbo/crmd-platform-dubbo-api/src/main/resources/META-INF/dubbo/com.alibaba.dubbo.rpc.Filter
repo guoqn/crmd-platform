@@ -1,0 +1,2 @@
+dubboThreadLocalFilter=com.ffcs.crmd.platform.dubbo.filter.DubboThreadLocalFilter
+monitor2=com.ffcs.crmd.platform.dubbo.filter.CrmdMonitorFilter

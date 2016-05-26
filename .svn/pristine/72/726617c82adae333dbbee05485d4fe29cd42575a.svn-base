@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper>
+    <sql id="qryPageByTabId">
+        SELECT
+            REL_ID,
+            TAB_ID,
+            OBJ_TYPE,
+            OBJ_ID,
+            REMARK,
+            CREATE_STAFF,
+            UPDATE_STAFF,
+            STATUS_CD,
+            CREATE_DATE,
+            STATUS_DATE,
+            UPDATE_DATE,
+            REGION_CD,
+            AREA_ID,
+            REC_UPDATE_DATE,
+            SHARDING_ID,
+            REL_SHARDING_ID,
+            DVERSION,
+            DTIMESTAMP
+        FROM
+            OBJ_TAB_REL
+        WHERE
+            TAB_ID = ?
+    </sql>
+
+</mapper>

@@ -1,0 +1,21 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.ffcs.crmd.platform</groupId>
+		<artifactId>crmd-platform</artifactId>
+		<version>0.0.3-SNAPSHOT</version>
+		<relativePath>../..</relativePath>
+	</parent>
+	<artifactId>crmd-platform-idempotency</artifactId>
+	<packaging>pom</packaging>
+	<name>crmd-platform-idempotency</name>
+	<url>http://maven.apache.org</url>
+
+	<dependencies>
+	</dependencies>
+	<modules>
+		<module>crmd-platform-idempotency-api</module>
+		<module>crmd-platform-idempotency-core</module>
+	</modules>
+</project>

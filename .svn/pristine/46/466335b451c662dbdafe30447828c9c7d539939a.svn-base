@@ -1,0 +1,140 @@
+package com.ffcs.crmd.platform.mq.rocketmq.query.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.alibaba.rocketmq.client.QueryResult;
+import com.alibaba.rocketmq.client.exception.MQBrokerException;
+import com.alibaba.rocketmq.client.exception.MQClientException;
+import com.alibaba.rocketmq.common.message.MessageExt;
+import com.alibaba.rocketmq.remoting.exception.RemotingException;
+import com.alibaba.rocketmq.tools.admin.DefaultMQAdminExt;
+import com.ffcs.crmd.platform.mq.MqException;
+import com.ffcs.crmd.platform.mq.MqMessage;
+import com.ffcs.crmd.platform.mq.query.api.IQuery;
+import com.ffcs.crmd.platform.mq.rocketmq.util.MessageUtil;
+
+/**
+ * 
+ * 功能说明:消息查询实现
+ *
+ * @author ZHONGFUHUA
+ * 
+ * @Date 2015年10月20日 下午4:17:19
+ *
+ *
+ * 版本号  |   作者   |  修改时间   |   修改内容
+ *
+ */
+public class QueryImpl implements IQuery{
+    
+    private static DefaultMQAdminExt defaultMQAdminExt = new DefaultMQAdminExt();
+    
+    private String namesrv;
+    
+    public void init() throws MqException {
+        defaultMQAdminExt.setInstanceName(Long.toString(System.currentTimeMillis()));
+        defaultMQAdminExt.setNamesrvAddr(this.getNamesrv());
+        try {
+            defaultMQAdminExt.start();
+        } catch (MQClientException e) {
+            throw new MqException(e);
+        }
+    }
+    
+    public void close() {
+        if(defaultMQAdminExt!=null){
+            defaultMQAdminExt.shutdown();
+        }
+    }
+    
+    public String getNamesrv() {
+        return namesrv;
+    }
+
+    public void setNamesrv(String namesrv) {
+        this.namesrv = namesrv;
+    }
+
+    /**
+     * 
+     * 功能说明:根据消息ID查询消息
+     * 
+     * @param msgId
+     *          消息标识
+     *          
+     * @author ZHONGFUHUA
+     * 
+     * @throws MqException 
+     *
+     * @Date 2015年8月26日
+     *
+     */
+    @Override
+    public MqMessage queryMessageById(String msgId) throws MqException {
+        MessageExt msgExt = null;
+        try {
+            msgExt = defaultMQAdminExt.viewMessage(msgId);
+        } catch (RemotingException e) {
+            throw new MqException(e.getMessage(), e.getCause());
+        } catch (MQBrokerException e) {
+            throw new MqException(e.getMessage(), e.getCause());
+        } catch (InterruptedException e) {
+            throw new MqException(e.getMessage(), e.getCause());
+        } catch (MQClientException e) {
+            throw new MqException(e.getMessage(), e.getCause());
+        }
+        return MessageUtil.rocketmq(msgExt);
+    }
+
+    /**
+     * 
+     * 功能说明:根据key和topic查询消息
+     * 
+     * @param key
+     *          消息key
+     * @param topic
+     *          消息topic
+     * @param maxNum
+     *          查询最大数
+     * @param beginTime
+     *          开始时间,long类型毫秒数
+     * @param endTime
+     *          结束时间,long类型毫秒数
+     * @author ZHONGFUHUA
+     * 
+     * @throws MqException 
+     * 
+     * @Date 2015年8月26日
+     *
+     */
+    @Override
+    public List<MqMessage> queryMessageByKey(String key, String topic, int maxNum, long beginTime,
+        long endTime) throws MqException {
+        if (StringUtils.isBlank(key)) {
+            throw new MqException("key不能为空");
+        }
+        if (StringUtils.isBlank(topic)) {
+            throw new MqException("topic不能为空");
+        }
+        List<MqMessage> msgResult = new ArrayList<MqMessage>();
+        if (maxNum <= 0) {
+            return msgResult;
+        }
+        endTime = endTime >= 0 ? endTime : System.currentTimeMillis();
+        try {
+            QueryResult queryMessage = defaultMQAdminExt.queryMessage(topic, key, maxNum, beginTime, endTime);
+            for (MessageExt msgExt : queryMessage.getMessageList()) {
+                msgResult.add(MessageUtil.rocketmq(msgExt));
+            }
+        } catch (MQClientException e) {
+            throw new MqException(e.getMessage(), e.getCause());
+        } catch (InterruptedException e) {
+            throw new MqException(e.getMessage(), e.getCause());
+        }
+        return msgResult;
+    }
+
+}

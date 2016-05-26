@@ -1,0 +1,256 @@
+/**
+ * 
+ */
+package com.ffcs.crmd.platform.mq.rocketmq.consumer.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.ffcs.crmd.platform.mq.MqException;
+import com.ffcs.crmd.platform.mq.consumer.api.IMessageListener;
+
+/**
+ * 简单消息监听器容器
+ * 
+ * @author chenzhi
+ * @2015年9月30日 上午10:49:57
+ */
+public class ListenerConsumerContainer {
+    
+    /**
+     * 日志
+     */
+    //private static final Logger          log                        = ClientLogger.getLog();
+    
+    /**
+     * 名服务地址
+     */
+    private String                       nameSrv               = null;
+    
+    /**
+     * 消费者组名
+     */
+    private String                       groupName             = null;
+    
+    /**
+     * 主题名
+     */
+    private String                       topicName             = null;
+    
+    /**
+     * 一次最大消费数量
+     */
+    private int                          batchSize             = 1;
+    
+    /**
+     * 是否有序消费
+     */
+    private boolean                      orderly               = false;
+    
+    /**
+     * 消费者实例列表
+     */
+    private List<ListenerConsumer> consumerListeners     = new ArrayList<ListenerConsumer>();
+    
+    /**
+     * 监听器
+     */
+    private IMessageListener             messageListener       = null;
+    
+    /**
+     * 消费者连接数
+     */
+    private int                          consumerConnectionNum = 1;
+    
+    /**
+     * 单消费实例消费最小线程数
+     */
+    private int                          consumeThreadMin      = 100;
+    
+    public ListenerConsumerContainer() {
+        super();
+    }
+    
+    public ListenerConsumerContainer(String nameSrv, String groupName, String topicName,
+        int consumeMessageBatchMaxSize, boolean orderly) {
+    }
+    
+    /**
+     * 
+     * 功能说明:根据主题查询该主题所有队列
+     * @param topic
+     *          主题
+     * @author ZHONGFUHUA
+     *
+     * @Date 2015年10月31日
+     *
+     */
+    /*private Set<MessageQueue> queryQueuesByTopic(String topic) {
+        Set<MessageQueue> mqList = new HashSet<MessageQueue>();
+        try {
+            defaultMQAdminExt.setInstanceName(Long.toString(System.currentTimeMillis()));
+            defaultMQAdminExt.setNamesrvAddr(this.getNameSrv());
+            defaultMQAdminExt.start();
+            TopicRouteData topicRouteData = defaultMQAdminExt.examineTopicRouteInfo(topic);
+            if (topicRouteData != null) {
+                mqList = MQClientInstance.topicRouteData2TopicSubscribeInfo(topic, topicRouteData);
+            }
+        } catch (RemotingException e) {
+            e.printStackTrace();
+        } catch (MQClientException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        defaultMQAdminExt.shutdown();
+        return mqList;
+    }*/
+    
+    /**
+     * 
+     * 功能说明:启动并初始化线程池
+     * 
+     * @author ZHONGFUHUA
+     * @throws MqException 
+     *
+     * @Date 2015年10月29日
+     *
+     */
+    public void start() throws MqException {
+        /*Set<MessageQueue> msgSet = this.queryQueuesByTopic(this.getTopicName());
+        if (msgSet == null || msgSet.isEmpty()) {
+            log.info("CrmLogger: 消费者容器初始化失败，{}没有队列信息", this.getTopicName());
+            throw new MqException(this.getTopicName() + "主题没有队列信息，请联系管理员！");
+        }
+        int connectNum = msgSet.size();*/
+        ExecutorService pool = Executors.newFixedThreadPool(this.getConsumerConnectionNum());
+        for (int i = 0; i < this.getConsumerConnectionNum(); i++) {
+            final ListenerConsumer simpleListener = new ListenerConsumer();
+            simpleListener.setNameSrv(this.getNameSrv());
+            simpleListener.setGroupName(this.getGroupName());
+            simpleListener.setTopicName(this.getTopicName());
+            simpleListener.setBatchSize(this.getBatchSize());
+            simpleListener.setOrderly(this.isOrderly());
+            simpleListener.setMessageListener(this.getMessageListener());
+            consumerListeners.add(simpleListener);
+            pool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        simpleListener.start();
+                    } catch (MqException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    }
+    
+    /**
+     * 
+     * 功能说明:关闭监听消费实例，并清空监听消费实例列表
+     * 
+     * @author ZHONGFUHUA
+     *
+     * @Date 2015年10月29日
+     *
+     */
+    public void close() {
+        if (null != consumerListeners || 0 <= consumerListeners.size()) {
+            for (ListenerConsumer simpleListener : consumerListeners) {
+                simpleListener.close();
+            }
+        }
+        consumerListeners.clear();
+    }
+    
+    public String getNameSrv() {
+        return nameSrv;
+    }
+    
+    public void setNameSrv(String nameSrv) throws MqException {
+        if (StringUtils.isBlank(nameSrv)) {
+            throw new MqException("名服务地址不能为空");
+        }
+        this.nameSrv = nameSrv;
+    }
+    
+    public String getGroupName() {
+        return groupName;
+    }
+    
+    public void setGroupName(String groupName) throws MqException {
+        if (StringUtils.isBlank(groupName)) {
+            throw new MqException("消费组名不能为空");
+        }
+        this.groupName = groupName;
+    }
+    
+    public String getTopicName() {
+        return topicName;
+    }
+    
+    public void setTopicName(String topicName) throws MqException {
+        if (StringUtils.isBlank(topicName)) {
+            throw new MqException("主题不能为空");
+        }
+        this.topicName = topicName;
+    }
+    
+    public int getBatchSize() {
+        return batchSize;
+    }
+    
+    public void setBatchSize(int batchSize) throws MqException {
+        if (batchSize < 1) {
+            throw new MqException("批量消费条数不能小于1");
+        }
+        this.batchSize = batchSize;
+    }
+    
+    public boolean isOrderly() {
+        return orderly;
+    }
+    
+    public void setOrderly(boolean orderly) {
+        this.orderly = orderly;
+    }
+    
+    public IMessageListener getMessageListener() {
+        return messageListener;
+    }
+    
+    public void setMessageListener(IMessageListener messageListener) throws MqException {
+        if (messageListener == null) {
+            throw new MqException("监听器不能为空值");
+        }
+        this.messageListener = messageListener;
+    }
+    
+    public int getConsumerConnectionNum() {
+        return consumerConnectionNum;
+    }
+    
+    public void setConsumerConnectionNum(int consumerConnectionNum) throws MqException {
+        if (consumerConnectionNum < 0) {
+            throw new MqException("消费者连接数不能小于0");
+        }
+        this.consumerConnectionNum = consumerConnectionNum;
+    }
+    
+    public int getConsumeThreadMin() {
+        return consumeThreadMin;
+    }
+    
+    public void setConsumeThreadMin(int consumeThreadMin) throws MqException {
+        if (consumeThreadMin < 20) {
+            throw new MqException("消费实例消费线程数不能小于20秒");
+        }
+        this.consumeThreadMin = consumeThreadMin;
+    }
+    
+}

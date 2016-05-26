@@ -1,0 +1,39 @@
+package com.ffcs.crmd.platform.mq.rocketmq;
+
+import javax.annotation.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.ffcs.crmd.platform.mq.ProdResult;
+import com.ffcs.crmd.platform.mq.producer.api.IProducer;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {
+        "classpath*:conf/mq/spring/applicationContext-crm-mq-producer-orderly.xml" })
+public class TestProducerOrderly {
+    @Resource(name = "crmMqOrderlyProducer")
+    private IProducer orderlyProducer;
+    
+    
+    /**
+     * 发送有序消息
+     * 通过MqMessageQueueSeletorImpl选择器来选择发送消息到主题的哪个队列应用
+     * @author zhongfuhua
+     * @since 2015-08-24
+     */
+    @Test
+    public void testOrderProducer() {
+        for (int i = 0; i < 32; i++) {
+            try {
+                ProdResult result = orderlyProducer.send(("Body" + i).getBytes(), "Tag", "Key");
+                System.out.println(result.getMqMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+}

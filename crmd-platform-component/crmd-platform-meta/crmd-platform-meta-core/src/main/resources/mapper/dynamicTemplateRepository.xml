@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper>
+
+	<sql id="qryTplPageInfo" type="xml">
+	<![CDATA[     
+		   <dataSqlNode>
+		        <type>sqltext</type>
+		        <sqltext>
+		        	SELECT
+						template_id,
+						event_id,
+						template_code,
+						template_type,
+						template_name,
+						template_desc,
+						remark,
+						status_cd,
+						create_date,
+						status_date,
+						update_date,
+						sharding_id,
+						create_staff,
+						update_staff,
+						tenant_id
+					FROM
+						dynamic_template
+					WHERE 
+				</sqltext>     
+		        <dataSqlNode>
+		            <type>param</type>
+		            <sqltext> and template_code= ? </sqltext> 
+		            <paramTag>templateCode</paramTag>
+		        </dataSqlNode>
+		        <dataSqlNode>
+		            <type>like</type>
+		            <sqltext> and template_name like ? </sqltext>
+		            <paramTag>templateName</paramTag>
+		        </dataSqlNode>
+		        <dataSqlNode>
+		            <type>param</type>
+		            <sqltext> and status_cd= ?</sqltext>
+		            <paramTag>statusCd</paramTag>
+		        </dataSqlNode>
+		  </dataSqlNode>
+		]]>
+	</sql>
+
+	<!-- by code -->
+	<sql id="getTplByCode" type="sql">
+		<![CDATA[
+			SELECT
+				template_id,
+				event_id,
+				template_code,
+				template_type,
+				template_name,
+				template_desc,
+				remark,
+				status_cd,
+				create_date,
+				status_date,
+				update_date,
+				sharding_id,
+				create_staff,
+				update_staff,
+				tenant_id
+			FROM
+				dynamic_template
+			WHERE 
+			template_code= ? and status_cd=?
+		]]>
+	</sql>
+
+	<!-- by type -->
+	<sql id="qryTplListsByType" type="sql">
+		<![CDATA[
+			SELECT
+				template_id,
+				event_id,
+				template_code,
+				template_type,
+				template_name,
+				template_desc,
+				remark,
+				status_cd,
+				create_date,
+				status_date,
+				update_date,
+				sharding_id,
+				create_staff,
+				update_staff,
+				tenant_id
+			FROM
+				dynamic_template
+			WHERE 
+			template_type= ? and status_cd=?
+		]]>
+	</sql>
+
+</mapper>

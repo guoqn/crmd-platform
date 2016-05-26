@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.ctg.itrdc.event:ctg-event-client-api:0.1.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ctg/itrdc/event/ctg-event-client-api/0.1.0-SNAPSHOT/ctg-event-client-api-0.1.0-20151208.095319-11.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ctg/itrdc/event/ctg-event-client-api/0.1.0-SNAPSHOT/ctg-event-client-api-0.1.0-20151208.095319-11-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ctg/itrdc/event/ctg-event-client-api/0.1.0-SNAPSHOT/ctg-event-client-api-0.1.0-20151208.095319-11-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

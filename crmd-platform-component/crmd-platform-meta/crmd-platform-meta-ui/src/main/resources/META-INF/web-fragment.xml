@@ -1,0 +1,16 @@
+<web-fragment version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd">
+
+    <!-- 指定模块名称 -->
+    <name>platform_meta_ui</name>
+    <!-- 加载顺序
+    <ordering>
+        <before>
+            <others/>
+        </before>
+    </ordering>-->
+
+
+
+</web-fragment>

@@ -1,0 +1,51 @@
+/**
+ * JSON2STYLE
+ *
+ * 样式解析器
+ *
+ * @author LAIYONGMIN-PC
+ */
+
+// 样式解析器
+if (!eh) {
+    var eh = {};
+}
+if (!eh.style) {
+    eh.style = {};
+}
+// 样式类型
+eh.style.cls = 'class'
+eh.style.style = 'style'
+// 解析配置样式
+eh.style.parseConfStyle = function (data) {
+    var cls = '';
+    var sty = ''
+    if (data) {
+        for (s in data) {
+            var s = data[s];
+            // 标识为删除的样式，不处理
+            if (s.opType === 'del') {
+                continue;
+            }
+            // cls 样式
+            if (s.styleType === eh.style.cls) {
+                cls += ' ' + s.styleAttrValue;
+                // style样式
+            } else if (s.styleType === eh.style.style) {
+                sty += ';' + s.styleAttr + ':' + s.styleAttrValue;
+            }
+        }
+    }
+    // 合并样式
+    var style = '';
+    if (cls && cls != '') {
+        // 去掉第一个空格
+        style = 'class="' + cls.substring(1) + '"';
+    }
+    if (sty && sty != '') {
+        // 去掉第一个分号
+        style += ' style="' + sty.substring(1) + '"';
+    }
+    // 返回样式
+    return style;
+}

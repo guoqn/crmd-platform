@@ -1,0 +1,32 @@
+package com.ffcs.crmd.platform.mq.rocketmq;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+/**
+ * 无序推送监听的器在Spring配置文件中设置
+ * @author chenzhi
+ * @2015年8月25日 下午3:55:51
+ */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {
+        "classpath*:conf/mq/spring/applicationContext-crm-mq-push-currently.xml" })
+public class TestPushCurrently {
+    
+    /**
+     * 无序并发监听
+     */
+    @Test
+    public void testCurrentlyPush() {
+        while (true) {
+            try {
+                // spring初始化直接启动
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}

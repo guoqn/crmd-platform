@@ -1,0 +1,16 @@
+.loading-dialog .modal-body > p {
+	text-align: center;
+	margin: 20px 0;
+}
+.loading-dialog .modal-footer {
+	padding: 10px;
+}
+.loading-dialog .loading-icon {
+	background-image: url('../img/loading.gif');
+	background-repeat: no-repeat;
+	background-position: center 40px;
+	min-height: 100px;
+}
+.loading-dialog .loading-icon > p {
+	margin-top: 150px;
+}

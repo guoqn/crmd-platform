@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <option name="DEFAULT_COMPILER" value="Javac" />
+    <resourceExtensions />
+    <wildcardResourcePatterns>
+      <entry name="!?*.java" />
+      <entry name="!?*.form" />
+      <entry name="!?*.class" />
+      <entry name="!?*.groovy" />
+      <entry name="!?*.scala" />
+      <entry name="!?*.flex" />
+      <entry name="!?*.kt" />
+      <entry name="!?*.clj" />
+    </wildcardResourcePatterns>
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-cache-api" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-cache-api" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-idempotency-api" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-idempotency-api" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-core-dao-api" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-core-dao-api" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-mq-api" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-mq-api" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-ddl-core" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-ddl-core" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-core-ddd-api" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-core-ddd-api" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-cache-core" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-cache-core" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-core-dao-facade" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-core-dao-facade" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-idempotency-core" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-idempotency-core" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-dubbo-api" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-dubbo-api" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-core-ddd-facade" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-core-ddd-facade" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-base" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-base" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-core-dao-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-core-dao-service" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-core-ddd-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-core-ddd-service" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-dubbo-core" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-dubbo-core" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-meta-api" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-meta-api" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-pub" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-pub" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-meta-control" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-meta-control" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-nosql-api" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-nosql-api" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-data" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-data" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-dfs-api" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-dfs-api" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-meta-core" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-meta-core" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-control" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-control" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-meta-ui" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-meta-ui" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-pub-ui" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-pub-ui" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-meta-facade" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-meta-facade" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-mq-rocketmq" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-mq-rocketmq" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-job-core" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-job-core" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-nosql-core" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-nosql-core" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-dfs-core" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-dfs-core" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-mq-ctg" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-mq-ctg" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-ddl-api" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-ddl-api" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-core-ddd-dat-facade" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-core-ddd-dat-facade" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-core-ddd-dat-proxy" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-core-ddd-dat-proxy" />
+      </profile>
+      <profile default="false" name="Annotation profile for crmd-platform-core-ddd-dat-api" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-core-ddd-dat-api" />
+      </profile>
+      <profile default="false" name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="crmd-platform-job" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="crmd-platform" target="1.5" />
+      <module name="crmd-platform-base" target="1.7" />
+      <module name="crmd-platform-cache" target="1.5" />
+      <module name="crmd-platform-cache-api" target="1.7" />
+      <module name="crmd-platform-cache-core" target="1.7" />
+      <module name="crmd-platform-control" target="1.7" />
+      <module name="crmd-platform-core-dao-api" target="1.7" />
+      <module name="crmd-platform-core-dao-facade" target="1.7" />
+      <module name="crmd-platform-core-dao-service" target="1.7" />
+      <module name="crmd-platform-core-ddd-api" target="1.7" />
+      <module name="crmd-platform-core-ddd-dat-api" target="1.7" />
+      <module name="crmd-platform-core-ddd-dat-facade" target="1.7" />
+      <module name="crmd-platform-core-ddd-dat-proxy" target="1.7" />
+      <module name="crmd-platform-core-ddd-facade" target="1.7" />
+      <module name="crmd-platform-core-ddd-service" target="1.7" />
+      <module name="crmd-platform-data" target="1.7" />
+      <module name="crmd-platform-ddl" target="1.5" />
+      <module name="crmd-platform-ddl-api" target="1.7" />
+      <module name="crmd-platform-ddl-core" target="1.7" />
+      <module name="crmd-platform-dfs" target="1.5" />
+      <module name="crmd-platform-dfs-api" target="1.7" />
+      <module name="crmd-platform-dfs-core" target="1.7" />
+      <module name="crmd-platform-dubbo" target="1.5" />
+      <module name="crmd-platform-dubbo-api" target="1.7" />
+      <module name="crmd-platform-dubbo-core" target="1.7" />
+      <module name="crmd-platform-idempotency" target="1.5" />
+      <module name="crmd-platform-idempotency-api" target="1.7" />
+      <module name="crmd-platform-idempotency-core" target="1.7" />
+      <module name="crmd-platform-job" target="1.5" />
+      <module name="crmd-platform-job-core" target="1.7" />
+      <module name="crmd-platform-meta" target="1.5" />
+      <module name="crmd-platform-meta-api" target="1.7" />
+      <module name="crmd-platform-meta-control" target="1.7" />
+      <module name="crmd-platform-meta-core" target="1.7" />
+      <module name="crmd-platform-meta-facade" target="1.7" />
+      <module name="crmd-platform-meta-ui" target="1.7" />
+      <module name="crmd-platform-mq" target="1.6" />
+      <module name="crmd-platform-mq-api" target="1.6" />
+      <module name="crmd-platform-mq-ctg" target="1.6" />
+      <module name="crmd-platform-mq-rocketmq" target="1.6" />
+      <module name="crmd-platform-nosql" target="1.5" />
+      <module name="crmd-platform-nosql-api" target="1.7" />
+      <module name="crmd-platform-nosql-core" target="1.7" />
+      <module name="crmd-platform-pub" target="1.7" />
+      <module name="crmd-platform-pub-ui" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

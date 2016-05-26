@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper>
+
+    <sql id="qrySysTypesPageByDomainId">
+        <![CDATA[
+            SELECT
+                BUSI_TYPE_ID,
+                DOMAIN_ID,
+                BUSI_TYPE_NAME,
+                BUSI_TYPE_NBR,
+                BUSI_TYPE_DESC,
+                CHANGE_LOG_LEVEL,
+                DELETE_LOG_LEVEL,
+                CACHE_LEVEL,
+                MANAGER_GRADE,
+                META_TYPE,
+                REMARK,
+                CREATE_STAFF,
+                UPDATE_STAFF,
+                STATUS_CD,
+                CREATE_DATE,
+                STATUS_DATE,
+                UPDATE_DATE,
+                REGION_CD,
+                AREA_ID,
+                REC_UPDATE_DATE,
+                SHARDING_ID,
+                REL_SHARDING_ID,
+                DVERSION,
+                DTIMESTAMP
+            FROM
+                BUSI_TYPE
+            WHERE
+                DOMAIN_ID = ?
+        ]]>
+    </sql>
+    
+    <sql id="qryBusiTypeByNbr">
+        <![CDATA[
+            SELECT
+                BUSI_TYPE_ID,
+                DOMAIN_ID,
+                BUSI_TYPE_NAME,
+                BUSI_TYPE_NBR,
+                BUSI_TYPE_DESC,
+                CHANGE_LOG_LEVEL,
+                DELETE_LOG_LEVEL,
+                CACHE_LEVEL,
+                MANAGER_GRADE,
+                META_TYPE,
+                REMARK,
+                CREATE_STAFF,
+                UPDATE_STAFF,
+                STATUS_CD,
+                CREATE_DATE,
+                STATUS_DATE,
+                UPDATE_DATE,
+                REGION_CD,
+                AREA_ID,
+                REC_UPDATE_DATE,
+                SHARDING_ID,
+                REL_SHARDING_ID,
+                DVERSION,
+                DTIMESTAMP
+            FROM
+                BUSI_TYPE
+            WHERE
+                BUSI_TYPE_NBR = ?
+                AND STATUS_CD = ?
+        ]]>
+    </sql>
+
+</mapper>

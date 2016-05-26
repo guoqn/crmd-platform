@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.ffcs.crm:crm-cache:0.0.5-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ffcs/crm/crm-cache/0.0.5-SNAPSHOT/crm-cache-0.0.5-20160419.031329-1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ffcs/crm/crm-cache/0.0.5-SNAPSHOT/crm-cache-0.0.5-20160419.031329-1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ffcs/crm/crm-cache/0.0.5-SNAPSHOT/crm-cache-0.0.5-20160419.031329-1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper>
+
+	<sql id="getAttrValuesBySpecId">
+		<![CDATA[
+			SELECT
+				ATTR_VALUE_ID,
+				PARENT_VALUE_ID,
+				ATTR_ID,
+				ATTR_VALUE_NAME,
+				ATTR_VALUE_DESC,
+				ATTR_VALUE,
+				ATTR_VALUE_SORT,
+				IS_TRANS,
+				EFF_DATE,
+				EXP_DATE,
+				GROUP_CD,
+				MANAGE_GRADE,
+				REMARK,
+                CREATE_STAFF,
+                UPDATE_STAFF,
+                STATUS_CD,
+                CREATE_DATE,
+                STATUS_DATE,
+                UPDATE_DATE,
+                REGION_CD,
+                AREA_ID,
+                REC_UPDATE_DATE,
+                SHARDING_ID,
+                REL_SHARDING_ID,
+                DVERSION,
+                DTIMESTAMP
+			FROM
+				ATTR_VALUE
+			WHERE
+				ATTR_ID = ?
+			AND
+				PARENT_VALUE_ID = ?
+		]]>
+	</sql>
+
+
+	<sql id="qryAttrValuesByAttrId">
+		<![CDATA[
+			SELECT
+				ATTR_VALUE_ID,
+				PARENT_VALUE_ID,
+				ATTR_ID,
+				ATTR_VALUE_NAME,
+				ATTR_VALUE_DESC,
+				ATTR_VALUE,
+				ATTR_VALUE_SORT,
+				IS_TRANS,
+				EFF_DATE,
+				EXP_DATE,
+				GROUP_CD,
+				MANAGE_GRADE,
+				REMARK,
+                CREATE_STAFF,
+                UPDATE_STAFF,
+                STATUS_CD,
+                CREATE_DATE,
+                STATUS_DATE,
+                UPDATE_DATE,
+                REGION_CD,
+                AREA_ID,
+                REC_UPDATE_DATE,
+                SHARDING_ID,
+                REL_SHARDING_ID,
+                DVERSION,
+                DTIMESTAMP
+			FROM
+				ATTR_VALUE
+			WHERE
+				ATTR_ID = ?
+				AND STATUS_CD = ?
+		]]>
+	</sql>
+
+</mapper>

@@ -1,0 +1,72 @@
+package com.ffcs.crmd.platform.data.utils;
+
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+import javax.persistence.Table;
+
+import com.ctg.itrdc.platform.common.exception.RtManagerException;
+import com.ctg.itrdc.platform.common.utils.type.StringUtils;
+import com.ctg.itrdc.platform.data.entity.ClassInfoUtils;
+import com.ctg.itrdc.platform.data.entity.ColumnInfo;
+import com.ctg.itrdc.platform.pub.entity.BaseEntity;
+import com.ffcs.crmd.platform.data.ddl.SeqServiceFactory;
+import com.ffcs.crmd.platform.ddl.api.ICrmSeqService;
+
+public class CrmEntityUtils {
+	private static ConcurrentMap<Class<?>, String> seqMap = new ConcurrentHashMap<Class<?>, String>();
+
+	private static ICrmSeqService iCrmSeqService = SeqServiceFactory.getSeqService();
+
+	public static String getGlobalSeqName(BaseEntity entity) {
+		if (entity == null) {
+			throw new RtManagerException("对象不能为空");
+		}
+		if (!seqMap.containsKey(entity.getClass())) {
+
+			String seq = "";
+			Table t = entity.getClass().getAnnotation(Table.class);
+			if (t != null && !StringUtils.isNullOrEmpty(t.name())) {
+				seq = "SEQ_" + t.name() + "_ID";
+				seq = seq.toUpperCase();
+			} else {
+				seq = "SEQ_GLOBAL_ID";
+			}
+			seqMap.put(entity.getClass(), seq);
+		}
+		return seqMap.get(entity.getClass());
+	}
+
+	public static Long getSeq(String seqName) {
+		if (iCrmSeqService == null) {
+			throw new RtManagerException("序列服务不存在");
+		}
+		return iCrmSeqService.getSeq(seqName);
+	}
+
+	/**
+	 * 
+	 * 获取分片键值.
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	public static Object getShardingId(Object entity) {
+		if (entity == null) {
+			throw new RtManagerException("对象不能为空");
+		}
+		List<ColumnInfo> columnList = ClassInfoUtils.getColumnMap().get(entity.getClass());
+		if (columnList == null || columnList.size() == 0) {
+			throw new RtManagerException("类：" + entity.getClass().getName() + "字段描述不存在");
+		}
+		Object value = null;
+		for (ColumnInfo column : columnList) {
+			if (column.isSharding()) {
+				value = ClassInfoUtils.getValues(entity, column.getFiledName());
+				break;
+			}
+		}
+		return value;
+	}
+}

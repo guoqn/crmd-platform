@@ -1,0 +1,13 @@
+.navbar {
+	position: relative;
+	min-height: 50px;
+	margin-bottom: 0px;
+	border: 1px solid transparent;
+}
+
+.alert {
+	padding: 2px;
+	margin-bottom: 2px;
+	border: 1px solid transparent;
+	border-radius: 2px;
+}

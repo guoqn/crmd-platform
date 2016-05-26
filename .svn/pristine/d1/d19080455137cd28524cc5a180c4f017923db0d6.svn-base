@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.ffcs.crmd.platform</groupId>
+		<artifactId>crmd-platform</artifactId>
+		<version>0.0.3-SNAPSHOT</version>
+		<relativePath>../..</relativePath>
+	</parent>
+	<artifactId>crmd-platform-mq</artifactId>
+	<name>crmd-platform-mq</name>
+	<packaging>pom</packaging>
+
+	<properties>
+		<ctg.mq.version>2.0.3</ctg.mq.version>
+		<rocketmq.version>3.2.6</rocketmq.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+
+	<modules>
+		<module>crmd-platform-mq-api</module>
+		<module>crmd-platform-mq-ctg</module>
+		<module>crmd-platform-mq-rocketmq</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- ctg-mq -->
+			<dependency>
+				<groupId>com.ctg.itrdc.mq</groupId>
+				<artifactId>ctg-mq-api</artifactId>
+				<version>${ctg.mq.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.ctg.itrdc.mq</groupId>
+				<artifactId>ctg-mq-rocketmq</artifactId>
+				<version>${ctg.mq.version}</version>
+			</dependency>
+
+			<!-- crmd-platform-mq-api -->
+			<dependency>
+				<groupId>com.ffcs.crmd.platform</groupId>
+				<artifactId>crmd-platform-mq-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.alibaba.rocketmq</groupId>
+				<artifactId>rocketmq-client</artifactId>
+				<version>${rocketmq.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba.rocketmq</groupId>
+				<artifactId>rocketmq-tools</artifactId>
+				<version>${rocketmq.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
+	<build>
+		<plugins>
+			<!-- compiler插件, 设定JDK版本 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<showWarnings>true</showWarnings>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

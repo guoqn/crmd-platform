@@ -1,0 +1,81 @@
+<web-fragment version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd">
+
+    <!-- 指定模块名称 -->
+    <name>platform_pub</name>
+    <servlet>
+        <servlet-name>enttLocalCacheServlet</servlet-name>
+        <servlet-class>com.ffcs.crmd.platform.pub.cache.servlet.EnttLocalCacheServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>enttLocalCacheServlet</servlet-name>
+        <url-pattern>/enttLocalCacheServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>enttGlobalCacheServlet</servlet-name>
+        <servlet-class>com.ffcs.crmd.platform.pub.cache.servlet.EnttGlobalCacheServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>enttGlobalCacheServlet</servlet-name>
+        <url-pattern>/enttGlobalCacheServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>serviceLocalCacheServlet</servlet-name>
+        <servlet-class>com.ffcs.crmd.platform.pub.cache.servlet.ServiceLocalCacheServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>serviceLocalCacheServlet</servlet-name>
+        <url-pattern>/serviceLocalCacheServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>serviceGlobalCacheServlet</servlet-name>
+        <servlet-class>com.ffcs.crmd.platform.pub.cache.servlet.ServiceGlobalCacheServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>serviceGlobalCacheServlet</servlet-name>
+        <url-pattern>/serviceGlobalCacheServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>dataServiceSwitchServlet</servlet-name>
+        <servlet-class>com.ffcs.crmd.platform.pub.dats.DataServiceSwitchServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dataServiceSwitchServlet</servlet-name>
+        <url-pattern>/dataServiceSwitchServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>dialectSwitchServlet</servlet-name>
+        <servlet-class>com.ffcs.crmd.platform.pub.utils.sql.DialectSwitchServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dialectSwitchServlet</servlet-name>
+        <url-pattern>/dialectSwitchServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>rwBalanceSwitchServlet</servlet-name>
+        <servlet-class>com.ffcs.crmd.platform.pub.utils.rwbalance.RwBalanceSwitchServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>rwBalanceSwitchServlet</servlet-name>
+        <url-pattern>/rwBalanceSwitchServlet</url-pattern>
+    </servlet-mapping>
+    <!-- <filter>
+         <filter-name>PlatformTheadLocalFilter</filter-name>
+         <filter-class>com.ctg.itrdc.platform.pub.filter.ThreadLocalFilter</filter-class>
+     </filter>
+     <filter-mapping>
+         <filter-name>PlatformTheadLocalFilter</filter-name>
+         <url-pattern>/*</url-pattern>
+     </filter-mapping>-->
+
+</web-fragment>

@@ -1,0 +1,59 @@
+/* ========================================================================
+ * message-dialog.js
+ * 
+ * Description : Singleton message dialog.
+ *      Author : huangchao
+ * Create date : 2014/9/24
+ * ======================================================================== */
+.message-dialog .modal-header {
+	padding: 10px 15px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+.message-dialog .modal-header > .modal-title {
+	font-weight: bold;
+}
+.message-dialog .modal-header > .modal-title > span:first-child {
+	vertical-align: middle;
+	margin-right: 5px;
+}
+
+.message-dialog .modal-footer {
+	padding: 5px 10px;
+}
+
+.message-dialog > .message-dialog-loading .modal-header,
+.message-dialog > .message-dialog-loading .modal-footer {
+	display: none;
+}
+.message-dialog > .message-dialog-loading .modal-body {
+	background-image: url('../img/loading.gif');
+	background-repeat: no-repeat;
+	background-position: center 30px;
+}
+.message-dialog > .message-dialog-loading .modal-body > p {
+	margin-top: 125px;
+	margin-bottom: 15px;
+	text-align: center;
+}
+
+.message-dialog > .message-dialog-info .modal-header {
+	color: #fff;
+	background-color: #5bc0de;
+}
+.message-dialog > .message-dialog-primary .modal-header {
+	color: #fff;
+	background-color: #428bca;
+}
+.message-dialog > .message-dialog-success .modal-header {
+	color: #fff;
+	background-color: #5cb85c;
+}
+.message-dialog > .message-dialog-warning .modal-header {
+	color: #fff;
+	background-color: #f0ad4e;
+}
+.message-dialog > .message-dialog-danger .modal-header {
+	color: #fff;
+	background-color: #d9534f;
+}

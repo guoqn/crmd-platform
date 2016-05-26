@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.ctg.itrdc.platform:ctg-itrdc-platform-efclientapi:0.0.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ctg/itrdc/platform/ctg-itrdc-platform-efclientapi/0.0.1-SNAPSHOT/ctg-itrdc-platform-efclientapi-0.0.1-20151214.034145-1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ctg/itrdc/platform/ctg-itrdc-platform-efclientapi/0.0.1-SNAPSHOT/ctg-itrdc-platform-efclientapi-0.0.1-20151214.034145-1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ctg/itrdc/platform/ctg-itrdc-platform-efclientapi/0.0.1-SNAPSHOT/ctg-itrdc-platform-efclientapi-0.0.1-20151214.034145-1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

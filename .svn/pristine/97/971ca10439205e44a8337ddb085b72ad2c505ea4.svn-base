@@ -1,0 +1,27 @@
+##请求级别缓存默认配置.
+default.request.local.maxSize=3000
+default.request.local.expire=1800
+default.request.global.maxSize=6000
+default.request.global.expire=1800
+
+##请求级别缓存默认配置.
+default.global.local.maxSize=3000
+default.global.local.expire=3600
+default.global.global.maxSize=3000
+default.global.global.expire=3600
+
+##配置缓存级别level. 后面是缓存的服务名,可以采用通配符的形式.
+## 11 代表请求级别缓存
+## 12 代表全局请求缓存
+level.$cust*.query*=11
+##本地缓存有效时间,单位秒,不配置则读取全局默认
+local.expire.$cust*.query*=500
+##本地缓存个数,不配置则读取全局默认
+local.maxSize.$cust*.query*=500
+##全局缓存有效时间,单位秒,不配置则读取全局默认
+global.expire.$cust*.query*=500
+##全局缓存个数,不配置则读取全局默认,目前参数没有用
+global.maxSize.$cust*.query*=500
+
+level.*.*=11
+level.$custFacade.queryCustName=12

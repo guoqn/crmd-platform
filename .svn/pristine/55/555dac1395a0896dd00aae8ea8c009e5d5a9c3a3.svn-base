@@ -1,0 +1,145 @@
+package com.ffcs.crmd.platform.meta.entity.impl;
+
+import com.ctg.itrdc.platform.common.utils.type.NumberUtils;
+import com.ctg.itrdc.platform.common.utils.type.StringUtils;
+import com.ffcs.crmd.platform.meta.provider.ITableMetaData;
+import com.ffcs.crmd.platform.meta.exception.MetaException;
+import com.ffcs.crmd.platform.meta.service.MetaServiceFactory;
+import com.ffcs.crmd.platform.pub.ex.ExceptionUtils;
+
+public class BaseAttrEntityImpl extends AbstractBaseMetaEntityImpl<Long> {
+
+    private Long slaAttrId = null;
+
+    private Long slaAttrValue = null;
+
+    private Long masterAttrId = null;
+
+    private String baseEntityName = "";
+
+    private Long baseBusiObjId = null;
+
+    private AttrOpType attrOpType = null;
+
+    public BaseAttrEntityImpl() {
+        super();
+    }
+
+    public BaseAttrEntityImpl(Long baseBusiObjId, String baseEntityName, Long masterAttrId,
+        Long slaAttrId, Long slaAttrValue) {
+        this.baseBusiObjId = baseBusiObjId;
+        this.baseEntityName = baseEntityName;
+        this.masterAttrId = masterAttrId;
+        this.slaAttrValue = slaAttrValue;
+        this.slaAttrId = slaAttrId;
+    }
+
+    public void setMasterId(Object masterId) {
+        if (masterAttrId == null) {
+            logger.warn("masterIdSpec is null");
+            return;
+        }
+        writeAttrByBusiObjAttrId(masterAttrId, masterId);
+    }
+
+    public Long getMasterId(Long masterId) {
+        return NumberUtils.nullToLongZero(readAttrByBusiObjAttrId(masterId));
+    }
+
+    public Long getAttrId() {
+        return NumberUtils.nullToLongZero(readAttrByBusiObjAttrId(slaAttrId));
+    }
+
+    public void setAttrId(Long attrId) {
+        if (slaAttrId == null) {
+            logger.warn("attrIdSpec is null");
+            return;
+        }
+        writeAttrByBusiObjAttrId(slaAttrId, attrId);
+    }
+
+    public String getAttrValue() {
+        return StringUtils.strnull(readAttrByBusiObjAttrId(slaAttrValue));
+    }
+
+    public void setAttrValue(String attrValue) {
+        if (slaAttrValue == null) {
+            logger.warn("attrValueSpec is null");
+            return;
+        }
+        writeAttrByBusiObjAttrId(slaAttrValue, attrValue);
+    }
+
+    public void setBaseEntityName(String entityName) {
+        this.baseEntityName = entityName;
+    }
+
+    public String getBaseEntityName() {
+        if (StringUtils.isNullOrEmpty(this.baseEntityName)) {
+            ExceptionUtils.throwEx(new MetaException("baseEntity do not set"));
+        }
+        return this.baseEntityName;
+    }
+
+    public Long getBaseBusiObjId() {
+        return baseBusiObjId;
+    }
+
+    public void setBaseBusiObjId(Long baseBusiObjId) {
+        this.baseBusiObjId = baseBusiObjId;
+    }
+
+    public Long getMasterAttrId() {
+        return masterAttrId;
+    }
+
+    public void setMasterAttrId(Long masterAttrId) {
+        this.masterAttrId = masterAttrId;
+    }
+
+    public Long getSlaAttrValue() {
+        return slaAttrValue;
+    }
+
+    public void setSlaAttrValue(Long slaAttrValue) {
+        this.slaAttrValue = slaAttrValue;
+    }
+
+    public Long getSlaAttrId() {
+        return slaAttrId;
+    }
+
+    public void setSlaAttrId(Long slaAttrId) {
+        this.slaAttrId = slaAttrId;
+    }
+
+    public String getAttrOpType() {
+        if (attrOpType == null) {
+            return "";
+        }
+        return attrOpType.op();
+    }
+
+    public void setAttrOpType(String attrOpType) {
+        String oldOp = "";
+        if (this.attrOpType != null) {
+            oldOp = this.attrOpType.op();
+        }
+        this.attrOpType = AttrOpType.getOp(attrOpType,oldOp);
+    }
+
+    @Override
+    public ITableMetaData readTableMeta() {
+        ITableMetaData tableMetaData = MetaServiceFactory.getMetaService()
+            .getTableMetaDataByBusiObjIdAndTableName(this.getBaseBusiObjId(), this.getTableName());
+        if (tableMetaData == null) {
+            ExceptionUtils.throwEx(new MetaException("no tableMetaData"));
+        }
+        return tableMetaData;
+    }
+
+    @Override
+    public boolean isUseMeta() {
+        return true;
+    }
+}

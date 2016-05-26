@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.ctg.itrdc.platform:ctg-itrdc-platform-daoclient:1.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ctg/itrdc/platform/ctg-itrdc-platform-daoclient/1.0-SNAPSHOT/ctg-itrdc-platform-daoclient-1.0-20160513.012527-27.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ctg/itrdc/platform/ctg-itrdc-platform-daoclient/1.0-SNAPSHOT/ctg-itrdc-platform-daoclient-1.0-20160513.012527-27-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ctg/itrdc/platform/ctg-itrdc-platform-daoclient/1.0-SNAPSHOT/ctg-itrdc-platform-daoclient-1.0-20160513.012527-27-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

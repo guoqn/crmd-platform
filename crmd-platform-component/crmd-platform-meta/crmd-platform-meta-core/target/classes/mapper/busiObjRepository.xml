@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper>
+
+    <sql id="qryBusiObjPageByTypeId">
+        <![CDATA[
+            SELECT
+                BUSI_OBJ_ID,
+                BUSI_TYPE_ID,
+                PAR_BUSI_OBJ_ID,
+                BUSI_OBJ_NAME,
+                BUSI_OBJ_NBR,
+                BUSI_OBJ_DESC,
+                APPLY_REGION_ID,
+                REMARK,
+                CREATE_STAFF,
+                UPDATE_STAFF,
+                STATUS_CD,
+                CREATE_DATE,
+                STATUS_DATE,
+                UPDATE_DATE,
+                REGION_CD,
+                AREA_ID,
+                REC_UPDATE_DATE,
+                SHARDING_ID,
+                REL_SHARDING_ID,
+                DVERSION,
+                DTIMESTAMP
+            FROM
+                BUSI_OBJ
+            WHERE
+                BUSI_TYPE_ID = ?
+        ]]>
+    </sql>
+    <sql id="qryBusiObjPageByAObjId">
+        <![CDATA[
+            SELECT
+                A.BUSI_OBJ_ID,
+                A.BUSI_TYPE_ID,
+                A.PAR_BUSI_OBJ_ID,
+                A.BUSI_OBJ_NAME,
+                A.BUSI_OBJ_NBR,
+                A.BUSI_OBJ_DESC,
+                A.APPLY_REGION_ID,
+                A.REMARK,
+                A.CREATE_STAFF,
+                A.UPDATE_STAFF,
+                A.STATUS_CD,
+                A.CREATE_DATE,
+                A.STATUS_DATE,
+                A.UPDATE_DATE,
+                A.REGION_CD,
+                A.AREA_ID,
+                A.REC_UPDATE_DATE,
+                A.SHARDING_ID,
+                A.REL_SHARDING_ID,
+                A.DVERSION,
+                A.DTIMESTAMP
+            FROM
+                BUSI_OBJ A,REL_SPEC B
+            WHERE
+                A.BUSI_OBJ_ID = B.Z_OBJ_ID
+            AND B.A_OBJ_ID = ?
+        ]]>
+    </sql>
+    <sql id="qryBusiObjPageByZObjId">
+        <![CDATA[
+            SELECT
+                A.BUSI_OBJ_ID,
+                A.BUSI_TYPE_ID,
+                A.PAR_BUSI_OBJ_ID,
+                A.BUSI_OBJ_NAME,
+                A.BUSI_OBJ_NBR,
+                A.BUSI_OBJ_DESC,
+                A.APPLY_REGION_ID,
+                A.REMARK,
+                A.CREATE_STAFF,
+                A.UPDATE_STAFF,
+                A.STATUS_CD,
+                A.CREATE_DATE,
+                A.STATUS_DATE,
+                A.UPDATE_DATE,
+                A.REGION_CD,
+                A.AREA_ID,
+                A.REC_UPDATE_DATE,
+                A.SHARDING_ID,
+                A.REL_SHARDING_ID,
+                A.DVERSION,
+                A.DTIMESTAMP
+            FROM
+                BUSI_OBJ A,REL_SPEC B
+            WHERE
+                A.BUSI_OBJ_ID = B.A_OBJ_ID
+            AND
+            B.Z_OBJ_ID = ?
+        ]]>
+    </sql>
+    <sql id="qryBusiObjPageByTabId">
+        <![CDATA[
+            SELECT
+                A.BUSI_OBJ_ID,
+                A.BUSI_TYPE_ID,
+                A.PAR_BUSI_OBJ_ID,
+                A.BUSI_OBJ_NAME,
+                A.BUSI_OBJ_NBR,
+                A.BUSI_OBJ_DESC,
+                A.APPLY_REGION_ID,
+                A.REMARK,
+                A.CREATE_STAFF,
+                A.UPDATE_STAFF,
+                A.STATUS_CD,
+                A.CREATE_DATE,
+                A.STATUS_DATE,
+                A.UPDATE_DATE,
+                A.REGION_CD,
+                A.AREA_ID,
+                A.REC_UPDATE_DATE,
+                A.SHARDING_ID,
+                A.REL_SHARDING_ID,
+                A.DVERSION,
+                A.DTIMESTAMP
+            FROM
+                BUSI_OBJ A,
+                OBJ_TAB_REL B,
+                SYS_TABLE C
+            WHERE
+                C.TAB_ID = B.TAB_ID
+            AND
+                B.OBJ_ID = A.BUSI_OBJ_ID
+            AND
+                B.OBJ_TYPE = ?
+            AND
+                C.TAB_ID = ?
+        ]]>
+    </sql>
+    
+    <sql id="qryBusiObjByTypeIdAndStatusCd">
+        <![CDATA[
+            SELECT
+                BUSI_OBJ_ID,
+                BUSI_TYPE_ID,
+                PAR_BUSI_OBJ_ID,
+                BUSI_OBJ_NAME,
+                BUSI_OBJ_NBR,
+                BUSI_OBJ_DESC,
+                APPLY_REGION_ID,
+                REMARK,
+                CREATE_STAFF,
+                UPDATE_STAFF,
+                STATUS_CD,
+                CREATE_DATE,
+                STATUS_DATE,
+                UPDATE_DATE,
+                REGION_CD,
+                AREA_ID,
+                REC_UPDATE_DATE,
+                SHARDING_ID,
+                REL_SHARDING_ID,
+                DVERSION,
+                DTIMESTAMP
+            FROM
+                BUSI_OBJ
+            WHERE
+                BUSI_TYPE_ID = ?
+                AND STATUS_CD = ?
+        ]]>
+    </sql>
+
+    <sql id="qryBusiObjByBusiObjNbrAndStatusCd">
+        <![CDATA[
+            SELECT
+                BUSI_OBJ_ID,
+                BUSI_TYPE_ID,
+                PAR_BUSI_OBJ_ID,
+                BUSI_OBJ_NAME,
+                BUSI_OBJ_NBR,
+                BUSI_OBJ_DESC,
+                APPLY_REGION_ID,
+                REMARK,
+                CREATE_STAFF,
+                UPDATE_STAFF,
+                STATUS_CD,
+                CREATE_DATE,
+                STATUS_DATE,
+                UPDATE_DATE,
+                REGION_CD,
+                AREA_ID,
+                REC_UPDATE_DATE,
+                SHARDING_ID,
+                REL_SHARDING_ID,
+                DVERSION,
+                DTIMESTAMP
+            FROM
+                BUSI_OBJ
+            WHERE
+                BUSI_OBJ_NBR = ?
+                AND STATUS_CD = ?
+        ]]>
+    </sql>
+</mapper>

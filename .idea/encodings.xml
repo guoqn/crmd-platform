@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-base" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-cache" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-cache/crmd-platform-cache-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-cache/crmd-platform-cache-core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-ddl" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-ddl/crmd-platform-ddl-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-ddl/crmd-platform-ddl-core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-dfs" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-dfs/crmd-platform-dfs-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-dfs/crmd-platform-dfs-core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-dubbo" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-dubbo/crmd-platform-dubbo-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-dubbo/crmd-platform-dubbo-core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-idempotency" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-idempotency/crmd-platform-idempotency-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-idempotency/crmd-platform-idempotency-core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-job" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-job/crmd-platform-job-core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-meta" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-meta/crmd-platform-meta-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-meta/crmd-platform-meta-control" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-meta/crmd-platform-meta-core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-meta/crmd-platform-meta-facade" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-meta/crmd-platform-meta-ui" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-mq" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-mq/crmd-platform-mq-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-mq/crmd-platform-mq-ctg" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-mq/crmd-platform-mq-rocketmq" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-nosql" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-nosql/crmd-platform-nosql-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-component/crmd-platform-nosql/crmd-platform-nosql-core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-core/crmd-platform-core-dao-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-core/crmd-platform-core-dao-facade" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-core/crmd-platform-core-dao-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-core/crmd-platform-core-ddd-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-core/crmd-platform-core-ddd-dat-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-core/crmd-platform-core-ddd-dat-facade" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-core/crmd-platform-core-ddd-dat-proxy" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-core/crmd-platform-core-ddd-facade" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-core/crmd-platform-core-ddd-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-kernel/crmd-platform-control" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-kernel/crmd-platform-data" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-kernel/crmd-platform-pub" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crmd-platform-kernel/crmd-platform-pub-ui" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>

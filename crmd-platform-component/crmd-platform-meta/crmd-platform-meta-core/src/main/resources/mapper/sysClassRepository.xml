@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper>
+
+	<sql id="getSysClssByCode" type="sql"><![CDATA[
+			select * from sys_class s where s.java_code=? and s.status_cd=? ]]>
+	</sql>
+
+</mapper>

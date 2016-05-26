@@ -1,0 +1,51 @@
+package com.ffcs.crmd.platform.mq.rocketmq;
+
+import java.util.Calendar;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.ffcs.crmd.platform.mq.MqException;
+import com.ffcs.crmd.platform.mq.MqMessage;
+import com.ffcs.crmd.platform.mq.consumer.api.IConsumer;
+
+/**
+ * 监听的器在Spring配置文件中设置
+ * 
+ * @author chenzhi
+ * @2015年8月25日 下午3:55:51
+ */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {
+        "classpath*:conf/mq/spring/applicationContext-crm-mq-pull.xml" })
+public class TestPull {
+    @Resource(name = "crmMqDefaultConsumer")
+    private IConsumer defaultConsumer;
+    
+    @Test
+    public void testConsumer() throws MqException {
+        if (defaultConsumer != null) {
+            List<MqMessage> msgs = defaultConsumer.pull();
+            int retry = 0;
+            while (msgs.size() == 0) {
+                if (retry > 3) {
+                    return;
+                }
+                retry++;
+                msgs = defaultConsumer.pull();
+            }
+            int i = 0;
+            for (MqMessage msg : msgs) {
+                System.out.println(Calendar.getInstance().getTime().toString() + " count=" + (i++)
+                    + " " + Thread.currentThread().getName() + "  queue=" + msg.getQueueId()
+                    + "  body=" + new String(msg.getBody()) + "   key=" + msg.getKeys());
+            }
+            System.out.println("=================================================");
+        }
+    }
+}

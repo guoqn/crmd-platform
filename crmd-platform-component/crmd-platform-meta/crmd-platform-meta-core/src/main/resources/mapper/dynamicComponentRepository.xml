@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper>
+	<!-- by winCode -->
+	<sql id="getRootComponentByWinId" type="sql">
+		<![CDATA[
+		SELECT
+			component_id,
+			p_component_id,
+			GROUP_CODE,
+			window_id,
+			component_type,
+			component_code,
+			component_rows,
+			component_clos,
+			component_exp,
+			component_name,
+			component_tip,
+			component_desc,
+			bus_attr_id,
+			bus_attr_type,
+			bus_attr_code,
+			bus_attr_name,
+			remark,
+			status_cd,
+			create_date,
+			status_date,
+			update_date,
+			sharding_id,
+			create_staff,
+			update_staff,
+			tenant_id
+		FROM
+			dynamic_component
+		WHERE 
+			window_id = ? and status_cd = ? and p_component_id is null
+		]]>
+	</sql>
+	<!-- by eventId -->
+	<sql id="qryChildComponentByPId" type="sql">
+		<![CDATA[
+		SELECT
+			component_id,
+			p_component_id,
+			window_id,
+			GROUP_CODE,
+			component_type,
+			component_code,
+			component_rows,
+			component_clos,
+			component_exp,
+			component_tip,
+			component_name,
+			component_desc,
+			bus_attr_id,
+			bus_attr_type,
+			bus_attr_code,
+			bus_attr_name,
+			remark,
+			status_cd,
+			create_date,
+			status_date,
+			update_date,
+			sharding_id,
+			create_staff,
+			update_staff,
+			tenant_id
+		FROM
+			dynamic_component
+		WHERE 
+			p_component_id = ? and status_cd = ?
+		]]>
+	</sql>
+
+
+	<!-- by windowId -->
+	<sql id="qryComponentsByWinId" type="sql">
+		<![CDATA[
+		SELECT
+			component_id,
+			p_component_id,
+			window_id,
+			GROUP_CODE,
+			component_type,
+			component_code,
+			component_rows,
+			component_clos,
+			component_exp,
+			component_tip,
+			component_name,
+			component_desc,
+			bus_attr_id,
+			bus_attr_type,
+			bus_attr_code,
+			bus_attr_name,
+			remark,
+			status_cd,
+			create_date,
+			status_date,
+			update_date,
+			sharding_id,
+			create_staff,
+			update_staff,
+			tenant_id
+		FROM
+			dynamic_component
+		WHERE 
+			window_id = ? and status_cd = ?
+		]]>
+	</sql>
+
+</mapper>

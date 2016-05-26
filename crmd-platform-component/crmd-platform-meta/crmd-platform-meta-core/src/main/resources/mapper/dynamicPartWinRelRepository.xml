@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper>
+	<!-- by qryRelsByPartId -->
+	<sql id="qryRelsByPartId" type="sql">
+		SELECT
+			rel_id,
+			part_id,
+			window_id,
+			rel_order,
+			remark,
+			status_cd,
+			create_date,
+			status_date,
+			update_date,
+			sharding_id,
+			create_staff,
+			update_staff,
+			tenant_id
+		FROM
+			dynamic_part_win_rel r
+		WHERE
+			r.part_id = ?
+		and
+			r.status_cd= ?
+	</sql>
+
+</mapper>

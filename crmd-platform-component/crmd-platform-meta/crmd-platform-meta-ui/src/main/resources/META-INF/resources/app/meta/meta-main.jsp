@@ -1,0 +1,330 @@
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="utf-8"
+        import="com.ffcs.crmd.platform.ui.utils.JspUtil" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- 通用资源引入 -->
+    <jsp:include page="/app/public/include/header-inc.jsp"></jsp:include>
+    <title>元数据配置</title>
+    <link rel="stylesheet"
+          href="<%=JspUtil.path(request)%>/resources/lib/sidebar/deshboard.css?<%=JspUtil.version()%>"/>
+    <link rel="stylesheet" href="css/meta.css">
+</head>
+
+<body ng-app="metaMainApp" ng-controller="metaMainCtrl">
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="meta-main.jsp" ng-bind="metaMain.projectName"></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse hide">
+            <ul class="nav navbar-nav navbar-right">
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+
+    <div class="col-sm-3 col-md-2 sidebar">
+        <ul class="nav nav-sidebar">
+            <li ng-repeat="item in metaMain.sidebarItems">
+                <a href="#" ng-click="metaMain.itemSelect(item,$event)" ng-bind="item.name"></a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
+        <div class="row">
+            <div class="col-sm-12" ng-show="metaMain.selectSidebarItem.name == '系统表'">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <jsp:include page="sys-table/sys-table.jsp"></jsp:include>
+                        <ul class="nav nav-tabs" role="tabList">
+                            <li role="presentation" class="active">
+                                <a href="javascript:;" data-target="#column" aria-controls="column"
+                                   role="tab"
+                                   data-toggle="tab">系统字段</a></li>
+                            <li><a href="javascript:;" data-target="#relTabObj"
+                                   aria-controls="relTabObj"
+                                   role="tab"
+                                   data-toggle="tab">关联对象</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="column">
+                                <jsp:include page="sys-column/sys-column.jsp"></jsp:include>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="relTabObj">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <jsp:include
+                                                page="obj-tab-rel/tab-obj-rel.jsp"></jsp:include>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12" ng-show="metaMain.selectSidebarItem.name == '主题域'">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <jsp:include page="sys-domain/sys-domain.jsp"></jsp:include>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12" ng-show="metaMain.selectSidebarItem.name == '业务大类'">
+                <jsp:include page="busi-type/busi-type.jsp"></jsp:include>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <jsp:include page="attr-spec/attr-spec.jsp"></jsp:include>
+                    </div>
+                    <div class="col-sm-6">
+                        <jsp:include page="attr-value/attr-value.jsp"></jsp:include>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12" ng-show="metaMain.selectSidebarItem.name == '业务对象'">
+                <jsp:include page="busi-obj/busi-obj.jsp"></jsp:include>
+                <ul class="nav nav-tabs" role="tabList">
+                    <li role="presentation" class="active">
+                        <a href="javascript:;"
+                           data-target="#busiObjAttr"
+                           aria-controls="busiObjAttr"
+                           role="tab"
+                           data-toggle="tab">属性规格</a>
+                    </li>
+                    <li role="presentation" class="">
+                        <a href="javascript:;" data-target="#relSpec"
+                           aria-controls="relSpec"
+                           role="tab"
+                           data-toggle="tab">关联对象</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="busiObjAttr">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <jsp:include
+                                        page="busi-obj-attr/busi-obj-attr.jsp"></jsp:include>
+                            </div>
+                            <div class="col-sm-6">
+                                <jsp:include
+                                        page="busi-obj-attr-value/busi-obj-attr-value.jsp"></jsp:include>
+                            </div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="relSpec">
+                        <ul class="nav nav-tabs" role="tabList">
+                            <li role="presentation" class="active">
+                                <a href="javascript:;"
+                                   data-target="#relSpecA"
+                                   aria-controls="relSpecA"
+                                   role="tab"
+                                   data-toggle="tab">关联A端对象</a>
+
+                            </li>
+                            <li role="presentation" class="">
+                                <a href="javascript:;"
+                                   data-target="#relSpecZ"
+                                   aria-controls="relSpecZ"
+                                   role="tab"
+                                   data-toggle="tab">关联Z端对象</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active"
+                                 id="relSpecA">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <jsp:include
+                                                page="rel-spec/rel-spec-a.jsp"></jsp:include>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <jsp:include
+                                                page="rel-spec-attr/rel-spec-attr-a.jsp"></jsp:include>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="relSpecZ">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <jsp:include
+                                                page="rel-spec/rel-spec-z.jsp"></jsp:include>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <jsp:include
+                                                page="rel-spec-attr/rel-spec-attr-z.jsp"></jsp:include>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+        <%--<div ng-switch on="metaMain.selectSidebarItem.name">
+            <div ng-switch-default>
+                欢迎页面
+            </div>
+            <div ng-switch-when="系统表">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <jsp:include page="sys-table/sys-table.jsp"></jsp:include>
+                        <ul class="nav nav-tabs" role="tabList">
+                            <li role="presentation" class="active">
+                                <a href="javascript:;" data-target="#column" aria-controls="column"
+                                   role="tab"
+                                   data-toggle="tab">系统字段</a></li>
+                            <li><a href="javascript:;" data-target="#relTabObj"
+                                   aria-controls="relTabObj"
+                                   role="tab"
+                                   data-toggle="tab">关联对象</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="column">
+                                <jsp:include page="sys-column/sys-column.jsp"></jsp:include>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="relTabObj">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <jsp:include
+                                                page="obj-tab-rel/tab-obj-rel.jsp"></jsp:include>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <jsp:include
+                                                page="rel-spec-attr/rel-spec-attr-a.jsp"></jsp:include>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-switch-when="主题域">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <jsp:include page="sys-domain/sys-domain.jsp"></jsp:include>
+                        <jsp:include page="busi-type/busi-type.jsp"></jsp:include>
+                        <ul class="nav nav-tabs" role="tabList">
+                            <li role="presentation" class="active">
+                                <a href="javascript:;" data-target="#busiObj"
+                                   aria-controls="busiObj"
+                                   role="tab"
+                                   data-toggle="tab">业务对象</a></li>
+                            <li><a href="javascript:;" data-target="#attrSpec"
+                                   aria-controls="attrSpec"
+                                   role="tab"
+                                   data-toggle="tab">属性规格</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="busiObj">
+                                <jsp:include page="busi-obj/busi-obj.jsp"></jsp:include>
+                                <ul class="nav nav-tabs" role="tabList">
+                                    <li role="presentation" class="active">
+                                        <a href="javascript:;"
+                                           data-target="#busiObjAttr"
+                                           aria-controls="busiObjAttr"
+                                           role="tab"
+                                           data-toggle="tab">业务对象属性规格</a>
+                                    </li>
+                                    <li role="presentation" class="">
+                                        <a href="javascript:;" data-target="#relSpecA"
+                                           aria-controls="relSpecA"
+                                           role="tab"
+                                           data-toggle="tab">关联Z端对象</a></li>
+                                    <li role="presentation" class="">
+                                        <a href="javascript:;"
+                                           data-target="#relSpecZ"
+                                           aria-controls="relSpecZ"
+                                           role="tab"
+                                           data-toggle="tab">关联A端对象</a></li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane active" id="busiObjAttr">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <jsp:include
+                                                        page="busi-obj-attr/busi-obj-attr.jsp"></jsp:include>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <jsp:include
+                                                        page="busi-obj-attr-value/busi-obj-attr-value.jsp"></jsp:include>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="relSpecA">
+                                        <jsp:include page="rel-spec/rel-spec-a.jsp"></jsp:include>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="relSpecZ">
+                                        <jsp:include page="rel-spec/rel-spec-z.jsp"></jsp:include>
+                                    </div>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="attrSpec">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <jsp:include page="attr-spec/attr-spec.jsp"></jsp:include>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <jsp:include page="attr-value/attr-value.jsp"></jsp:include>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>--%>
+    </div>
+</div>
+<!-- 通用资源引入 -->
+<jsp:include page="/app/public/include/footer-inc.jsp"></jsp:include>
+<!-- 元数据配置主要脚本 -->
+<script type="text/javascript"
+        src="<%=JspUtil.path(request)%>/app/meta/meta-common.js?<%=JspUtil.version()%>"></script>
+<script type="text/javascript"
+        src="<%=JspUtil.path(request)%>/app/meta/meta-controller.js?<%=JspUtil.version()%>"></script>
+<script type="text/javascript"
+        src="<%=JspUtil.path(request)%>/app/meta/sys-table/sys-table-controller.js?<%=JspUtil.version()%>"></script>
+<script type="text/javascript"
+        src="<%=JspUtil.path(request)%>/app/meta/sys-domain/sys-domain-controller.js?<%=JspUtil.version()%>"></script>
+<script type="text/javascript"
+        src="<%=JspUtil.path(request)%>/app/meta/sys-column/sys-column-controller.js?<%=JspUtil.version()%>"></script>
+<script type="text/javascript"
+        src="<%=JspUtil.path(request)%>/app/meta/attr-spec/attr-spec-controller.js?<%=JspUtil.version()%>"></script>
+<script type="text/javascript"
+        src="<%=JspUtil.path(request)%>/app/meta/attr-value/attr-value-controller.js?<%=JspUtil.version()%>"></script>
+<script type="text/javascript"
+        src="<%=JspUtil.path(request)%>/app/meta/busi-obj/busi-obj-controller.js?<%=JspUtil.version()%>"></script>
+<script type="text/javascript"
+        src="<%=JspUtil.path(request)%>/app/meta/busi-type/busi-type-controller.js?<%=JspUtil.version()%>"></script>
+<script type="text/javascript"
+        src="<%=JspUtil.path(request)%>/app/meta/busi-obj-attr/busi-obj-attr-controller.js?<%=JspUtil.version()%>"></script>
+<script type="text/javascript"
+        src="<%=JspUtil.path(request)%>/app/meta/busi-obj-attr-value/busi-obj-attr-value-controller.js?<%=JspUtil.version()%>"></script>
+<script type="text/javascript"
+        src="<%=JspUtil.path(request)%>/app/meta/obj-tab-rel/tab-obj-rel-controller.js?<%=JspUtil.version()%>"></script>
+<script type="text/javascript"
+        src="<%=JspUtil.path(request)%>/app/meta/rel-spec/rel-spec-a-controller.js?<%=JspUtil.version()%>"></script>
+<script type="text/javascript"
+        src="<%=JspUtil.path(request)%>/app/meta/rel-spec/rel-spec-z-controller.js?<%=JspUtil.version()%>"></script>
+<script type="text/javascript"
+        src="<%=JspUtil.path(request)%>/app/meta/rel-spec-attr/rel-spec-attr-a-controller.js?<%=JspUtil.version()%>"></script>
+<script type="text/javascript"
+        src="<%=JspUtil.path(request)%>/app/meta/rel-spec-attr/rel-spec-attr-z-controller.js?<%=JspUtil.version()%>"></script>
+</body>
+</html>

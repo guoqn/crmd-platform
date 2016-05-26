@@ -1,0 +1,282 @@
+package com.ffcs.crmd.platform.meta.util;
+
+import com.ctg.itrdc.platform.common.exception.RtManagerException;
+import com.ctg.itrdc.platform.common.utils.type.NumberUtils;
+import com.ctg.itrdc.platform.common.utils.type.StringUtils;
+import com.ffcs.crmd.platform.meta.entity.SysConfig;
+import com.ffcs.crmd.platform.pub.vo.RetVo;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+/**
+ * 获取子节点。
+ * Created by FFSC-GUOQN on 2015/12/22.
+ */
+public class SysConfigUtil {
+
+    public static final String PATH_SEPARATOR = "/";
+
+    private static ConcurrentMap<String, String> cacheMap = new ConcurrentHashMap<String, String>();
+
+    public static ConcurrentMap<String, String> getCacheMap() {
+        return cacheMap;
+    }
+
+    private static ConcurrentMap<String, Object> cacheMapList = new ConcurrentHashMap<String, Object>();
+
+    public static void setCacheMap(ConcurrentMap<String, String> cacheMap) {
+        SysConfigUtil.cacheMap = cacheMap;
+    }
+
+    /**
+     * 校验path路径
+     *
+     * @param path
+     * @return
+     * @throws RtManagerException
+     */
+    public static String validatePath(String path) throws RtManagerException {
+        if (path == null) {
+            throw new RtManagerException("Path cannot be null");
+        }
+        if (path.length() == 0) {
+            throw new RtManagerException("Path length must be > 0");
+        }
+        if (path.charAt(0) != '/') {
+            throw new RtManagerException(
+                    "Path must start with / character");
+        }
+        if (path.length() == 1) { // done checking - it's the root
+            return path;
+        }
+        if (path.charAt(path.length() - 1) == '/') {
+            throw new RtManagerException(
+                    "Path must not end with / character");
+        }
+
+        String reason = null;
+        char lastc = '/';
+        char chars[] = path.toCharArray();
+        char c;
+        for (int i = 1; i < chars.length; lastc = chars[i], i++) {
+            c = chars[i];
+
+            if (c == 0) {
+                reason = "null character not allowed @" + i;
+                break;
+            } else if (c == '/' && lastc == '/') {
+                reason = "empty node name specified @" + i;
+                break;
+            } else if (c == '.' && lastc == '.') {
+                if (chars[i - 2] == '/' &&
+                        ((i + 1 == chars.length)
+                                || chars[i + 1] == '/')) {
+                    reason = "relative paths not allowed @" + i;
+                    break;
+                }
+            } else if (c == '.') {
+                if (chars[i - 1] == '/' &&
+                        ((i + 1 == chars.length)
+                                || chars[i + 1] == '/')) {
+                    reason = "relative paths not allowed @" + i;
+                    break;
+                }
+            } else if (c > '\u0000' && c < '\u001f'
+                    || c > '\u007f' && c < '\u009F'
+                    || c > '\ud800' && c < '\uf8ff'
+                    || c > '\ufff0' && c < '\uffff') {
+                reason = "invalid charater @" + i;
+                break;
+            }
+        }
+
+        if (reason != null) {
+            throw new RtManagerException(
+                    "Invalid path string \"" + path + "\" caused by " + reason);
+        }
+
+        return path;
+    }
+
+    /**
+     * 根据path全路径 获取node名称，例如  "/one/two/three" will return "three"
+     * /root/one/three
+     *
+     * @param path the path
+     * @return the node
+     */
+    public static RetVo getNodeFromPath(String path) {
+        RetVo retVo = new RetVo(false);
+        validatePath(path);
+
+        String[] strData = path.substring(1).split(PATH_SEPARATOR);
+        if (strData == null || strData.length <= 0) {
+            return null;
+        }
+        //根据路径的最有一个元素获取所有名称匹配的子节点
+        List<SysConfig> childNode = SysConfig.repository().getNodeByCode(strData[strData.length-1]);
+        for (SysConfig conf : childNode) {
+            LinkedList<String> nodeQueue = new LinkedList<String>(Arrays.asList(strData));
+            nodeQueue.removeLast();
+            retVo = recurNode(nodeQueue, conf);
+            if (retVo.getResult()) {
+                retVo.setObject(conf.getNodeValue());
+                retVo.setRetCode(StringUtils.strnull(conf.getConfId())); //存取parentId
+                cacheMap.putIfAbsent(path, conf.getNodeValue());
+                break;
+            }
+        }
+        return retVo;
+    }
+
+    /**
+     * 根据路径获取到nodeValue的值
+     *
+     * @param path
+     * @return
+     */
+    public static String getNodeValue(String path) {
+        //如果key有存在，那么直接返回key的值
+        if (cacheMap.containsKey(path)) {
+            return cacheMap.get(path);
+        }
+        RetVo retVo = getNodeFromPath(path);
+        if (retVo.getResult()) {
+            return StringUtils.strnull(retVo.getObject());
+        }
+        return "";
+    }
+
+    /**
+     * /a/b
+     * <p/>
+     * /a/b/c
+     * /a/b/c/d
+     * /b
+     * 循环递归
+     *
+     * @param nodeQueue
+     * @return
+     */
+    private static RetVo recurNode(LinkedList<String> nodeQueue, SysConfig conf) {
+        RetVo retVo = new RetVo(false);
+        if (conf.getParentId() == null && nodeQueue.isEmpty()) {
+            retVo.setResult(true);
+            return retVo;
+        } else if (conf.getParentId() == null && !nodeQueue.isEmpty()) {
+            retVo.setMsgTitle("此路径的其中一个节点编码:" + conf.getCode() + "的parentId是空,但是路径还没有校验完,请核查!");
+            return retVo;
+        } else if (conf.getParentId() != null && nodeQueue.isEmpty()) {
+            retVo.setMsgTitle("根节点还存在上级,不是一个完整的路径!");
+            return retVo;
+        } else {
+            SysConfig parNode = SysConfig.repository().getById(conf.getParentId());
+            if (parNode != null && nodeQueue.getLast().equals(parNode.getCode())) {
+                nodeQueue.removeLast();
+                retVo = recurNode(nodeQueue, parNode);
+            }
+        }
+        return retVo;
+    }
+
+    /**
+     * 清理所有缓存
+     *
+     * @return
+     */
+    public static RetVo cleanAllCache() {
+        RetVo retVo = new RetVo(false);
+        cacheMap.clear();
+        cacheMapList.clear();
+        retVo.setResult(true);
+        return retVo;
+    }
+
+    /**
+     * 根据路径清理对应节点的缓存
+     *
+     * @param path
+     * @return
+     */
+    public static RetVo cleanCacheByNode(String path) {
+        RetVo retVo = new RetVo(false);
+        validatePath(path);
+        if (cacheMap.containsKey(path)) {
+            cacheMap.remove(path);
+            retVo.setResult(true);
+        }
+        if(cacheMapList.containsKey(path)){
+            cacheMapList.remove(path);
+            retVo.setResult(true);
+        }
+        return retVo;
+    }
+
+    /**
+     * 清理当前路径下的所有子节点
+     *
+     * @param path
+     * @return
+     */
+    public static RetVo clearChildByPath(String path) {
+        RetVo retVo = new RetVo(false);
+        try {
+//            cacheMap.putIfAbsent("/root/child1/child2","name");
+//            cacheMap.putIfAbsent("/root/child1/child2/1231asjs","name");
+//            cacheMap.putIfAbsent("/root/child1/child2/123","name");
+//            cacheMap.putIfAbsent("/switch/child1/child2/123","name");
+//            cacheMap.putIfAbsent("/switch/child1/child2/123123123/123","name");
+//            cacheMap.putIfAbsent("/switch/child1/child2/www","name");
+//            cacheMap.putIfAbsent("/switch/child1/child2/9999/asas","name");
+//            cacheMap.putIfAbsent("/sampling/child1/child2/112","name");
+//            cacheMap.putIfAbsent("/sampling/child1/child2/asdasd","name");
+//            cacheMap.putIfAbsent("/sampling/child1/child2/555/3/3","name");
+//            cacheMap.putIfAbsent("/sampling/child1/child2/jkljkl/1qwe/snsn","name");
+            Iterator<Map.Entry<String, String>> it = cacheMap.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<String, String> entry = it.next();
+                String key = entry.getKey();
+                if (path.equals(key)) {
+                    System.out.println("delete this :" + entry.getKey());
+                    it.remove();
+                } else {
+                    String pathEnd = path + "/";
+                    if (key.length() <= path.length()) continue;
+                    key = key.substring(0, pathEnd.length());
+                    if (pathEnd.equals(key)) {
+                        System.out.println("delete this :" + entry.getKey());
+                        it.remove();
+                    }
+                }
+            }
+
+            retVo.setResult(true);
+        } catch (Exception e) {
+            throw new RtManagerException(e);
+        }
+        return retVo;
+    }
+
+    /**
+     * 获取当前路径下的子节点 最后一级的子节点
+     * example /root/child1/child1-1 , /root/child1/child1-2
+     * 输入/root/child1  输出child1-1 child1-2
+     *
+     * @param path
+     * @return
+     */
+    public static List<SysConfig> getChildListByPath(String path) {
+        RetVo retVo = getNodeFromPath(path);
+        if (cacheMapList.containsKey(path)) {
+            return (List<SysConfig>) cacheMapList.get(path);
+        }
+        if (retVo.getResult() && !StringUtils.isNullOrEmpty(retVo.getRetCode())) {
+            cacheMapList.put(path, SysConfig.repository().getChildCode(
+                    NumberUtils.toLong(retVo.getRetCode())));
+            return SysConfig.repository().getChildCode(NumberUtils.toLong(retVo.getRetCode()));
+        }
+        return null;
+    }
+}

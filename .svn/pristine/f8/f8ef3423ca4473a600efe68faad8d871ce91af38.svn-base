@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper>
+	<!-- 根据SysClass的java_code获取分片规则 -->
+	<sql type="sql" id="queryWorkItemBySheetId">
+		<![CDATA[
+		SELECT
+			a.item_id,
+			a.sheet_id,
+			a.item_type,
+			a.obj_sharding_rule_id,
+			a.obj_sharding_id,
+			a.remark,
+			a.area_id,
+			a.region_cd,
+			a.status_cd,
+			a.status_date,
+			a.create_staff,
+			a.create_date,
+			a.update_staff,
+			a.update_date,
+			a.rec_update_date,
+			a.dversion,
+			a.dtimestamp,
+			a.sharding_id
+		FROM
+			sys_work_item a
+		WHERE
+			a.sheet_id = ?
+	]]>
+	</sql>
+</mapper>

@@ -1,0 +1,72 @@
+package com.ffcs.crmd.platform.meta.repository;
+
+import com.ctg.itrdc.platform.common.entity.PageInfo;
+import com.ffcs.crmd.platform.core.ddd.repository.ICrmDomBaseRepository;
+import com.ffcs.crmd.platform.meta.entity.DynamicWindow;
+
+public interface IDynamicWindowRepository extends ICrmDomBaseRepository<DynamicWindow, Long> {
+
+	/**
+	 * 根据编码获取窗体
+	 * 
+	 * @param winCode
+	 * @return
+	 */
+	public DynamicWindow getDynamicWindowByWinCode(String winCode);
+
+	/**
+	 * @param winId
+	 * @return
+	 */
+	public DynamicWindow getSimpleWindow(Long winId);
+
+	/**
+	 * 根据事件ID获取窗体
+	 * 
+	 * @param eventId
+	 * @return
+	 */
+	public DynamicWindow getDynamicWindowByEventId(Long eventId);
+
+	/**
+	 * 模版ID获取窗体
+	 * 
+	 * @param tplId
+	 * @return
+	 */
+	public DynamicWindow getDynamicWindowByTplId(Long tplId);
+
+	/**
+	 * 模版code获取窗体
+	 * 
+	 * @param code
+	 * @return
+	 */
+	public DynamicWindow getDynamicWindowByTplCode(String code);
+
+	/**
+	 * 根据具体条件获取窗体信息
+	 * 
+	 * @param busSpec
+	 *            规格
+	 * @param busService
+	 *            动作
+	 * @param busRegion
+	 *            区域
+	 * @param busChannel
+	 *            渠道
+	 * @return
+	 */
+	public DynamicWindow getDynamicWindow(Long busSpec, Long busService, Long busRegion, Long busChannel);
+
+	/**
+	 * 获取窗体信息
+	 * 
+	 * @param window
+	 * @param page
+	 * @param pageSize
+	 * @return
+	 */
+	PageInfo<DynamicWindow> qryWindowPageInfo(DynamicWindow window, int page, int pageSize);
+
+}

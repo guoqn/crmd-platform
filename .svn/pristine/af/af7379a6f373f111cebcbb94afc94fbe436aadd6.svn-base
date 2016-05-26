@@ -1,0 +1,69 @@
+package com.ffcs.crmd.platform.pub.dats;
+
+import com.ctg.itrdc.platform.common.exception.RtManagerException;
+import com.ctg.itrdc.platform.common.log.ILogger;
+import com.ctg.itrdc.platform.common.log.LoggerFactory;
+import com.ctg.itrdc.platform.common.utils.type.StringUtils;
+import com.ffcs.crmd.platform.base.utils.CrmPropertiesUtil;
+import com.ffcs.crmd.platform.pub.ex.ExceptionUtils;
+import com.ffcs.crmd.platform.pub.proxy.provider.ServiceLoader;
+
+import java.lang.reflect.Method;
+
+/**
+ * Created by linzhiqiang on 16/4/16.
+ */
+public class DataServiceUtils {
+
+    private static ServiceLoader factory = ServiceLoader.getDefaultFactory();
+
+    private static final String path = "data-service-config.properties";
+
+    private static final ILogger LOGGER = LoggerFactory.getLogger(DataServiceUtils.class);
+
+    private static boolean isOpen = false;
+
+    static {
+        String switchStr = CrmPropertiesUtil.getConfigValueCache(path, "switch");
+        if (!StringUtils.isNullOrEmpty(switchStr)) {
+            isOpen = Boolean.valueOf(switchStr);
+        }
+    }
+
+    public static <T> T callService(String serviceName, String methodName, Object... args) {
+        Object service = null;
+        try {
+            service = factory.getServiceInstance(serviceName);
+        } catch (final Exception e) {
+            LOGGER.error("获取服务异常", e);
+            ExceptionUtils.throwEx(new RtManagerException("获取服务异常"));
+        }
+        if (service == null) {
+            LOGGER.error("服务{}不存在", serviceName);
+            ExceptionUtils.throwEx(new RtManagerException("服务" + serviceName + "不存在"));
+        }
+        final Method method = factory.getClazzMethod(service, methodName, args);
+        if (method == null) {
+            LOGGER.error("方法{}不存在", methodName);
+            ExceptionUtils.throwEx(new RtManagerException("方法" + methodName + "不存在"));
+        }
+        Object ret = null;
+        try {
+            ret = method.invoke(service, args);
+        } catch (final Exception e) {
+            LOGGER.error("服务{},方法{},调用失败", serviceName, methodName);
+            ExceptionUtils
+                .throwEx(new RtManagerException("服务" + serviceName + ",方法" + methodName + ",调用失败"));
+        }
+
+        return (T) ret;
+    }
+
+    public static boolean isOpenDataService() {
+        return isOpen;
+    }
+
+    public static void setOpenDataService(boolean isOpen) {
+        DataServiceUtils.isOpen = isOpen;
+    }
+}

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper>
+	<!-- by class Id -->
+	<sql id="method01" type="xml">
+			<![CDATA[
+			 <dataSqlNode>
+			    <type>sqltext</type>
+			    <sqltext>select * from attr_spec c where </sqltext>
+			     <dataSqlNode>
+			        <type>param</type>
+			        <sqltext> and c.attr_name= ?</sqltext>
+			        <paramTag>attr_name</paramTag>
+			    </dataSqlNode>
+			    <dataSqlNode>
+			        <type>param</type>
+			        <sqltext> and c.attr_id= ?</sqltext>
+			        <paramTag>attr_id</paramTag>
+			    </dataSqlNode>
+			    <dataSqlNode>
+			        <type>param</type>
+			        <sqltext> and c.status_cd= ?</sqltext>
+			        <paramTag>status_cd</paramTag>
+			    </dataSqlNode>
+			     <dataSqlNode>
+			        <type>param</type>
+			        <sqltext>limit ?</sqltext>
+			        <paramTag>limit</paramTag>
+			    </dataSqlNode>
+			</dataSqlNode>   
+ 			]]>
+	</sql>
+
+	<!-- by class Id -->
+	<sql id="method02" type="xml">
+			<![CDATA[
+			<dataSqlNode>
+			    <type>sqltext</type>
+			    <sqltext>select * from attr_spec c where </sqltext>
+			    <dataSqlNode>
+			        <type>like</type>
+			        <sqltext> and c.attr_name like ? </sqltext>
+			        <paramTag>attr_name</paramTag>
+			    </dataSqlNode>
+			</dataSqlNode>   
+ 			]]>
+	</sql>
+
+	<!-- by class Id -->
+	<sql id="method03" type="xml">
+			<![CDATA[
+			<dataSqlNode>
+			    <type>sqltext</type>
+			    <sqltext>select * from attr_spec c where </sqltext>
+			    <dataSqlNode>
+			        <type>param</type>
+			        <sqltext> and c.attr_id in </sqltext>
+			        <paramTag>attr_ids</paramTag>
+			    </dataSqlNode>
+			</dataSqlNode>    
+ 			]]>
+	</sql>
+
+	<!-- by class Id -->
+	<sql id="method04" type="xml">
+			<![CDATA[
+			 <dataSqlNode>
+			    <type>sqltext</type>
+			    <sqltext>select * from attr_spec c where </sqltext>
+			    <dataSqlNode>
+					<type>param</type>
+					<sqltext> and c.attr_id = ? </sqltext>
+					<paramTag>attr_id</paramTag>
+				</dataSqlNode>
+			    <dataSqlNode>
+					<type>param</type>
+					<sqltext> and c.attr_id in </sqltext>
+			        <dataSqlNode>
+		              <type>sqltext</type>
+		              <sqltext> ( </sqltext>
+			        </dataSqlNode>
+			        <dataSqlNode>
+		               <type>sqltext</type>
+		               <sqltext> select attr_id from attr_spec where </sqltext>
+		               <dataSqlNode>
+		                  <type>likeright</type>
+		                  <sqltext> and java_code = ? </sqltext>
+		                  <paramTag>java_code</paramTag>
+	                   </dataSqlNode>
+		            </dataSqlNode>
+		            <dataSqlNode>
+		                <type>sqltext</type>
+		                <sqltext> ) </sqltext>
+		             </dataSqlNode>
+			    </dataSqlNode> 
+			     <dataSqlNode>
+					<type>param</type>
+					<sqltext> and c.class_id = ? </sqltext>
+					<paramTag>class_id</paramTag>
+				</dataSqlNode>             
+			</dataSqlNode>   
+ 			]]>
+	</sql>
+
+	<!-- by class Id -->
+	<sql id="method05" type="sql">
+			<![CDATA[
+			 select * from attr_spec c where  c.attr_id = ?
+ 			]]>
+	</sql>
+
+	<!-- by class Id -->
+	<sql id="method06" type="xml">
+		<![CDATA[
+			<dataSqlNode>
+			    <type>sqltext</type>
+			    <sqltext>select v.* from attr_spec c,attr_value v where c.attr_id=v.attr_id </sqltext>
+			    <dataSqlNode>
+			        <type>param</type>
+			        <sqltext> and c.attr_id =? </sqltext>
+			        <paramTag>attr_id</paramTag>
+			    </dataSqlNode>
+			</dataSqlNode>    
+ 			]]>
+	</sql>
+
+	<!-- by class Id -->
+	<sql id="method07" type="xml">
+		<![CDATA[
+			<dataSqlNode>
+			    <type>sqltext</type>
+			    <sqltext>select c.* from attr_spec c where </sqltext>
+			    <dataSqlNode>
+			        <type>param</type>
+			        <sqltext> and c.attr_id =? </sqltext>
+			        <paramTag>attrId</paramTag>
+			    </dataSqlNode>
+			    <dataSqlNode>
+			        <type>sqltext</type>
+			        <sqltext> and exists ( </sqltext>
+			    </dataSqlNode>
+			    <dataSqlNode>
+			        <type>sqltext</type>
+			        <sqltext> select 1 from attr_spec where </sqltext>
+			        <dataSqlNode>
+				        <type>param</type>
+				        <sqltext> and attr_id =? </sqltext>
+				        <paramTag>attrId2</paramTag>
+			    	</dataSqlNode>
+			    </dataSqlNode>
+			    <dataSqlNode>
+			        <type>sqltext</type>
+			        <sqltext> ) </sqltext>
+			    </dataSqlNode>
+			    <dataSqlNode>
+			        <type>param</type>
+			        <sqltext> and c.java_code = ? </sqltext>
+			        <paramTag>javaCode</paramTag>
+			    </dataSqlNode>
+			</dataSqlNode>    
+ 			]]>
+	</sql>
+
+	<sql id="method08" type="xml">
+		<![CDATA[
+			<dataSqlNode>
+			    <type>sqltext</type>
+			    <sqltext>SELECT c.* from attr_Spec c whEre </sqltext>
+			    <dataSqlNode>
+			        <type>param</type>
+			        <sqltext> and C.Attr_id &gt;= ? </sqltext>
+			        <paramTag>attrId</paramTag>
+			    </dataSqlNode>
+			    <dataSqlNode>
+			        <type>param</type>
+			        <sqltext> and c.attr_id &lt;= ? </sqltext>
+			        <paramTag>attrId2</paramTag>
+			    </dataSqlNode>
+			    <dataSqlNode>
+			        <type>param</type>
+			        <sqltext> And dAte_fOrmat(c.create_dAte,'%Y,%m,%d') &lt;= ? </sqltext>
+			        <paramTag>createDate</paramTag>
+			    </dataSqlNode>
+			    <dataSqlNode>
+			        <type>sqltext</type>
+			        <sqltext> order by #{orderclumn} #{desc} </sqltext>
+			    </dataSqlNode>
+			</dataSqlNode>    
+ 			]]>
+	</sql>
+
+	<!-- by attr id -->
+	<sql id="method09" type="xml">
+		<![CDATA[
+			<dataSqlNode>
+			    <type>sqltext</type>
+			    <sqltext>select count(1) from attr_spec c,attr_value v where c.attr_id=v.attr_id </sqltext>
+			    <dataSqlNode>
+			        <type>param</type>
+			        <sqltext> and c.attr_id =? </sqltext>
+			        <paramTag>attr_id</paramTag>
+			    </dataSqlNode>
+			</dataSqlNode>    
+ 			]]>
+	</sql>
+
+	<!-- sample between -->
+	<sql id="sampleBetween" type="xml">
+		<![CDATA[
+			<dataSqlNode>
+			    <type>sqltext</type>
+			    <sqltext>SELECT * from attr_spec a where </sqltext>
+			    <dataSqlNode>
+			        <type>param</type>
+			        <sqltext>  a.ATTR_ID=? and a.ATTR_ID=? </sqltext>
+			        <paramTag>attrIds</paramTag>
+			    </dataSqlNode>
+			</dataSqlNode>    
+ 			]]>
+	</sql>
+
+	<!-- between and -->
+	<sql id="between" type="xml">
+		<![CDATA[
+			<dataSqlNode>
+			    <type>sqltext</type>
+			    <sqltext>SELECT * from attr_spec a where </sqltext>
+			    <dataSqlNode>
+			        <type>param</type>
+			        <sqltext> a.ATTR_ID between ? and ? </sqltext>
+			        <paramTag>attrIds</paramTag>
+			    </dataSqlNode>
+			</dataSqlNode>    
+ 			]]>
+	</sql>
+
+</mapper>

@@ -1,0 +1,274 @@
+package com.ffcs.crmd.platform.pub.utils.sql.translater;
+
+import com.alibaba.druid.sql.PagerUtils;
+import com.ctg.itrdc.platform.common.exception.RtManagerException;
+import com.ctg.itrdc.platform.common.log.ILogger;
+import com.ctg.itrdc.platform.common.log.LoggerFactory;
+import com.ctg.itrdc.platform.common.utils.type.StringUtils;
+import com.ffcs.crmd.platform.pub.utils.sql.DialectUtils;
+import com.ffcs.crmd.platform.pub.utils.sql.Dialect;
+import com.ffcs.crmd.platform.pub.ex.ExceptionUtils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * Created by linzhiqiang on 16/3/1.
+ */
+public class SqlTranslaterUtil {
+
+    private static final ILogger                              LOGGER      = LoggerFactory
+        .getLogger(SqlTranslaterUtil.class);
+    private static final ConcurrentMap<String, String>        sqlMap      = new ConcurrentHashMap<String, String>();
+    private static final ConcurrentMap<String, PageSqlEntity> pageSqlMap  = new ConcurrentHashMap<String, PageSqlEntity>();
+    private static final ConcurrentMap<String, String>        countSqlMap = new ConcurrentHashMap<String, String>();
+
+    private SqlTranslaterUtil() {
+
+    }
+
+    private static ConcurrentMap<String, Pattern> patternMap = new ConcurrentHashMap<String, Pattern>();
+
+    /**
+     * 获取分页的SQL
+     * @param sql
+     * @param first
+     * @param pageSize
+     * @return
+     */
+    public static PageSqlEntity getPageSql(String sql, int first, int pageSize) {
+        String key = sql + "&&" + first + "&&" + pageSize;
+        if (!pageSqlMap.containsKey(key)) {
+            String newSql = PagerUtils
+                .limit(sql, DialectUtils.getDialect().dialect(), first, pageSize);
+            PageSqlEntity entity = new PageSqlEntity(newSql);
+            pageSqlMap.putIfAbsent(key, entity);
+        }
+        return pageSqlMap.get(key);
+    }
+
+    /**
+     * 获取Count语句
+     * @param sql
+     * @return
+     */
+    public static String getCountSql(String sql) {
+        if (!countSqlMap.containsKey(sql)) {
+            String newSql = PagerUtils.count(sql, DialectUtils.getDialect().dialect());
+            countSqlMap.putIfAbsent(sql, newSql);
+        }
+        return countSqlMap.get(sql);
+    }
+
+    public static String translateSql(String sql) {
+        if (!sqlMap.containsKey(sql)) {
+            String newSql = sql;
+            if (StringUtils.trim(newSql).startsWith(TranslateConstants.SQL_BEGIN)) {
+                newSql = getFlagConvertSql(newSql);
+            } else {
+                newSql = getFunctionConvertSql(newSql);
+            }
+            sqlMap.putIfAbsent(sql, newSql);
+        }
+
+        return sqlMap.get(sql);
+
+    }
+
+    private static String getFlagConvertSql(String newSql) {
+        int start = newSql.indexOf(TranslateConstants.SQL_BEGIN);
+        int end = newSql.lastIndexOf(TranslateConstants.SQL_END);
+        String subString = newSql.substring(start + TranslateConstants.SQL_BEGIN.length(), end);
+
+        if (DialectUtils.getDialect().equals(Dialect.MYSQL)) {
+            int subStart = subString.indexOf(TranslateConstants.MYSQL_BEGIN);
+            int subEnd = subString.lastIndexOf(TranslateConstants.MYSQL_END);
+            if (subStart == -1 || subEnd == -1) {
+                ExceptionUtils.throwEx(new RtManagerException("dialect not exists"));
+            }
+            return subString.substring(subStart + TranslateConstants.MYSQL_BEGIN.length(), subEnd);
+        } else if (DialectUtils.getDialect().equals(Dialect.ORACLE)) {
+            int subStart = subString.indexOf(TranslateConstants.ORACLE_BEGIN);
+            int subEnd = subString.lastIndexOf(TranslateConstants.ORACLE_END);
+            if (subStart == -1 || subEnd == -1) {
+                ExceptionUtils.throwEx(new RtManagerException("dialect not exists"));
+            }
+            return subString.substring(subStart + TranslateConstants.ORACLE_BEGIN.length(), subEnd);
+
+        } else {
+            ExceptionUtils.throwEx(new RtManagerException("dialect not exists"));
+        }
+
+        return subString;
+    }
+
+    private static String getFunctionConvertSql(String newSql) {
+        Matcher matcher = getMatcher(newSql);
+        if (matcher != null) {
+            Map<String, String> funcMap = new HashMap<String, String>();
+            //开始匹配
+            while (matcher.find()) {
+                int start = matcher.start();
+                int end = matcher.end();
+                String orignFunc = getOrignFunc(start, end, newSql);
+                LOGGER.debug(orignFunc);
+                //放入map等待处理,同时去重.
+                funcMap.put(orignFunc, orignFunc);
+            }
+
+            if (funcMap.size() > 0) {
+                for (String key : funcMap.keySet()) {
+                    String tranlatedStr = TranslaterFactory.getTranslater()
+                        .translate(funcMap.get(key));
+                    funcMap.put(key, tranlatedStr);
+                    //替换SQL里面的函数为正确的函数
+                    while (newSql.indexOf(key) > 0) {
+                        newSql = newSql.replace(key, tranlatedStr);
+                    }
+                }
+            }
+        }
+        return newSql;
+    }
+
+    private static String getOrignFunc(int start, int end, String sql) {
+        Stack<Integer> stack = new Stack<Integer>();
+        //end处有一个 左括号,使用 函数名( 匹配.
+        stack.push(end - 1);
+        //从end开始匹配
+        int index = end;
+        if (index == sql.length()) {
+            ExceptionUtils.throwEx(new RtManagerException("Orign:" + sql + ", format Error"));
+        }
+        boolean find = false;
+        do {
+            //如果是右括号
+            if (TranslateConstants.RIGHT_PARENTHESS_CHAR == sql.charAt(index)) {
+                //堆栈弹出一个数,如果此时堆栈为空,则匹配结束
+                if (stack.size() > 0) {
+                    stack.pop();
+                    if (stack.isEmpty()) {
+                        find = true;
+                        break;
+                    }
+                }
+            } else if (TranslateConstants.LEFT_PARENTHESS_CHAR == sql.charAt(index)) {
+                //如果是左括号,则是另一个函数的开始,放入堆栈.
+                stack.push(index);
+            } else {
+                //其他的都略过
+            }
+            index++;
+        } while (index < sql.length());
+        if (!find) {
+            ExceptionUtils.throwEx(
+                new RtManagerException("Orign:" + sql + ", format Error,Could not find func"));
+        }
+        return sql.substring(start, index + 1);
+    }
+
+    /**
+     * 获取匹配器,查看是否有匹配的需要替换的函数
+     * @param sql
+     * @return
+     */
+    private static Matcher getMatcher(String sql) {
+        List<String> transFlags = TranslaterFactory.getTranslater().getAllTransFlag();
+        if (transFlags == null || transFlags.size() <= 0) {
+            return null;
+        }
+        String regex = StringUtils.join(transFlags, "|");
+        Pattern pattern = null;
+        if (!patternMap.containsKey(regex)) {
+            //正则匹配,大小写不敏感.
+            Pattern tmp = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+            patternMap.put(regex, tmp);
+        }
+        pattern = patternMap.get(regex);
+
+        Matcher matcher = pattern.matcher(sql);
+        return matcher;
+    }
+
+    /**
+     * 映射的关键字,查找映射的公式
+     * @param mapKey
+     * @return
+     */
+    public static String getKeyWords(String mapKey) {
+        if (mapKey.endsWith(TranslateConstants.LEFT_PARENTHESS)) {
+            return mapKey.substring(0, mapKey.length() - 1);
+        } else if (mapKey.indexOf(TranslateConstants.LEFT_PARENTHESS) > 0) {
+            return mapKey.substring(0, mapKey.indexOf(TranslateConstants.LEFT_PARENTHESS));
+        } else {
+            return mapKey;
+        }
+    }
+
+    public static List<String> decodeParamsList(String orign) {
+        List<String> params = new ArrayList<String>();
+        int start = orign.indexOf(TranslateConstants.LEFT_PARENTHESS);
+        //括号数,左括号+1,右括号-1
+        int parenthess = 1;
+        //单引号,找到就+1,只有偶数个对的.
+        int singleQuotes = 0;
+        //双引号,找到就+1,只有偶数个对的.
+        int doubleQuotes = 0;
+        //分隔符,找到就+1,只有偶数个对的.
+        int delimiter = 0;
+        int index = start + 1;
+        int paramStart = start + 1;
+        do {
+            char ch = orign.charAt(index);
+            switch (ch) {
+                case TranslateConstants.SINGLE_QUOTES:
+                    singleQuotes++;
+                    break;
+                case TranslateConstants.DELIMITER:
+                    delimiter++;
+                    break;
+                case TranslateConstants.DOUBLE_QUOTES:
+                    doubleQuotes++;
+                    break;
+                case TranslateConstants.LEFT_PARENTHESS_CHAR:
+                    parenthess++;
+                    break;
+                case TranslateConstants.RIGHT_PARENTHESS_CHAR:
+                    parenthess--;
+                    //如果已经找到结尾
+                    if (parenthess == 0) {
+                        //不是结尾标记
+                        if (paramStart != index) {
+                            String sub = orign.substring(paramStart, index);
+                            if (StringUtils.trim(sub).length() > 0) {
+                                params.add(sub);
+                            }
+                        }
+                    }
+                    break;
+                case TranslateConstants.COMMA:
+                    //找到,判断,',",`,是否成对,如果是,则截取这一段作为参数,且,(,必须是奇数个,也就是只有开始的左括号
+                    if (parenthess % 2 == 1 && singleQuotes % 2 == 0 && doubleQuotes % 2 == 0
+                        && delimiter % 2 == 0) {
+                        String param = orign.substring(paramStart, index);
+                        params.add(param);
+                        paramStart = index + 1;
+                    }
+            }
+            //找到右括号,结束
+            if (parenthess == 0) {
+                break;
+            }
+            index++;
+        } while (index < orign.length());
+
+        return params;
+    }
+}

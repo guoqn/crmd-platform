@@ -1,0 +1,13 @@
+#NameServer的地址与端口
+namesrvAddr=http://134.129.68.170:13223/rocketmq-nameserver/NamesrvTest
+
+#主题
+topic=CTG_MQ_TEST
+
+#消费和生产组
+producer.group=P_CTG_MQ_TEST_PRODUCER
+consumer.group=C_CTG_MQ_TEST_CONSUMER
+
+#mq账号验证
+authID=admin
+authPWD=123456

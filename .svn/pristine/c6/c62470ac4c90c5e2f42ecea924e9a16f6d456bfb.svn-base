@@ -1,0 +1,132 @@
+package com.ffcs.crmd.platform.mq.rocketmq;
+
+/**
+ * 
+ * 功能说明:生产者配置
+ *
+ * @author ZHONGFUHUA
+ * 
+ * @Date 2016年1月19日 下午2:55:49
+ *
+ *
+ * 版本号  |   作者   |  修改时间   |   修改内容
+ *
+ */
+public class ProducerConfig {
+    
+    /**
+     * 名服务列表(必选)
+     */
+    private String nameSrv         = null;
+    
+    /**
+     * 消费组名(必选)
+     */
+    private String groupName       = null;
+    
+    /**
+     * 生产者实例(必选)
+     */
+    private String instanceName    = null;
+    
+    /**
+     * 主题名称(必选)
+     */
+    private String topicName       = null;
+    
+    /**
+     * 消息体最大值(可选)
+     */
+    private int    maxMessageSize  = 1024 * 128;
+    
+    /**
+     * 发送超时时间,默认值为30s(可选)
+     */
+    private int    sendTimeOut     = 30000;
+    
+    /**
+     * 消息体超过指定大小压缩(可选)
+     */
+    private int    compressMsgOver = 1024 * 4;
+    
+    /**
+     * 发送失败重试次数(可选)
+     */
+    private int    maxRetryTimes   = 0;
+    
+    public ProducerConfig() {
+        
+    }
+    
+    public ProducerConfig(String nameSrv, String groupName, String topicName, String authID,
+        String authPWD) {
+        this.nameSrv = nameSrv;
+        this.groupName = groupName;
+        this.topicName = topicName;
+    }
+    
+    public String getNameSrv() {
+        return nameSrv;
+    }
+    
+    public void setNameSrv(String nameSrv) {
+        this.nameSrv = nameSrv;
+    }
+    
+    public String getGroupName() {
+        return groupName;
+    }
+    
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+    
+    public String getInstanceName() {
+        return instanceName;
+    }
+    
+    public void setInstanceName(String instanceName) {
+        this.instanceName = instanceName;
+    }
+    
+    public String getTopicName() {
+        return topicName;
+    }
+    
+    public void setTopicName(String topicName) {
+        this.topicName = topicName;
+    }
+    
+    public int getMaxMessageSize() {
+        return maxMessageSize;
+    }
+    
+    public void setMaxMessageSize(int maxMessageSize) {
+        this.maxMessageSize = maxMessageSize;
+    }
+    
+    public int getSendTimeOut() {
+        return sendTimeOut;
+    }
+    
+    public void setSendTimeOut(int sendTimeOut) {
+        this.sendTimeOut = sendTimeOut;
+    }
+    
+    public int getCompressMsgOver() {
+        return compressMsgOver;
+    }
+    
+    public void setCompressMsgOver(int compressMsgOver) {
+        this.compressMsgOver = compressMsgOver;
+    }
+    
+    public int getMaxRetryTimes() {
+        return maxRetryTimes;
+    }
+    
+    public void setMaxRetryTimes(int maxRetryTimes) {
+        this.maxRetryTimes = maxRetryTimes;
+    }
+    
+}

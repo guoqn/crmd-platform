@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper>
+	<sql type="sql" id="getWorkSheetBySheetCd">
+		<![CDATA[
+		select 
+			a.sheet_id,
+			a.sheet_type,
+			a.sheet_cd,
+			a.remark,
+			a.area_id,
+			a.region_cd,
+			a.status_cd,
+			a.status_date,
+			a.create_staff,
+			a.create_date,
+			a.update_staff,
+			a.update_date,
+			a.rec_update_date,
+			a.dversion,
+			a.dtimestamp,
+			a.sharding_id
+		FROM
+			sys_work_sheet a
+		WHERE
+			sheet_cd = ?
+	]]>
+	</sql>
+</mapper>

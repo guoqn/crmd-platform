@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper>
+	<!-- by class Id -->
+	<sql id="getAttrSpecsByCode" type="sql">
+			<![CDATA[select * from attr_spec c where c.class_id= ? and c.java_code= ? and c.status_cd = ?]]>
+	</sql>
+
+	<!-- by class Id -->
+	<sql id="getAttrSpecsByClassId" type="sql">
+			<![CDATA[select * from attr_spec c where c.class_id= ? and c.status_cd = ?]]>
+	</sql>
+
+</mapper>

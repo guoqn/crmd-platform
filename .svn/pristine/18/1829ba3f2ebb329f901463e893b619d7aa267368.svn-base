@@ -1,0 +1,42 @@
+package com.ffcs.crmd.platform.pub.proxy.callfilter.impl;
+
+import com.ctg.itrdc.platform.common.utils.type.StringUtils;
+import com.ffcs.crmd.platform.pub.facade.CrmSessionContext;
+import com.ffcs.crmd.platform.pub.proxy.callfilter.IProxyCallFilter;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Created by linzhiqiang on 16/2/16.
+ */
+public abstract class AbstractProxyCallFilter implements IProxyCallFilter {
+    @Override
+    public Map<String, String> getPropsMap() {
+        Map<String,String> map = new HashMap<String,String>();
+
+        //填充员工信息、岗位信息等。
+        map.put(CrmSessionContext.STAFF_ID,
+            StringUtils.strnull(CrmSessionContext.getContext().getStaffId()));
+        map.put(CrmSessionContext.ORG_ID,
+            StringUtils.strnull(CrmSessionContext.getContext().getOrgId()));
+        map.put(CrmSessionContext.REGION_ID,
+            StringUtils.strnull(CrmSessionContext.getContext().getRegionId()));
+
+        Map<String,String> tmpMap = getAppPropsMap();
+        if (tmpMap != null) {
+            map.putAll(tmpMap);
+        }
+
+        return map;
+    }
+
+    @Override
+    public void putPropsMap(Map<String, String> map) {
+        putAppPropsMap(map);
+    }
+
+    public abstract Map<String, String> getAppPropsMap();
+
+    public abstract void putAppPropsMap(Map<String, String> props);
+}

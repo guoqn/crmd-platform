@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="crmd-platform-meta-ui:war">
+    <output-path>$PROJECT_DIR$/crmd-platform-component/crmd-platform-meta/crmd-platform-meta-ui/target</output-path>
+    <root id="archive" name="crmd-platform-meta-ui.war">
+      <element id="artifact" artifact-name="crmd-platform-meta-ui:war exploded" />
+    </root>
+  </artifact>
+</component>

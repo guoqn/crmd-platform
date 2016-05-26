@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.ffcs.crmd.platform:crmd-platform-idempotency-api:0.0.2-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ffcs/crmd/platform/crmd-platform-idempotency-api/0.0.2-SNAPSHOT/crmd-platform-idempotency-api-0.0.2-20160226.101700-16.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ffcs/crmd/platform/crmd-platform-idempotency-api/0.0.2-SNAPSHOT/crmd-platform-idempotency-api-0.0.2-20160226.101700-16-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ffcs/crmd/platform/crmd-platform-idempotency-api/0.0.2-SNAPSHOT/crmd-platform-idempotency-api-0.0.2-20160226.101700-16-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

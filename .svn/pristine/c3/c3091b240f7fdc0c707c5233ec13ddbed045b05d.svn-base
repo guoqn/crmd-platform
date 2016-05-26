@@ -1,0 +1,87 @@
+<mapper>
+
+	<sql id="getNodeByName" type="sql">
+		<![CDATA[
+			select
+			CONF_ID,
+			NAME,PARENT_ID,
+			NODEVALUE,CODE,
+			SYS_CONF_DESC,
+			STATUS_DATE,
+			STATUS_CD,
+			CREATE_DATE,
+			CREATE_STAFF,
+			UPDATE_DATE,
+			UPDATE_STAFF,
+			AREA_ID,
+			REGION_CD
+			 from sys_config 
+			 where name like ?
+		]]>
+	</sql>
+
+	<!-- 根据code查询sys_config配置 -->
+	<sql id="getNodeByCode" type="sql">
+		<![CDATA[
+			select
+			CONF_ID,
+			NAME,PARENT_ID,
+			NODEVALUE,
+			CODE,
+			SYS_CONF_DESC,
+			STATUS_DATE,
+			STATUS_CD,
+			CREATE_DATE,
+			CREATE_STAFF,
+			UPDATE_DATE,
+			UPDATE_STAFF,
+			AREA_ID,
+			REGION_CD
+			 from sys_config
+			 where code = ?
+		]]>
+	</sql>
+
+	<!--qrySysConfigAll 根据id获取节点 -->
+	<sql id="qrySysConfigAll" type="sql">
+		<![CDATA[
+			select
+			CONF_ID,
+			NAME,PARENT_ID,
+			NODEVALUE,
+			CODE,
+			SYS_CONF_DESC,
+			STATUS_DATE,
+			STATUS_CD,
+			CREATE_DATE,
+			CREATE_STAFF,
+			UPDATE_DATE,
+			UPDATE_STAFF,
+			AREA_ID,
+			REGION_CD
+			 from sys_config
+		]]>
+	</sql>
+	
+	<!--qrySysConfigAll 根据id获取节点 -->
+	<sql id="qrySysConfigByParentId" type="sql">
+		<![CDATA[
+			select
+			CONF_ID,
+			NAME,PARENT_ID,
+			NODEVALUE,
+			CODE,
+			SYS_CONF_DESC,
+			STATUS_DATE,
+			STATUS_CD,
+			CREATE_DATE,
+			CREATE_STAFF,
+			UPDATE_DATE,
+			UPDATE_STAFF,
+			AREA_ID,
+			REGION_CD
+			 from sys_config
+			 where parent_Id = ?
+		]]>
+	</sql>	
+</mapper>

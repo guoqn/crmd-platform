@@ -1,0 +1,170 @@
+package com.ffcs.crmd.platform.pub.cache.context.entt;
+
+import com.ctg.itrdc.platform.pub.util.ApplicationContextUtil;
+import com.ffcs.crmd.platform.cache.api.Cache;
+import com.ffcs.crmd.platform.cache.api.CacheConfig;
+import com.ffcs.crmd.platform.cache.api.CacheConfigLoader;
+import com.ffcs.crmd.platform.cache.api.CacheProvider;
+import com.ffcs.crmd.platform.cache.api.constants.CacheConstants;
+import com.ffcs.crmd.platform.pub.cache.context.AbstractCacheContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * Created by linzhiqiang on 16/3/28.
+ */
+public class EnttCacheContext extends AbstractCacheContext {
+
+    private CacheProvider localCache;
+
+    private CacheProvider globalCache;
+
+    private CacheProvider threadCache;
+
+    private CacheConfigLoader configLoader;
+
+    private static class EnttCacheContextHolder {
+        private static EnttCacheContext CONTEXT = new EnttCacheContext();
+    }
+
+    private EnttCacheContext() {
+        if (ApplicationContextUtil
+            .containsBean(CacheConstants.ENTT_LOCAL_CACHE_PROVIDER_BEAN_NAME)) {
+            localCache = ApplicationContextUtil
+                .getBean(CacheConstants.ENTT_LOCAL_CACHE_PROVIDER_BEAN_NAME);
+        }
+        if (ApplicationContextUtil
+            .containsBean(CacheConstants.ENTT_GLOBAL_CACHE_PROVIDER_BEAN_NAME)) {
+            globalCache = ApplicationContextUtil
+                .getBean(CacheConstants.ENTT_GLOBAL_CACHE_PROVIDER_BEAN_NAME);
+        }
+        if (ApplicationContextUtil
+            .containsBean(CacheConstants.ENTT_THREAD_CACHE_PROVIDER_BEAN_NAME)) {
+            threadCache = ApplicationContextUtil
+                .getBean(CacheConstants.ENTT_THREAD_CACHE_PROVIDER_BEAN_NAME);
+        }
+        if (ApplicationContextUtil.containsBean(CacheConstants.ENTT_CACHE_CONFIG_LOADE_BEAN_NAME)) {
+            configLoader = ApplicationContextUtil
+                .getBean(CacheConstants.ENTT_CACHE_CONFIG_LOADE_BEAN_NAME);
+        }
+    }
+
+    public static EnttCacheContext getInstance() {
+        return EnttCacheContextHolder.CONTEXT;
+    }
+
+    public void putEnttToCache(String key, Serializable o) {
+        putEnttToCache(getRegionName(o), key, o);
+    }
+
+    public void putEnttToCache(String regionName, String key, Serializable o) {
+        if (configLoader == null) {
+            logger.debug("configLoader Not define");
+            return;
+        }
+        CacheConfig config = configLoader.getCacheConfig(regionName);
+        if (config == null) {
+            logger.warn("no cache Config , do not need cache");
+        } else {
+            if (CacheConstants.ENTT_CACHE_LEVEL_THREAD.equals(config.getLevel())) {
+                setObjectToCacheProvider(threadCache, regionName, key, o);
+            } else if (CacheConstants.ENTT_CACHE_LEVEL_LOCAL.equals(config.getLevel())) {
+                setObjectToCacheProvider(localCache, regionName, key, o);
+            } else if (CacheConstants.ENTT_CACHE_LEVEL_GLOBAL.equals(config.getLevel())) {
+                setObjectToCacheProvider(globalCache, regionName, key, o);
+            } else if (CacheConstants.ENTT_CACHE_LEVEL_MIX.equals(config.getLevel())) {
+                setObjectToCacheProvider(localCache, regionName, key, o);
+                setObjectToCacheProvider(globalCache, regionName, key, o);
+            }
+        }
+    }
+
+    public Object getEnttFromCache(String key, Class<?> type) {
+        if (configLoader == null) {
+            logger.debug("configLoader Not define");
+            return null;
+        }
+        String regionName = getRegionName(type);
+        CacheConfig config = configLoader.getCacheConfig(regionName);
+        if (config == null) {
+            logger.warn("{},no cache Config , do not need cache", regionName);
+        } else {
+            if (CacheConstants.ENTT_CACHE_LEVEL_THREAD.equals(config.getLevel())) {
+                return getObjectFromCacheProvider(threadCache, regionName, key);
+            } else if (CacheConstants.ENTT_CACHE_LEVEL_LOCAL.equals(config.getLevel())) {
+                return getObjectFromCacheProvider(localCache, regionName, key);
+            } else if (CacheConstants.ENTT_CACHE_LEVEL_GLOBAL.equals(config.getLevel())) {
+                return getObjectFromCacheProvider(globalCache, regionName, key);
+            } else if (CacheConstants.ENTT_CACHE_LEVEL_MIX.equals(config.getLevel())) {
+                Serializable value = getObjectFromCacheProvider(localCache, regionName, key);
+                if (value == null) {
+                    value = getObjectFromCacheProvider(globalCache, regionName, key);
+                    if (value != null) {
+                        setObjectToCacheProvider(localCache, regionName, key, value);
+                    }
+                }
+                return value;
+            }
+        }
+        return null;
+    }
+
+    public void removeEnttFromCache(String regionName, String key, Serializable o) {
+        if (configLoader == null) {
+            logger.debug("configLoader Not define");
+            return;
+        }
+        CacheConfig config = configLoader.getCacheConfig(regionName);
+        if (config == null) {
+            logger.warn("no cache Config , do not need cache");
+        } else {
+            if (CacheConstants.ENTT_CACHE_LEVEL_THREAD.equals(config.getLevel())) {
+                removeObjectFromCacheProvider(threadCache, regionName, key, o);
+            } else if (CacheConstants.ENTT_CACHE_LEVEL_LOCAL.equals(config.getLevel())) {
+                removeObjectFromCacheProvider(localCache, regionName, key, o);
+            } else if (CacheConstants.ENTT_CACHE_LEVEL_GLOBAL.equals(config.getLevel())) {
+                removeObjectFromCacheProvider(globalCache, regionName, key, o);
+            } else if (CacheConstants.ENTT_CACHE_LEVEL_MIX.equals(config.getLevel())) {
+                removeObjectFromCacheProvider(localCache, regionName, key, o);
+                removeObjectFromCacheProvider(globalCache, regionName, key, o);
+            }
+        }
+    }
+
+    private String getRegionName(Object o) {
+        return o.getClass().getName();
+    }
+
+    private String getRegionName(Class<?> clazz) {
+        return clazz.getName();
+    }
+
+    public List<String> getAllRegionName() {
+        return configLoader.getAllRegionName();
+    }
+
+    public void clearCache(String regionName) {
+        if (configLoader == null) {
+            logger.debug("configLoader Not define");
+            return;
+        }
+        CacheConfig config = configLoader.getCacheConfig(regionName);
+        if (config == null) {
+            logger.warn("no cache Config , do not need cache");
+        } else {
+            Cache global = getCache(globalCache, regionName);
+            global.clear();
+            Cache local = getCache(localCache, regionName);
+            local.clear();
+        }
+    }
+
+    public void clearAllCache() {
+        clearAllCache(globalCache);
+        clearAllCache(localCache);
+    }
+
+}

@@ -1,0 +1,77 @@
+package com.ffcs.crmd.platform.pub.bean.provider;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ctg.itrdc.platform.common.exception.RtManagerException;
+import com.ctg.itrdc.platform.common.log.ILogger;
+import com.ctg.itrdc.platform.common.log.LoggerFactory;
+
+public abstract class AbstractBeanConvert implements IBeanConvert {
+    
+    protected ILogger logger = LoggerFactory.getLogger(this.getClass());
+    
+    public abstract Class<?> getSourceClass();
+    
+    public abstract Class<?> getDestClass();
+    
+    @Override
+    public <T> List<T> copyList(List sourceList, Class<T> destClazz) {
+        return copyList(sourceList, destClazz, true);
+    }
+    
+    @Override
+    public <T> List<T> copyList(List sourceList, Class<T> destClazz, boolean isOnlyCopyNotNull) {
+        List<T> list = new ArrayList<T>();
+        if (sourceList != null && sourceList.size() > 0) {
+            for (Object obj : sourceList) {
+                Object dest = null;
+                try {
+                    dest = destClazz.newInstance();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                    throw new RtManagerException("Instance" + destClazz.getName() + "ERROR");
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                    throw new RtManagerException("Instance" + destClazz.getName() + "ERROR");
+                }
+                applyIf(dest, obj);
+                list.add((T) dest);
+            }
+        }
+        return list;
+    }
+    
+    @Override
+    public Object applyIf(Object dest, Object source) {
+        return applyIf(dest, source, true);
+    }
+    
+    @Override
+    public Object applyIf(Object dest, Object source, boolean isOnlyCopyNotNull) {
+        if (getSourceClass().isAssignableFrom(source.getClass())
+            && getDestClass().isAssignableFrom(dest.getClass())) {
+            sourceTypeToDestType(source, dest, isOnlyCopyNotNull);
+        } else if (getDestClass().isAssignableFrom(source.getClass())
+            && getSourceClass().isAssignableFrom(dest.getClass())) {
+            destTypeToSourceType(source, dest, isOnlyCopyNotNull);
+        } else {
+            throw new RtManagerException("Params is not " + getSourceClass().getName() + " and "
+                + getDestClass().getName());
+        }
+        return dest;
+    }
+    
+    //    public void sourceTypeToDestType(Object source, Object dest) {
+    //        sourceTypeToDestType(source, dest, false);
+    //    }
+    //    
+    //    public void destTypeToSourceType(Object source, Object dest) {
+    //        destTypeToSourceType(source, dest, false);
+    //    }
+    
+    public abstract void sourceTypeToDestType(Object source, Object dest, boolean isOnlyCopyNotNull);
+    
+    public abstract void destTypeToSourceType(Object source, Object dest, boolean isOnlyCopyNotNull);
+    
+}

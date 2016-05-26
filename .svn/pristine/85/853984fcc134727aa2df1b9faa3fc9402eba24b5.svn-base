@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper>
+    <!-- by class Id -->
+    <sql id="getAttrSpecByTypeId">
+        <![CDATA[
+            SELECT
+                ATTR_ID,
+                BUSI_TYPE_ID,
+                PAR_ATTR_ID,
+                ATTR_NBR,
+                ATTR_NAME,
+                ATTR_DESC,
+                DEFAULT_VALUE,
+                START_VALUE,
+                END_VALUE,
+                IS_UNIQUE,
+                IS_NULLABLE,
+                ATTR_VALUE_DATA_TYPE,
+                IS_DANY_ATTR,
+                ATTR_VALUE_TYPE,
+                ATTR_FORMAT,
+                ATTR_LENGTH,
+                EXT_ATTR_CD,
+                ATTR_PERSIST_TYPE,
+                ATTR_IO_TYPE,
+                ATTR_SORT,
+                PROC_TYPE,
+                REF_BUSY_TYPE_ID,
+                ATTR_LEVEL,
+                IS_MULTI_VALUE,
+                PRINT_FORMAT,
+                CODE_BUILDER,
+                CODE_PARAM,
+                COMPLETE_ACTION,
+                IS_VISIBLE,
+                ADD_EFF_TYPE,
+                MOD_EFF_TYPE,
+                DEFAULT_TYPE_PERIOD,
+                EXPIRE_TYPE,
+                CNS_TYPE_EXTRA,
+                PF_POST,
+                HB_POST,
+                IS_TRANS,
+                PRINT_EXT,
+                OWNER_APP,
+                ATTR_SPEC_EXT_RULE,
+                EXT_FLAG,
+                GROUP_CD,
+                SEQ_NAME,
+                STATUS_CD,
+                CREATE_DATE,
+                STATUS_DATE,
+                UPDATE_DATE,
+                REGION_CD,
+                AREA_ID,
+                REC_UPDATE_DATE,
+                SHARDING_ID,
+                REL_SHARDING_ID,
+                DVERSION,
+                DTIMESTAMP
+            FROM
+                ATTR_SPEC
+            WHERE
+                BUSI_TYPE_ID = ?
+            AND PAR_ATTR_ID = ?
+        ]]>
+    </sql>
+
+</mapper>

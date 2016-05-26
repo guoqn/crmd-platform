@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.ffcs.crmd.platform</groupId>
+		<artifactId>crmd-platform</artifactId>
+		<version>0.0.3-SNAPSHOT</version>
+		<relativePath>../..</relativePath>
+	</parent>
+	<artifactId>crmd-platform-mq</artifactId>
+	<version>2.0.0-SNAPSHOT</version>
+	<name>crmd-platform-mq</name>
+	<packaging>pom</packaging>
+
+	<properties>
+		<crmd.platform.mq.version>2.0.0-SNAPSHOT</crmd.platform.mq.version>
+		<ctg.mq.version>2.0.3</ctg.mq.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+
+	<modules>
+		<module>crmd-platform-mq-api</module>
+		<module>crmd-platform-mq-ctg</module>
+		<module>crmd-platform-mq-rocketmq</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- crmd-platform-mq-api -->
+			<dependency>
+				<groupId>com.ffcs.crmd.platform</groupId>
+				<artifactId>crmd-platform-mq-api</artifactId>
+				<version>${crmd.platform.mq.version}</version>
+			</dependency>
+
+			<!-- ctg-mq -->
+			<dependency>
+				<groupId>com.ctg.itrdc.mq</groupId>
+				<artifactId>ctg-mq-api</artifactId>
+				<version>${ctg.mq.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.ctg.itrdc.mq</groupId>
+				<artifactId>ctg-mq-rocketmq</artifactId>
+				<version>${ctg.mq.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>

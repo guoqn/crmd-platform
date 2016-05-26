@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper>
+    <sql id="qryRelSpecPageByTabId">
+        <![CDATA[
+            SELECT
+                C.REL_SPEC_ID,
+                C.A_OBJ_ID,
+                C.Z_OBJ_ID,
+                C.REL_TYPE,
+                C.REMARK,
+                C.CREATE_STAFF,
+                C.UPDATE_STAFF,
+                C.STATUS_CD,
+                C.CREATE_DATE,
+                C.STATUS_DATE,
+                C.UPDATE_DATE,
+                C.REGION_CD,
+                C.AREA_ID,
+                C.REC_UPDATE_DATE,
+                C.SHARDING_ID,
+                C.REL_SHARDING_ID,
+                C.DVERSION,
+                C.DTIMESTAMP
+            FROM
+                SYS_TABLE A,
+                OBJ_TAB_REL B,
+                REL_SPEC C
+            WHERE
+                A.TAB_ID = B.TAB_ID
+            AND
+                B.OBJ_ID = C.REL_SPEC_ID
+            AND
+                A.TAB_ID = ?
+        ]]>
+    </sql>
+    <sql id="qryPageByAObjId">
+        <![CDATA[
+            SELECT
+                C.REL_SPEC_ID,
+                C.A_OBJ_ID,
+                C.Z_OBJ_ID,
+                C.REL_TYPE,
+                C.REMARK,
+                C.CREATE_STAFF,
+                C.UPDATE_STAFF,
+                C.STATUS_CD,
+                C.CREATE_DATE,
+                C.STATUS_DATE,
+                C.UPDATE_DATE,
+                C.REGION_CD,
+                C.AREA_ID,
+                C.REC_UPDATE_DATE,
+                C.SHARDING_ID,
+                C.REL_SHARDING_ID,
+                C.DVERSION,
+                C.DTIMESTAMP
+            FROM
+                REL_SPEC C
+            WHERE
+                C.A_OBJ_ID = ?
+        ]]>
+    </sql>
+    <sql id="qryPageByZObjId">
+        <![CDATA[
+            SELECT
+                C.REL_SPEC_ID,
+                C.A_OBJ_ID,
+                C.Z_OBJ_ID,
+                C.REL_TYPE,
+                C.REMARK,
+                C.CREATE_STAFF,
+                C.UPDATE_STAFF,
+                C.STATUS_CD,
+                C.CREATE_DATE,
+                C.STATUS_DATE,
+                C.UPDATE_DATE,
+                C.REGION_CD,
+                C.AREA_ID,
+                C.REC_UPDATE_DATE,
+                C.SHARDING_ID,
+                C.REL_SHARDING_ID,
+                C.DVERSION,
+                C.DTIMESTAMP
+            FROM
+                REL_SPEC C
+            WHERE
+                C.Z_OBJ_ID = ?
+        ]]>
+    </sql>
+</mapper>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper>
+	<!-- by winCode -->
+	<sql id="getDynamicWindowByWinCode" type="sql">
+		<![CDATA[
+		SELECT
+			window_id,
+			event_id,
+			template_id,
+			window_type,
+			window_code,
+			window_name,
+			window_desc,
+			remark,
+			status_cd,
+			create_date,
+			status_date,
+			update_date,
+			sharding_id,
+			create_staff,
+			update_staff,
+			tenant_id
+		FROM
+			dynamic_window
+		WHERE
+			window_code= ? and status_cd=?
+		]]>
+	</sql>
+
+	<!-- by winId -->
+	<sql id="getDynamicWindowByWinId" type="sql">
+		<![CDATA[
+		SELECT
+			window_id,
+			event_id,
+			template_id,
+			window_type,
+			window_code,
+			window_name,
+			window_desc,
+			remark,
+			status_cd,
+			create_date,
+			status_date,
+			update_date,
+			sharding_id,
+			create_staff,
+			update_staff,
+			tenant_id
+		FROM
+			dynamic_window
+		WHERE
+			window_id= ? and status_cd=?
+		]]>
+	</sql>
+	<!-- by eventId -->
+	<sql id="getDynamicWindowByEventId" type="sql">
+		<![CDATA[
+		SELECT
+			window_id,
+			event_id,
+			template_id,
+			window_type,
+			window_code,
+			window_name,
+			window_desc,
+			remark,
+			status_cd,
+			create_date,
+			status_date,
+			update_date,
+			sharding_id,
+			create_staff,
+			update_staff,
+			tenant_id
+		FROM
+			dynamic_window
+		WHERE
+			event_id= ? and status_cd=?
+		]]>
+	</sql>
+	<!-- 根据相关条件获取窗体信息 -->
+	<sql id="qryWindowPageInfo" type="xml">
+	<![CDATA[
+		<dataSqlNode>
+			<type>sqltext</type>
+			<sqltext>SELECT
+				window_id,
+				event_id,
+				template_id,
+				window_type,
+				window_code,
+				window_name,
+				window_desc,
+				remark,
+				status_cd,
+				create_date,
+				status_date,
+				update_date,
+				sharding_id,
+				create_staff,
+				update_staff,
+				tenant_id
+				FROM
+				dynamic_window c where
+			</sqltext>
+			<dataSqlNode>
+				<type>param</type>
+				<sqltext> and c.window_type= ?</sqltext>
+				<paramTag>windowType</paramTag>
+			</dataSqlNode>
+			<dataSqlNode>
+				<type>param</type>
+				<sqltext> and c.window_code= ?</sqltext>
+				<paramTag>windowCode</paramTag>
+			</dataSqlNode>
+			<dataSqlNode>
+				<type>likeright</type>
+				<sqltext> and c.window_name like ?</sqltext>
+				<paramTag>windowName</paramTag>
+			</dataSqlNode>
+			<dataSqlNode>
+				<type>param</type>
+				<sqltext> and c.status_cd= ?</sqltext>
+				<paramTag>statusCd</paramTag>
+			</dataSqlNode>
+		</dataSqlNode>
+		]]>
+	</sql>
+
+	<!-- by tplId -->
+	<sql id="getDynamicWindowByTplId" type="sql">
+		<![CDATA[
+		SELECT
+			window_id,
+			event_id,
+			template_id,
+			window_type,
+			window_code,
+			window_name,
+			window_desc,
+			remark,
+			status_cd,
+			create_date,
+			status_date,
+			update_date,
+			sharding_id,
+			create_staff,
+			update_staff,
+			tenant_id
+		FROM
+			dynamic_window
+		WHERE
+			template_id= ? and status_cd=?
+		]]>
+	</sql>
+
+</mapper>

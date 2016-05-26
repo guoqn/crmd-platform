@@ -1,0 +1,47 @@
+jdbc.driver=com.mysql.jdbc.Driver
+
+
+#jdbc.url=jdbc:mysql://134.130.132.4:8366/CRM-DS?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
+#jdbc.username=crmdsquery
+#jdbc.password=ffcrmdsquery2015
+#jdbc.validation=select user()
+
+jdbc.url=jdbc:mysql://134.132.66.203:8866/CRM-DS?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
+jdbc.username=user
+jdbc.password=Aa123456
+jdbc.validation=select user()
+
+
+#jdbc.url=jdbc:mysql://134.132.66.207:8866/CRM-MKT?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
+#jdbc.username=mkt
+#jdbc.password=Aa123456
+#jdbc.validation=select user()
+
+#jdbc.url=jdbc:mysql://localhost:3306/CRM-DS?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
+#jdbc.username=root
+#jdbc.password=123456
+#jdbc.validation=select user()
+
+jdbc.initialSize=1
+jdbc.minIdle=1
+jdbc.maxActive=200
+
+##\u9ed8\u8ba4\u65e0\u9700\u53d8\u5316
+stat.slowSqlMillis=3000
+stat.logSlowSql=true
+stat.connectionStackTraceEnable=true
+log.statementExecutableSqlLogEnable=true
+
+###\u4ee5\u4e0b\u503c\u65e0\u7279\u6b8a\u60c5\u51b5\uff0c\u53ef\u4ee5\u4e0d\u53d8\u5316
+jdbc.maxWait=60000
+jdbc.timeBetweenEvictionRunsMillis=60000
+jdbc.minEvictableIdleTimeMillis=300000
+jdbc.validationQuery=SELECT 'x'
+jdbc.testWhileIdle=true
+jdbc.testOnBorrow=false
+jdbc.testOnReturn=false
+jdbc.poolPreparedStatements=false
+jdbc.maxPoolPreparedStatementPerConnectionSize=200
+jdbc.removeAbandoned=true
+jdbc.removeAbandonedTimeoutMillis=1800000
+jdbc.resetStatEnable=false

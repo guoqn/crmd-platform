@@ -1,0 +1,29 @@
+/**
+ * 
+ */
+package com.ffcs.crmd.platform.mq.rocketmq.producer.selector.impl;
+
+import com.ffcs.crmd.platform.mq.MqMessage;
+import com.ffcs.crmd.platform.mq.producer.api.IQueueSelector;
+
+/**
+ * 简单的队列选型器实现,根据key/queuesize取模法
+ * key为空时取MqMessage实例的hashcode
+ * @author chenzhi
+ * @2015年8月25日 下午10:11:06
+ */
+public class SimpleQueueSelector implements IQueueSelector {
+
+	@Override
+	public int onSelect(MqMessage msg, int queueSize, Object param){
+		int hashCode = 0;
+		
+		if(msg.getKeys()==null){
+			 hashCode=Math.abs(msg.hashCode());
+		}else{
+			 hashCode = Math.abs(msg.getKeys().hashCode());	
+		}				
+        int index = hashCode % queueSize;        
+        return index;//将特定的消息插入知道的队列中
+	}
+}

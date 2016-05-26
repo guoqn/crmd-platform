@@ -1,0 +1,259 @@
+/**
+ * 请求数据接口
+ * 
+ * 获取统一请求接口
+ * 
+ * @author LAIYONGMIN-PC
+ */
+
+// 自定义空间名
+if (!eh) {
+	var eh = {};
+}
+if (!eh.data) {
+	eh.data = {};
+}
+// 请求模块
+eh.data.url = "meta/dynamicPageCtrl";
+
+// 请求访问服务接口
+eh.data.call = function(type, param, rt) {
+	var url = "";
+	// 注册系统通用模块
+	var comApp = angular.injector([ "commonApp", "ng" ]);
+	// 调用
+	comApp.invoke([ 'commonService', function(commonService) {
+		switch (type) {
+		case "win":
+			url = eh.data.url + "/getDynamicWinByCode";
+			break;
+		case "tpl":
+			url = "";
+			break;
+		default:
+			// 默认传入的url+method
+			url = eh.data.url + "/" + param.method;
+			break;
+		}
+		commonService.call(url, param, function(data) {
+			if ($.isFunction(rt)) {
+				// 统一格式化数据
+				rt(eh.data._dataformat(data));
+			}
+		}, null);
+	} ]);
+};
+// 请求特定方法
+eh.data.callMethod = function(method, param, rt) {
+	// 注册系统通用模块
+	var comApp = angular.injector([ "commonApp", "ng" ]);
+	// 调用
+	comApp.invoke([ 'commonService', function(commonService) {
+		commonService.call(eh.data.url + "/" + method, param, function(data) {
+			if ($.isFunction(rt)) {
+				// 统一格式化数据
+				rt(eh.data._dataformat(data));
+			}
+		}, null);
+	} ]);
+};
+// 请求服务
+eh.data.callService = function(url, param, rt) {
+	// 注册系统通用模块
+	var comApp = angular.injector([ "commonApp", "ng" ]);
+	// 调用
+	comApp.invoke([ 'commonService', function(commonService) {
+		commonService.call(url, param, function(data) {
+			if ($.isFunction(rt)) {
+				// 统一格式化数据
+				rt(eh.data._dataformat(data));
+			}
+		}, null);
+	} ]);
+}
+
+/**
+ * 请求访问通用窗体
+ * 
+ * @param winCode
+ * @param rt
+ */
+eh.data.getPageByWinCode = function(winCode, rt) {
+	eh.data.call('win', JSON.stringify({
+		winCode : winCode
+	}), rt);
+}
+
+// 数据前端统一格式化
+eh.data._dataformat = function(data) {
+	// 数据格式处理
+	return data;
+}
+
+// JQUERY 扩展
+
+$.fn.extend({
+
+	// 根据winCode获取窗体
+	win : function(data) {
+		var $this = $(this);
+		if (data) {
+			// 请求访问
+			eh.data.call('win', JSON.stringify({
+				winCode : data.param
+			}), function(rt) {
+				try {
+					// 设置HTML
+					$this.html(eh.parse.createHtml(rt));
+					// 初始化脚本
+					eh.script.jsBatchActuator(eh.script.getDataCache(""));
+					// TODO;后期可以做配置事件绑定
+					// 执行函数
+					if ($.isFunction(data.success)) {
+						data.success(rt);
+					}
+				} catch (e) {
+					// 执行失败
+					if ($.isFunction(data.error)) {
+						data.error(e);
+					}
+				}
+			});
+		}
+	},
+	// 根据配置的事件获取窗体信息
+	winByEvent : function(data) {
+		var $this = $(this);
+		// 请求数据
+		eh.data.callMethod("getDynamicWinByEvents", JSON.stringify({
+			busSpec : data.param.busSpec,// 规格
+			busService : data.param.busService,// 动作
+			busRegion : data.param.busRegion,
+			busType : data.param.busType,
+			busObjId : data.param.busObjId,
+			busChannel : data.param.busChannel
+		// 区域
+		}), function(rt) {
+			try {
+				// 设置HTML
+				$this.html(eh.parse.createHtml(rt));
+				// 初始化脚本
+				eh.script.jsBatchActuator(eh.script.getDataCache(""));
+				// TODO;后期可以做配置事件绑定
+				// 执行函数
+				if ($.isFunction(data.success)) {
+					data.success(rt);
+				}
+			} catch (e) {
+				// 执行失败
+				if ($.isFunction(data.error)) {
+					data.error(e);
+				}
+			}
+
+		});
+	},
+	// 下拉初始化-提供自住设置下拉框值
+	initSelect : function(data) {
+		var $this = $(this);
+		eh.data.callService(data.url, data.param, function(rt) {
+			if (rt && rt.object) {
+				// 清空
+				$this.empty();
+				var datas = rt.object;
+				// 重新设置下拉框
+				if (datas && datas.length > 0) {
+					$this.append("<option id='option_0_0' value=''>请选择</option>");
+					$.each(datas, function(i, v) {
+						$this.append("<option id='option_" + v.id + "' value='" + v.value + "'>" + v.name + "</option>");
+					});
+				}
+				// 执行函数
+				if ($.isFunction(data.success)) {
+					data.success(rt);
+				}
+			}
+		});
+	}
+});
+
+// 支持angularJs,封装
+var ehDataServiceApp = angular.module("ehDataServiceApp", [ "commonApp" ]);
+
+// 服务
+ehDataServiceApp.service("ehDataService", [ "commonService", function(commonService) {
+	// ::::::::::::::事件相关服务::::::::::::::::::::::::::::
+	// 保存事件
+	this.saveEvent = function(event, sback) {
+		eh.data.callMethod("insertDyEvent", event, sback);
+	}
+	// 修改事件
+	this.updateEvent = function(event, sback) {
+		eh.data.callMethod("updateDyEvent", event, sback);
+	}
+	// 删除事件
+	this.deleteEvent = function(id, sback) {
+		eh.data.callMethod("deleteDyEvent", {
+			eventId : id
+		}, sback);
+	}
+	// 获取事件
+	this.getEventById = function(id, sback) {
+		eh.data.callMethod("getDyEventByEventId", {
+			eventId : id
+		}, sback);
+	}
+	// ::::::::::::::事件相关服务:::::::::::::::::::::::::::::：
+
+	// :::::::::::::::窗体相关服务::::::::::::::::::::::::::::::
+
+	// 保存
+	this.saveWindow = function(window, sback) {
+		eh.data.callMethod("submitSimpleWindow", window, sback);
+	}
+	// 修改--同保存服务
+	this.updateWindow = function(window, sback) {
+		eh.data.callMethod("submitSimpleWindow", window, sback);
+	}
+	// 删除
+	this.deleteWindow = function(id, sback) {
+		eh.data.callMethod("deleteWindow", {
+			winId : id
+		}, sback);
+	}
+	// 获取窗体服务-简单窗体信息
+	this.getWindowById = function(id, sback) {
+		eh.data.callMethod("getSimpleWindow", {
+			winId : id
+		}, sback);
+	}
+
+	// :::::::::::::::窗体相关服务::::::::::::::::::::::::::::::
+
+	// :::::::::::::::配置设计界面相关服务:::::::::::::::::::::::
+
+	// 窗体包含，组件、样式。
+	/**
+	 * type="event"/"window"/"tpl"/"part"
+	 */
+	this.getDesignWindow = function(type, id, sback) {
+		eh.data.callMethod("getDynamicWinById", {
+			objType : type,
+			objId : id
+		}, sback);
+	}
+
+	// 配置界面提交
+
+	this.saveDesignWindow = function(type, id, nodes, delNodes, sback) {
+		eh.data.callMethod("submitPageDesign", {
+			children : nodes,
+			delCompents : delNodes,
+			objType : type,
+			objId : id
+		}, sback);
+	}
+
+	// :::::::::::::::配置设计界面相关服务:::::::::::::::::::::::
+
+} ]);

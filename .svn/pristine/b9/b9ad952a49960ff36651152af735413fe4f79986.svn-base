@@ -1,0 +1,112 @@
+package com.ffcs.crmd.platform.meta.repository.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
+import com.ctg.itrdc.platform.common.entity.PageInfo;
+import com.ctg.itrdc.platform.common.utils.type.StringUtils;
+import com.ffcs.crmd.lmax.exception.RtManagerException;
+import com.ffcs.crmd.platform.core.ddd.repository.impl.AbstractCrmDomBaseRepository;
+import com.ffcs.crmd.platform.meta.constants.MetaConstants;
+import com.ffcs.crmd.platform.meta.entity.DynamicEvent;
+import com.ffcs.crmd.platform.meta.repository.IDynamicEventRepository;
+import com.ffcs.crmd.platform.pub.ex.ExceptionUtils;
+
+@Repository("dynamicEventRepository")
+public class DynamicEventRepositoryImpl extends AbstractCrmDomBaseRepository<DynamicEvent, Long>
+		implements IDynamicEventRepository {
+
+	public DynamicEventRepositoryImpl() {
+		super(DynamicEvent.class);
+	}
+
+	@Override
+	public List<DynamicEvent> qryDynamicEventByBusParam(Map<String, Object> params) {
+		// 固定条件
+		params.put("statusCd", MetaConstants.STATUS.META_STATUS_VALID);
+		return this.queryListByName("dynamicEventRepository.qryDynamicEventByBusParam", DynamicEvent.class, params);
+	}
+
+	public PageInfo<DynamicEvent> qryDynamicEventPageInfoByBusParam(Map<String, Object> params, int page,
+			int pageSize) {
+		// 固定条件
+		params.put("statusCd", MetaConstants.STATUS.META_STATUS_VALID);
+		return this.queryPageInfoByName("dynamicEventRepository.qryDynamicEventByBusParam", DynamicEvent.class, params,
+				page, pageSize);
+	}
+
+	@Override
+	public DynamicEvent getDynamicEvent(Long busSpec, Long busService, Long busRegion, Long busChannel) {
+		// 条件不合法，
+		if (busSpec == 0 && busService == 0 && busRegion == 0 && busChannel == 0) {
+			return null;
+		}
+		Map<String, Object> params = new HashMap<String, Object>();
+		// 必备条件
+		if (busSpec != 0) {
+			params.put("busSpec", busSpec);
+		}
+		if (busService != 0) {
+			params.put("busService", busService);
+		}
+		if (busRegion != 0) {
+			params.put("busRegion", busRegion);
+		}
+		if (busChannel != 0) {
+			params.put("busChannel", busChannel);
+		}
+
+		List<DynamicEvent> lists = qryDynamicEventByBusParam(params);
+
+		if (lists != null && lists.size() > 0) {
+			return lists.get(0);
+		}
+		return null;
+	}
+
+	@Override
+	public DynamicEvent getDynmaicEvent(String busType, Long busSpec, Long busObjId, Long busRegion, Long busService,
+			Long busChannel) {
+		// 条件不合法
+		if (StringUtils.isNullOrEmpty(busType) && busSpec == 0 && busObjId == 0 && busRegion == 0 && busService == 0) {
+			return null;
+		}
+		Map<String, Object> params = new HashMap<String, Object>();
+		// 类型
+		if (!StringUtils.isNullOrEmpty(busType)) {
+			params.put("busType", busType);
+		}
+		// 规格
+		if (busSpec != 0) {
+			params.put("busSpec", busSpec);
+		}
+		// 对象
+		if (busObjId != 0) {
+			params.put("busObjId", busObjId);
+		}
+		// 区域
+		if (busRegion != 0) {
+			params.put("busRegion", busRegion);
+		}
+		// 服务
+		if (busService != 0) {
+			params.put("busService", busService);
+		}
+		// 渠道
+		if (busChannel != 0) {
+			params.put("busChannel", busChannel);
+		}
+		List<DynamicEvent> lists = qryDynamicEventByBusParam(params);
+		if (lists != null && lists.size() > 0) {
+			if (lists.size() > 1) {
+				ExceptionUtils.throwEx(new RtManagerException("配置异常，查出多个配置事件记录。请检测配置是否合法！"));
+			} else {
+				return lists.get(0);
+			}
+		}
+		return null;
+	}
+}

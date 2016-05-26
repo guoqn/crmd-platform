@@ -1,0 +1,146 @@
+﻿<?xml version="1.0"?>
+<!-- <!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" > -->
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	version="2.5"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee   http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+	<display-name>webapp</display-name>
+	<listener>
+		<listener-class>
+			com.ctg.itrdc.platform.pub.container.ItrdcContextLoaderListener
+		</listener-class>
+	</listener>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath*:conf/spring/applicationContext.xml
+			classpath*:conf/spring/**/applicationContext*.xml
+			<!-- 前后端分离特殊配置，联合测试注释 -->
+			classpath*:conf/dubbo/applicationContext*.xml  <!-- 前后端配置 -->
+			classpath*:conf/front/dubbo/applicationContext*.xml  <!-- 只在前端配置 -->
+		</param-value>
+	</context-param>
+
+
+
+	<servlet>
+		<servlet-name>DruidStatView</servlet-name>
+		<servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+		<!-- •deny优先于allow，如果在deny列表中，就算在allow列表中，也会被拒绝。 •如果allow没有配置或者为空，则允许所有访问 
+			<IP> 或者 <IP>/<SUB_NET_MASK_size> -->
+		<!-- <init-param> <param-name>allow</param-name> <param-value>128.242.127.1/24,128.242.128.1</param-value> 
+			</init-param> <init-param> <param-name>deny</param-name> <param-value>128.242.127.4</param-value> 
+			</init-param> -->
+		<!-- 在StatViewSerlvet输出的html页面中，有一个功能是Reset All，执行这个操作之后，会导致所有计数器清零，重新计数。你可以通过配置参数关闭它。 -->
+		<init-param>
+			<param-name>resetEnable</param-name>
+			<param-value>false</param-value>
+		</init-param>
+
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DruidStatView</servlet-name>
+		<url-pattern>/druid/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- WebStatFilter用于采集web-jdbc关联监控的数据。 -->
+	<filter>
+		<filter-name>DruidWebStatFilter</filter-name>
+		<filter-class>com.alibaba.druid.support.http.WebStatFilter</filter-class>
+		<init-param>
+			<param-name>exclusions</param-name>
+			<param-value>*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*</param-value>
+		</init-param>
+		<init-param>
+			<param-name>sessionStatMaxCount</param-name>
+			<param-value>1000</param-value>
+		</init-param>
+		<!-- 你可以关闭session统计功能，比如： -->
+
+		<init-param>
+			<param-name>sessionStatEnable</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<!-- druid 0.2.7版本开始支持profile，配置profileEnable能够监控单个url调用的sql列表。 -->
+		<init-param>
+			<param-name>profileEnable</param-name>
+			<param-value>true</param-value>
+		</init-param>
+
+	</filter>
+	<filter-mapping>
+		<filter-name>DruidWebStatFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
+	<!--session 超时定义 -->
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+
+
+
+	<filter>
+		<filter-name>TheadLocalFilter</filter-name>
+		<filter-class>com.ctg.itrdc.platform.pub.filter.ThreadLocalFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>TheadLocalFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<!-- <filter> -->
+	<!-- <filter-name>pageFilter</filter-name> -->
+	<!-- <filter-class> -->
+	<!-- com.ctg.itrdc.core.filter.PageFilter -->
+	<!-- </filter-class> -->
+	<!-- </filter> -->
+	<!-- <filter-mapping> -->
+	<!-- <filter-name>pageFilter</filter-name> -->
+	<!-- <url-pattern>*.jsp</url-pattern> -->
+	<!-- </filter-mapping> -->
+	<!-- <filter-mapping> -->
+	<!-- <filter-name>pageFilter</filter-name> -->
+	<!-- <url-pattern>*.html</url-pattern> -->
+	<!-- </filter-mapping> -->
+	<!-- <filter-mapping> -->
+	<!-- <filter-name>pageFilter</filter-name> -->
+	<!-- <url-pattern>*.htm</url-pattern> -->
+	<!-- </filter-mapping> -->
+
+	<!-- Action路由 -->
+	<!-- <filter> -->
+	<!-- <filter-name>actionFilter</filter-name> -->
+	<!-- <filter-class>com.ctg.itrdc.event.ActionRouteFilter</filter-class> -->
+	<!-- <init-param> -->
+	<!-- <param-name>ifCache</param-name> -->
+	<!-- <param-value>N</param-value> -->
+	<!-- </init-param> -->
+	<!-- </filter> -->
+	<!-- <filter-mapping> -->
+	<!-- <filter-name>actionFilter</filter-name> -->
+	<!-- <url-pattern>/*</url-pattern> -->
+	<!-- </filter-mapping> -->
+
+
+	<!-- Spring MVC配置 -->
+	<servlet>
+		<servlet-name>springMVC</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<!-- 可以自定义servlet.xml配置文件的位置和名称，默认为WEB-INF目录下，名称为[<servlet-name>]-servlet.xml，如spring-servlet.xml -->
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath*:conf/spring/spring-servlet.xml</param-value>
+		</init-param>
+
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>springMVC</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+
+</web-app>

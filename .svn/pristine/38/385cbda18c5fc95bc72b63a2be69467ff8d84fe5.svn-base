@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper>
+    <sql id="qryPageByRelSpecId">
+        <![CDATA[
+            SELECT
+                REL_SPEC_ATTR_ID,
+                REL_SPEC_ID,
+                ATTR_ID,
+                TAB_ID,
+                COL_ID,
+                REMARK,
+                CREATE_STAFF,
+                UPDATE_STAFF,
+                STATUS_CD,
+                CREATE_DATE,
+                STATUS_DATE,
+                UPDATE_DATE,
+                REGION_CD,
+                AREA_ID,
+                REC_UPDATE_DATE,
+                SHARDING_ID,
+                REL_SHARDING_ID,
+                DVERSION,
+                DTIMESTAMP
+            FROM
+                REL_SPEC_ATTR
+            WHERE
+                REL_SPEC_ID = ?
+        ]]>
+    </sql>
+    <sql id="qryPageByAttrId">
+        <![CDATA[
+            SELECT
+                REL_SPEC_ATTR_ID,
+                REL_SPEC_ID,
+                ATTR_ID,
+                TAB_ID,
+                COL_ID,
+                REMARK,
+                CREATE_STAFF,
+                UPDATE_STAFF,
+                STATUS_CD,
+                CREATE_DATE,
+                STATUS_DATE,
+                UPDATE_DATE,
+                REGION_CD,
+                AREA_ID,
+                REC_UPDATE_DATE,
+                SHARDING_ID,
+                REL_SHARDING_ID,
+                DVERSION,
+                DTIMESTAMP
+            FROM
+                REL_SPEC_ATTR
+            WHERE
+                ATTR_ID = ?
+        ]]>
+    </sql>
+    
+</mapper>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper>
+	<!-- by winCode -->
+	<sql id="qryDynamicStyleByCompId" type="xml">
+		<![CDATA[     
+		   <dataSqlNode>
+		        <type>sqltext</type>
+		        <sqltext>
+		        	SELECT
+						style_id,
+						p_style_id,
+						RELA_STYLE_ID,
+						component_id,
+						style_type,
+						style_attr,
+						style_attr_value,
+						remark,
+						status_cd,
+						create_date,
+						status_date,
+						update_date,
+						sharding_id,
+						create_staff,
+						update_staff,
+						tenant_id
+					FROM
+						dynamic_style
+					WHERE 
+				</sqltext>     
+		        <dataSqlNode>
+		            <type>param</type>
+		            <sqltext> and component_id= ? </sqltext> 
+		            <paramTag>componentId</paramTag>
+		        </dataSqlNode>
+		        <dataSqlNode>
+		             <type>param</type>
+		             <sqltext> and style_type= ?</sqltext>
+		             <paramTag>styleType</paramTag>
+		         </dataSqlNode>
+		         <dataSqlNode>
+		              <type>param</type>
+		              <sqltext> and status_cd= ?</sqltext>
+		              <paramTag>statusCd</paramTag>
+		          </dataSqlNode>
+		           <dataSqlNode>
+		              <type>sqltext</type>
+		              <sqltext> and p_style_id is null </sqltext>
+		          </dataSqlNode>
+		  </dataSqlNode>
+		]]>
+	</sql>
+
+	<sql id="qryThemeStyles" type="sql">
+	<![CDATA[ 
+		SELECT
+			style_id,
+			style_name,
+			p_style_id,
+			RELA_STYLE_ID,
+			component_id,
+			style_type,
+			style_attr,
+			style_attr_value,
+			remark,
+			status_cd,
+			create_date,
+			status_date,
+			update_date,
+			sharding_id,
+			create_staff,
+			update_staff,
+			tenant_id
+		FROM
+			dynamic_style
+		WHERE 
+		 style_type= ?
+		 and status_cd= ?
+	]]>
+	</sql>
+
+	<sql id="quryChildStylesByPId" type="sql">
+	<![CDATA[ 
+		SELECT
+			style_id,
+			style_name,
+			p_style_id,
+			RELA_STYLE_ID,
+			component_id,
+			style_type,
+			style_attr,
+			style_attr_value,
+			remark,
+			status_cd,
+			create_date,
+			status_date,
+			update_date,
+			sharding_id,
+			create_staff,
+			update_staff,
+			tenant_id
+		FROM
+			dynamic_style
+		WHERE 
+		 p_style_id= ?
+		 and status_cd= ?
+	]]>
+	</sql>
+
+
+	<sql id="qryCountByPId" type="sql">
+	<![CDATA[ 
+		SELECT
+			count(style_id)
+		FROM
+			dynamic_style
+		WHERE 
+		 p_style_id= ?
+		 and status_cd= ?
+	]]>
+	</sql>
+
+	<sql id="qryAllStyleTreeData" type="sql">
+	<![CDATA[ 
+		SELECT
+			style_id,
+			style_name,
+			p_style_id,
+			RELA_STYLE_ID,
+			component_id,
+			style_type,
+			style_attr,
+			style_attr_value,
+			remark,
+			status_cd,
+			create_date,
+			status_date,
+			update_date,
+			sharding_id,
+			create_staff,
+			update_staff,
+			tenant_id
+		FROM
+			dynamic_style
+		WHERE 
+		 component_id is null
+		 and status_cd= ?
+	]]>
+	</sql>
+
+
+	<sql id="qryStylesByComponentId" type="sql">
+	<![CDATA[ 
+		SELECT
+			style_id,
+			style_name,
+			p_style_id,
+			RELA_STYLE_ID,
+			component_id,
+			style_type,
+			style_attr,
+			style_attr_value,
+			remark,
+			status_cd,
+			create_date,
+			status_date,
+			update_date,
+			sharding_id,
+			create_staff,
+			update_staff,
+			tenant_id
+		FROM
+			dynamic_style
+		WHERE 
+		 component_id =?
+		 and status_cd= ?
+	]]>
+	</sql>
+
+</mapper>

@@ -1,0 +1,522 @@
+package com.ffcs.crmd.platform.meta.control;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ctg.itrdc.platform.common.utils.type.StringUtils;
+import com.ffcs.crmd.platform.control.AbstractController;
+import com.ffcs.crmd.platform.meta.api.dto.DynamicComponentDTO;
+import com.ffcs.crmd.platform.meta.api.dto.DynamicEventDTO;
+import com.ffcs.crmd.platform.meta.api.dto.DynamicPartDTO;
+import com.ffcs.crmd.platform.meta.api.dto.DynamicStyleDTO;
+import com.ffcs.crmd.platform.meta.api.dto.DynamicTemplateDTO;
+import com.ffcs.crmd.platform.meta.api.dto.DynamicWindowDTO;
+import com.ffcs.crmd.platform.meta.api.facade.IDynamicPageFacade;
+import com.ffcs.crmd.platform.meta.vo.DynamicPageVo;
+import com.ffcs.crmd.platform.pub.vo.RetVo;
+
+/**
+ * 
+ * 动态页面controller
+ * 
+ * 
+ * @author LAIYONGMIN-PC
+ *
+ */
+@Controller
+@RequestMapping("/meta/dynamicPageCtrl")
+@ResponseBody
+public class DynamicPageController extends AbstractController {
+
+	public final static String OBJ_TYPE_EVENT = "event";
+	public final static String OBJ_TYPE_WINDOW = "window";
+	public final static String OBJ_TYPE_PART = "part";
+	public final static String OBJ_TYPE_TPL = "tpl";
+
+	@Autowired
+	IDynamicPageFacade pageFacade;
+
+	/**
+	 * 根据窗体编码获取窗体信息 （组件 ,样式）
+	 * 
+	 * @param winCode
+	 * @return
+	 */
+	@RequestMapping("/getDynamicWinByCode")
+	public RetVo getDynamicWinByCode(@RequestBody DynamicPageVo dynamicPageVo) {
+		RetVo retVo = new RetVo(true);
+		DynamicWindowDTO windowDto = pageFacade.getDynamicWindowDTO(dynamicPageVo.getWinCode());
+		if (windowDto != null) {
+			retVo.setObject(windowDto);
+		}
+		return retVo;
+	}
+
+	/**
+	 * 根据条件获取窗体信息 （组件 ,样式）
+	 * 
+	 * @param winCode
+	 * @return
+	 */
+	@RequestMapping("/getDynamicWinByEvents")
+	public RetVo getDynamicWinByEvents(@RequestBody DynamicPageVo dynamicPageVo) {
+		RetVo retVo = new RetVo(true);
+		DynamicWindowDTO windowDto = pageFacade.getMKTDynamicWindowDTO(dynamicPageVo.getBusSpec(),
+				dynamicPageVo.getBusService(), dynamicPageVo.getBusRegion());
+		if (windowDto != null) {
+			retVo.setObject(windowDto);
+		}
+		return retVo;
+	}
+
+	/**
+	 * 根据类型条件查找窗体信息（组件、样式）
+	 * 
+	 * @param dynamicPageVo
+	 * @return
+	 */
+	@RequestMapping("/getDynamicWinById")
+	public RetVo getDynamicWinById(@RequestBody DynamicPageVo dynamicPageVo) {
+		RetVo retVo = new RetVo(true);
+		// 根据事件查找
+		if (OBJ_TYPE_EVENT.equals(dynamicPageVo.getObjType())) {
+			retVo.setObject(pageFacade.getDynamicWindowDtoByEventId(dynamicPageVo.getObjId()));
+		} else if (OBJ_TYPE_WINDOW.equals(dynamicPageVo.getObjType())) {
+			// 窗体查找
+			DynamicWindowDTO dto = pageFacade.getSimpleWindow(dynamicPageVo.getObjId());
+			if (dto != null) {
+				retVo.setObject(pageFacade.getDynamicWindowDTO(dto.getWindowCode()));
+				return retVo;
+			}
+		} else if (OBJ_TYPE_PART.equals(dynamicPageVo.getObjType())) {
+			List<DynamicWindowDTO> dtos = pageFacade.qrySimpleWindowByPartId(dynamicPageVo.getObjId());
+			// TODO;
+			// 目前暂获取一个窗体
+			if (dtos != null && dtos.size() > 0) {
+				retVo.setObject(pageFacade.getDynamicWindowDTO(dtos.get(0).getWindowCode()));
+				return retVo;
+			}
+		} else if (OBJ_TYPE_TPL.equals(dynamicPageVo.getObjType())) {
+			// 窗体模版
+			DynamicWindowDTO dto = pageFacade.getDynamicWindowByTplId(dynamicPageVo.getObjId());
+			if (dto != null) {
+				retVo.setObject(pageFacade.getDynamicWindowDTO(dto.getWindowCode()));
+				return retVo;
+			}
+		}
+		return retVo;
+	}
+
+	/**
+	 * 获取事件配置信息
+	 * 
+	 * @param dynamicPageVo
+	 * @return
+	 */
+	@RequestMapping("/queryEventsByBusspec")
+	public RetVo queryEventsByBusspec(@RequestBody DynamicPageVo dynamicPageVo) {
+		RetVo retVo = new RetVo(true);
+		retVo.setPageInfo(pageFacade.queryEventByBusspec(dynamicPageVo.getBusSpec(), dynamicPageVo.getOffset(),
+				dynamicPageVo.getLimit()));
+		return retVo;
+	}
+
+	/**
+	 * 保存事件
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	@RequestMapping("/insertDyEvent")
+	public RetVo insertDyEvent(@RequestBody DynamicEventDTO dto) {
+		RetVo retVo = new RetVo(true);
+		pageFacade.insertDyEvent(dto);
+		return retVo;
+	}
+
+	/**
+	 * 获取事件对象
+	 * 
+	 * @param DynamicPageVo
+	 * @return
+	 */
+	@RequestMapping("/getDyEventByEventId")
+	public RetVo getDyEventByEventId(@RequestBody DynamicPageVo dynamicPageVo) {
+		RetVo retVo = new RetVo(true);
+		retVo.setObject(pageFacade.getDyEventById(dynamicPageVo.getEventId()));
+		return retVo;
+	}
+
+	/**
+	 * 更新操作
+	 * 
+	 * @param dynamicPageVo
+	 * @return
+	 */
+	@RequestMapping("/updateDyEvent")
+	public RetVo updateDyEvent(@RequestBody DynamicEventDTO dto) {
+		RetVo retVo = new RetVo(true);
+		pageFacade.updateDyEvent(dto);
+		return retVo;
+	}
+
+	/**
+	 * 删除事件
+	 * 
+	 * @param eventId
+	 * @return
+	 */
+	@RequestMapping("/deleteDyEvent")
+	public RetVo deleteDyEvent(@RequestBody DynamicPageVo dynamicPageVo) {
+		RetVo retVo = new RetVo(true);
+		pageFacade.deleteByEvent(dynamicPageVo.getEventId());
+		return retVo;
+	}
+
+	/**
+	 * 根据pID获取样式节点/获取主题样式
+	 * 
+	 * @param dynamicPageVo
+	 * @return
+	 */
+	@RequestMapping("/qryStylesById")
+	public RetVo qryStylesById(@RequestBody DynamicPageVo dynamicPageVo) {
+		RetVo retVo = new RetVo(true);
+		retVo.setObject(pageFacade.qryDynamicStyles(dynamicPageVo.getStyleId(), dynamicPageVo.getStyleType()));
+		return retVo;
+	}
+
+	/**
+	 * ztree 请求 for ztree
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/qryChildStylesById")
+	public List<DynamicStyleDTO> qryChildStylesById(Long styleId) {
+		return pageFacade.qryDynamicStyles(styleId, "");
+	}
+
+	/**
+	 * 保存操作
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	@RequestMapping("/insertDyStyle")
+	public RetVo insertDyStyle(@RequestBody DynamicStyleDTO dto) {
+		RetVo retVo = new RetVo(true);
+		pageFacade.insertDyStyle(dto);
+		return retVo;
+	}
+
+	/**
+	 * 更新操作
+	 * 
+	 * @param dynamicPageVo
+	 * @return
+	 */
+	@RequestMapping("/updateDyStyle")
+	public RetVo updateDyStyle(@RequestBody DynamicStyleDTO dto) {
+		RetVo retVo = new RetVo(true);
+		pageFacade.updateDyStyle(dto);
+		return retVo;
+	}
+
+	/**
+	 * 删除操作
+	 * 
+	 * @param eventId
+	 * @return
+	 */
+	@RequestMapping("/deleteDyStyle")
+	public RetVo deleteDyStyle(@RequestBody DynamicPageVo dynamicPageVo) {
+		RetVo retVo = null;
+		int i = pageFacade.deleteDyStyle(dynamicPageVo.getStyleId());
+		if (i == 0) {
+			retVo = new RetVo(false, "0", "存在孩子节点，不允许删除!", "存在孩子节点，不允许删除!", null);
+		} else {
+			retVo = new RetVo(true);
+		}
+		return retVo;
+	}
+
+	/**
+	 * 获取事件对象
+	 * 
+	 * @param DynamicPageVo
+	 * @return
+	 */
+	@RequestMapping("/getDyStyleById")
+	public RetVo getDyStyleById(@RequestBody DynamicPageVo dynamicPageVo) {
+		RetVo retVo = new RetVo(true);
+		retVo.setObject(pageFacade.getDyStyleById(dynamicPageVo.getStyleId()));
+		return retVo;
+	}
+
+	/**
+	 * 获取全部配置样式
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/qryAllStyleTreeData")
+	public RetVo qryAllStyleTreeData() {
+		RetVo retVo = new RetVo(true);
+		retVo.setObject(pageFacade.qryAllStyleTreeData());
+		return retVo;
+	}
+
+	/**
+	 * 提交配置的界面信息
+	 * 
+	 * @param compDto
+	 * @return
+	 */
+	@RequestMapping("/submitPageDesign")
+	public RetVo submitPageDesign(@RequestBody DynamicComponentDTO handleData) {
+		RetVo retVo = new RetVo(true);
+		pageFacade.handlePageData(handleData);
+		return retVo;
+	}
+
+	/**
+	 * 获取通用窗体
+	 * 
+	 * @param dynamicPageVo
+	 * @return
+	 */
+	@RequestMapping("/qryWindowPageInfoByWin")
+	public RetVo qryWindowPageInfoByWin(@RequestBody DynamicPageVo dynamicPageVo) {
+		RetVo retVo = new RetVo(true);
+		DynamicWindowDTO dto = new DynamicWindowDTO();
+		dto.setWindowCode(dynamicPageVo.getWinCode());
+		dto.setWindowName(dynamicPageVo.getWinName());
+		dto.setWindowType(dynamicPageVo.getWinType());
+		retVo.setPageInfo(pageFacade.qryWindowPageInfoByWin(dto, dynamicPageVo.getOffset(), dynamicPageVo.getLimit()));
+		return retVo;
+	}
+
+	/**
+	 * 保存/更新窗体信息
+	 * 
+	 * @param winDto
+	 * @return
+	 */
+	@RequestMapping("/submitSimpleWindow")
+	public RetVo submitSimpleWindow(@RequestBody DynamicWindowDTO winDto) {
+		RetVo retVo = new RetVo(true);
+		pageFacade.saveSimpleWindow(winDto);
+		return retVo;
+	}
+
+	/**
+	 * 获取
+	 * 
+	 * @param dynamicPageVo
+	 * @return
+	 */
+	@RequestMapping("/getSimpleWindow")
+	public RetVo getSimpleWindow(@RequestBody DynamicPageVo dynamicPageVo) {
+		RetVo retVo = new RetVo(true);
+		retVo.setObject(pageFacade.getSimpleWindow(dynamicPageVo.getWinId()));
+		return retVo;
+	}
+
+	/**
+	 * 删除
+	 * 
+	 * @param dynamicPageVo
+	 * @return
+	 */
+	@RequestMapping("/deleteWindow")
+	public RetVo deleteWindow(@RequestBody DynamicPageVo dynamicPageVo) {
+		RetVo retVo = new RetVo(true);
+		pageFacade.deleteWindow(dynamicPageVo.getWinId());
+		return retVo;
+	}
+
+	/**
+	 * 保存构件
+	 * 
+	 * @param partDto
+	 * @return
+	 */
+	@RequestMapping("/savePart")
+	public RetVo savePart(@RequestBody DynamicPartDTO partDto) {
+		RetVo retVo = new RetVo(true);
+		pageFacade.savePart(partDto);
+		return retVo;
+	}
+
+	/**
+	 * 删除构件
+	 * 
+	 * @param partDto
+	 * @return
+	 */
+	@RequestMapping("/deletePart")
+	public RetVo deletePart(@RequestBody DynamicPartDTO partDto) {
+		RetVo retVo = new RetVo(true);
+		pageFacade.deletePart(partDto.getPartId());
+		return retVo;
+	}
+
+	/**
+	 * 查询构件
+	 * 
+	 * @param dynamicPageVo
+	 * @return
+	 */
+	@RequestMapping("/qryPageInfoPart")
+	public RetVo qryPageInfoPart(@RequestBody DynamicPageVo dynamicPageVo) {
+		RetVo retVo = new RetVo(true);
+		DynamicPartDTO dto = new DynamicPartDTO();
+		dto.setPartName(dynamicPageVo.getName());
+		dto.setPartType(dynamicPageVo.getType());
+		retVo.setPageInfo(pageFacade.qryPageInfoPart(dto, dynamicPageVo.getOffset(), dynamicPageVo.getLimit()));
+		return retVo;
+	}
+
+	/**
+	 * 获取纯构件信息
+	 * 
+	 * @param dynamicPageVo
+	 * @return
+	 */
+	@RequestMapping("/getSimplePart")
+	public RetVo getSimplePart(@RequestBody DynamicPageVo dynamicPageVo) {
+		RetVo retVo = new RetVo(true);
+		retVo.setObject(pageFacade.getSimplePart(dynamicPageVo.getObjId()));
+		return retVo;
+	}
+
+	/**
+	 * 获取模版
+	 * 
+	 * @param dynamicPageVo
+	 * @return
+	 */
+	@RequestMapping("/queryTpls")
+	public RetVo queryTpls(@RequestBody DynamicPageVo dynamicPageVo) {
+		RetVo retVo = new RetVo(true);
+		DynamicTemplateDTO dto = new DynamicTemplateDTO();
+		dto.setTemplateName(dynamicPageVo.getName());
+		retVo.setPageInfo(pageFacade.qryTplPageInfo(dto, dynamicPageVo.getOffset(), dynamicPageVo.getLimit()));
+		return retVo;
+	}
+
+	/**
+	 * 保存模版
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	@RequestMapping("/saveTpl")
+	public RetVo saveTpl(@RequestBody DynamicTemplateDTO tplDto) {
+		RetVo retVo = new RetVo(true);
+		pageFacade.saveTpl(tplDto);
+		return retVo;
+	}
+
+	/**
+	 * 更新模版
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	@RequestMapping("/updateTpl")
+	public RetVo updateTpl(@RequestBody DynamicTemplateDTO tplDto) {
+		RetVo retVo = new RetVo(true);
+		pageFacade.updateTpl(tplDto);
+		return retVo;
+	}
+
+	/**
+	 * @param tplDto
+	 * @return
+	 */
+	@RequestMapping("/getSimpleTpl")
+	public RetVo getSimpleTpl(@RequestBody DynamicTemplateDTO tplDto) {
+		RetVo retVo = new RetVo(true);
+		retVo.setObject(pageFacade.getTplById(tplDto.getTemplateId()));
+		return retVo;
+	}
+
+	/**
+	 * 删除模版
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	@RequestMapping("/delTpl")
+	public RetVo delTpl(@RequestBody DynamicTemplateDTO dto) {
+		RetVo retVo = new RetVo(true);
+		pageFacade.delTpl(dto.getTemplateId());
+		return retVo;
+	}
+
+	/**
+	 * 获取模版列表
+	 * 
+	 * @param tplDto
+	 * @return
+	 */
+	@RequestMapping("/qryTplListsByType")
+	public RetVo qryTplListsByType(@RequestBody DynamicTemplateDTO tplDto) {
+		RetVo retVo = new RetVo(true);
+		if (!StringUtils.isNullOrEmpty(tplDto.getTemplateType())) {
+			retVo.setObject(pageFacade.qryTplListsByType(tplDto.getTemplateType()));
+		}
+		return retVo;
+	}
+
+	/**
+	 * 获取窗体
+	 * 
+	 * @param dynamicPageVo
+	 * @return
+	 */
+	@RequestMapping("/getWindowByTplCode")
+	public RetVo getWindowByTplCode(@RequestBody DynamicPageVo dynamicPageVo) {
+		RetVo retVo = new RetVo(true);
+		// 窗体模版
+		DynamicWindowDTO dto = pageFacade.getDynamicWindowByTplCode(dynamicPageVo.getCode());
+		if (dto != null) {
+			retVo.setObject(pageFacade.getDynamicWindowDTO(dto.getWindowCode()));
+			return retVo;
+		}
+		return retVo;
+	}
+
+	/**
+	 * 获取构件
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/qryParts")
+	public List<DynamicComponentDTO> qryParts() {
+		List<DynamicPartDTO> parts = pageFacade.qryParts();
+		if (parts != null && parts.size() > 0) {
+			List<DynamicComponentDTO> dtos = new ArrayList<DynamicComponentDTO>();
+			for (DynamicPartDTO dto : parts) {
+				DynamicComponentDTO comp = new DynamicComponentDTO();
+				comp.setId(-1L);
+				comp.setName(dto.getPartName());
+				comp.setComponentId(-1L);
+				comp.setComponentType("201");
+				comp.setComponentName(dto.getPartName());
+				comp.setGroupCode(dto.getPartCode());
+				dtos.add(comp);
+			}
+			return dtos;
+		}
+		return null;
+	}
+
+}

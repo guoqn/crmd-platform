@@ -1,0 +1,371 @@
+/**
+ * @author LAIYONGMIN-PC
+ */
+
+var dypageWin = {}
+
+// 删除节点
+dypageWin.delCompents = [];
+
+$(function() {
+	// 初始化规格数据
+	var pageSetting = {
+		// 数据格式
+		data : {
+			simpleData : {
+				enable : true
+			}
+		},
+		edit : {
+			enable : true,
+			showRenameBtn : false,
+		},
+		//
+		callback : {
+			onClick : dypageWin.onSelectCompNode,
+			// 删除节点动作
+			onRemove : dypageWin.pageRemoveEvent,
+			// 移动结束
+			onDrop : dypageWin.dropEndEvent,
+			// 移动结束前
+			beforeDrop : dypageWin.pageBeforeDrop,
+			// 移动之前
+			beforeDrag : dypageWin.pageBeforeDrap
+		},
+		view : {
+			addHoverDom : dypageWin.addSelfHoverDom
+		}
+	};
+	var pageRootNode = [ {
+		id : 1,
+		pId : 0,
+		drag : false,
+		name : "HTML"
+	} ];
+	$.fn.zTree.init($("#pageTree"), pageSetting, pageRootNode);
+});
+// 界面设计树
+dypageWin.addSelfHoverDom = function(treeId, treeNode) {
+	// 跟节点隐藏删除动作
+	if (treeNode.id === 1) {
+		$("#" + treeId + "_" + treeNode.id + "_remove").hide();
+	}
+}
+// 界面设计树
+dypageWin.pageBeforeDrop = function(treeId, treeNodes, targetNode, moveType) {
+	// 不允许，移动到跟节点
+	if (targetNode === null) {
+		return false;
+	}
+}
+dypageWin.pageBeforeDrap = function(treeId, treeNodes) {
+	// 根节点不允许移动
+	if (treeNodes) {
+		var node = treeNodes[0];
+		if (node.id === 1) {
+			return false;
+		}
+	}
+}
+
+dypageWin.beforeDrag = function(treeId, treeNodes) {
+	for (var i = 0, l = treeNodes.length; i < l; i++) {
+		if (treeNodes[i].drag === false) {
+			return false;
+		}
+	}
+	return true;
+}
+
+dypageWin.beforeDrop = function(treeId, treeNodes, targetNode, moveType) {
+	return targetNode ? targetNode.drop !== false : true;
+}
+
+// 加载配置界面数据
+dypageWin.loadWinData = function(from, objId) {
+	var $scope = angular.element('#dypage-win').scope();// jquery+angular实现
+	$scope.display.item = from;// 页面导航
+	// 提交参数
+	$scope.display.objId = objId;
+	$scope.display.objType = from;
+	// 加载数据
+	eh.data.callMethod("getDynamicWinById", {
+		objType : from,
+		objId : objId
+	}, function(rt) {
+		if (rt.result) {
+			var pageTree = $.fn.zTree.getZTreeObj("pageTree");
+			var nodes = pageTree.getNodes();
+			if (nodes.length > 0) {
+				// 清除当前所有孩子节点
+				pageTree.removeChildNodes(nodes[0]);
+				if (rt.object && rt.object.componentDto) {
+					pageTree.addNodes(nodes[0], rt.object.componentDto);
+					pageTree.expandAll(true);
+					// 设置HTML
+					$("#pageHtml").html(eh.parse.createHtml(rt));
+					// 初始化脚本
+					eh.script.jsBatchActuator(eh.script.getDataCache(""));
+				} else {
+					pageTree.removeChildNodes(nodes[0]);
+					$("#pageHtml").html("");
+				}
+			}
+		} else {
+			MESSAGE_DIALOG.error(rt.detailMsg);
+		}
+	})
+}
+
+// 删除节点
+dypageWin.pageRemoveEvent = function(event, treeId, treeNode) {
+	var pageTree = $.fn.zTree.getZTreeObj("" + treeId);
+	var nodes = pageTree.getNodes();
+	if (nodes && nodes.length > 0) {
+		var root = nodes[0];
+		var childs = root.children;
+		// 设置HTML
+		$("#pageHtml").html(eh.parse.createHtml({
+			object : {
+				componentDto : childs[0]
+			}
+		}));
+		// 初始化脚本
+		eh.script.jsBatchActuator(eh.script.getDataCache(""));
+	}
+	// 暂存删除节点信息
+	if (treeNode.componentId != -1) {
+		// 没有实际的组件Id，则不缓存
+		dypageWin.delCompents.push(treeNode);
+	}
+}
+
+// 移动结束
+dypageWin.dropEndEvent = function(event, treeId, treeNodes, targetNode, moveType) {
+	// 目标节点
+	if (targetNode === null) {
+		return false;
+	}
+	var pageTree = $.fn.zTree.getZTreeObj("" + treeId);
+	var nodes = pageTree.getNodes();
+	if (nodes && nodes.length > 0) {
+		var root = nodes[0];
+		var childs = root.children;
+		// 设置HTML
+		$("#pageHtml").html(eh.parse.createHtml({
+			object : {
+				componentDto : childs[0]
+			}
+		}));
+		// 初始化脚本
+		eh.script.jsBatchActuator(eh.script.getDataCache(""));
+	}
+	// 更新移动目标节点
+	if (treeNodes) {
+		var selNode = treeNodes[0];
+		if (selNode.componentId != -1) {
+			selNode.opType = 'edit';
+		}
+		selNode.pComponentId = targetNode.componentId;
+		pageTree.updateNode(selNode, false);
+	}
+}
+// 递归设置参数
+dypageWin.recurseDel = function(datas) {
+	if (datas && datas.length > 0) {
+		for (d in datas) {
+			var data = datas[d];
+			if (data) {
+				dypageWin.deleteAttr(data);
+				// 不进行模版提交，没有意义
+				if (data.tpl) {
+					delete data.tpl;
+				}
+				if (data.children && data.children.length > 0) {
+					dypageWin.recurseDel(data.children);
+				}
+			}
+		}
+	}
+}
+// 提交的时候，controller接受端对象，属性不一致，会报错。
+dypageWin.deleteAttr = function(data) {
+	// 删除属性
+	delete data.check_Child_State;
+	delete data.check_Focus;
+	delete data.checked;
+	delete data.checkedOld;
+	delete data.chkDisabled;
+	delete data.editNameFlag;
+	delete data.halfCheck;
+	delete data.isAjaxing;
+	delete data.isFirstNode;
+	delete data.isHover;
+	delete data.isLastNode;
+	delete data.isParent;
+	delete data.nocheck;
+	delete data.open;
+	delete data.pId;
+	delete data.parentTId;
+	delete data.tId;
+	delete data.zAsync;
+	delete data.level;
+}
+
+// 选中操作
+dypageWin.onSelectCompNode = function(event, treeId, treeNode) {
+	var $scope = angular.element('#dypage-win').scope();// jquery+angular实现
+	// 设置组件表单式
+	$scope.compForm.componentExp = treeNode.componentExp;
+	// 组件类型
+	if (treeNode.busAttrType) {
+		$scope.compForm.componentType = parseInt(treeNode.busAttrType);
+	} else {
+		$scope.compForm.componentType = parseInt(treeNode.componentType);
+	}
+	// 编码
+	if (treeNode.busAttrCode) {
+		$scope.compForm.componentCode = treeNode.busAttrCode;
+	} else {
+		$scope.compForm.componentCode = treeNode.componentCode;
+	}
+	// 组件名称
+	if (treeNode.busAttrName) {
+		$scope.compForm.componentName = treeNode.busAttrName;
+	} else {
+		$scope.compForm.componentName = treeNode.componentName;
+	}
+	$scope.compForm.groupCode = treeNode.groupCode;
+	$scope.$apply();// 绑定到视图
+	winStyle.checkStyle(treeNode.dynamicStyleDtos);// 勾选样式
+}
+var dypageWinCtrl = angular.module("dypageApp").controller("dypageWinCtrl",
+		[ "$scope", "commonService", "dypageService", "$compile", "$timeout", function($scope, commonService, dypageService, $compile, $timeout) {
+			// 组件表单对象
+			$scope.compForm = {};
+			$scope.display = {};
+			// 模版下拉
+			$scope.groupCode = {};
+			// 跟全局绑定
+			$scope.winSelect = {
+				comTypeData : [ {
+					id : -1,
+					action : '请选择'
+				}, {
+					id : 0,
+					action : '表单（form）'
+				}, {
+					id : 3,
+					action : '层（div）'
+				}, {
+					id : 4,
+					action : '标签（label）'
+				}, {
+					id : 1,
+					action : '输入框'
+				}, {
+					id : 2,
+					action : '下拉框'
+				}, {
+					id : 5,
+					action : '日期输入框'
+				}, {
+					id : 14,
+					action : '数字输入框'
+				}, {
+					id : 8,
+					action : '多选框'
+				}, {
+					id : 9,
+					action : '单选框'
+				}, {
+					id : 10,
+					action : '多行文本输入框'
+				}, {
+					id : 11,
+					action : '按钮'
+				}, {
+					id : 200,
+					action : '虚拟组件（模版使用）'
+				}, {
+					id : 201,
+					action : '构件组件'
+				} ]
+			};
+
+			$scope.compForm.componentType = -1;
+			// 加载模版数据
+
+			eh.data.callMethod("qryTplListsByType", {
+				templateType : 'wtpl'
+			}, function(rt) {
+				// $timeout(function() {
+				$scope.groupCode = rt.object;
+				// }, 0);
+			});
+
+			// 更新树节点，不保存到数据库
+			$scope.updateDesignTree = function() {
+				var pageTree = $.fn.zTree.getZTreeObj("pageTree");
+				var selNodes = pageTree.getSelectedNodes();
+				if (selNodes != null && selNodes.length > 0) {
+					// 当前选中的节点
+					var node = selNodes[0];
+					node.componentType = $scope.compForm.componentType;
+					node.name = $scope.compForm.componentName;
+					node.componentName = $scope.compForm.componentName;
+					node.componentNo = $scope.compForm.componentNo;
+					node.componentExp = $scope.compForm.componentExp;
+					node.componentTip = "";
+					// 构件不同步
+					if ($scope.compForm.componentType != "201") {
+						node.groupCode = $scope.compForm.groupCode;
+					}
+					if (node.componentId != -1) {
+						node.opType = "edit";
+					}
+					pageTree.updateNode(node, false);
+				}
+			};
+			// 提交到数据库
+			$scope.submitDesignWin = function() {
+				// 界面树
+				var pageTree = $.fn.zTree.getZTreeObj("pageTree");
+				if (!pageTree.getNodes()[0].children) {
+					return;
+				}
+				var tempChilds = new Array(pageTree.getNodes()[0].children.length);
+				// 要对其进行深度拷贝，防止改变当前对象影响原来对象的变更。
+				$.extend(true, tempChilds, pageTree.getNodes()[0].children);
+				// 清除后台不对应的属性
+				dypageWin.recurseDel(tempChilds);
+				dypageWin.recurseDel(dypageWin.delCompents);
+				var data = {
+					children : tempChilds,
+					delCompents : dypageWin.delCompents,// 去除根节点
+					objType : $scope.display.objType,
+					objId : $scope.display.objId
+				}
+				// 提交
+				eh.data.callMethod("submitPageDesign", data, function(rt) {
+					// 提示
+					MESSAGE_DIALOG.alert('保存成功');
+					// 重新加载
+					dypageWin.loadWinData($scope.display.objType, $scope.display.objId);
+					// 情况临时数据
+					dypageWin.delCompents = [];
+				});
+			};
+
+			// 重置树节点
+			$scope.resetDesignWin = function() {
+				// 重新加载
+				dypageWin.loadWinData($scope.display.objType, $scope.display.objId);
+				// 情况临时数据
+				dypageWin.delCompents = [];
+			};
+			// 返回连接
+			$scope.gomain = function(id) {
+				$("#main > * ").hide().siblings("#main-" + id).show();
+			};
+		} ]);
